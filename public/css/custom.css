@@ -1,0 +1,28 @@
+body {
+    padding-top: 100px;
+}
+
+/****** Navigation Bar ******/
+.navbar {
+    background-color: #ed2636;
+}
+
+.navbar-inverse {
+    border-color: transparent;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+    color: white;
+}
+
+#logo {
+    color: white;
+    font-size: 40px;
+    font-family: 'Lobster', sans-serif;
+}
+
+
+/****** Footer ******/
+footer p {
+    text-align: center;
+}
