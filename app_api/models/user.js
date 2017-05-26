@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
 const Schema = mongoose.Schema;
+const dietSchema = require('./diets');
 
 const userSchema = new Schema({
     name: {
@@ -10,9 +11,11 @@ const userSchema = new Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     profile : {
-        picture: { type: String, default: '' },
+        picture: { type: String, "default": '' },
     },
+    diet: dietSchema,
     dob: { type: Date, required: false },
+    coords: { type: [Number], index: '2dsphere' },
     created_at: Date,
     verified: { type: Boolean, default: false }
 });

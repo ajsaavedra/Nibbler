@@ -5,17 +5,20 @@ const app = express();
 const ejs = require('ejs');
 const ejs_mate = require('ejs-mate');
 const config = require('./config/secret');
-const mainRoutes = require('./routes/main');
-const userRoutes = require('./routes/userAPI');
+const mainRoutes = require('./app_server/routes/main');
+const userRoutes = require('./app_server/routes/user');
+const routesAPI = require('./app_api/routes/locations');
 
 // Middleware
 app.use(express.static(__dirname + '/public'));
 app.engine('ejs', ejs_mate);
+app.set('views', __dirname + '/app_server/views');
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(mainRoutes);
 app.use(userRoutes);
+app.use('/api', routesAPI);
 
 mongoose.connect(config.database, function(err) {
     if (err) console.log(err);
