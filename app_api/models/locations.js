@@ -21,7 +21,7 @@ const locationSchema = new Schema({
     address: String,
     rating: { type: Number, "default": 0, min: 0, max: 5 },
     options: dietSchema,
-    coord: { type: [Number], index: '2dsphere' },
+    coords: { type: [Number], index: '2dsphere', required: true },
     openingTimes: [openingTimeSchema],
     reviews: [reviewSchema]
 });
