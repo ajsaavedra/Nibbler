@@ -1,11 +1,17 @@
 const User = require('../../app_api/models/user');
+const request = require('request');
+const title = 'Vegan, Vegetarian, Gluten-Free Nibbles';
 
 module.exports.login = function(req, res) {
-    res.render('main/accounts/login');
+    res.render('main/accounts/login', {
+        title: title
+    });
 };
 
 module.exports.signup = function(req, res) {
-    res.render('main/accounts/signup');
+    res.render('main/accounts/signup', {
+        title: title
+    });
 };
 
 module.exports.register = function(req, res, next) {

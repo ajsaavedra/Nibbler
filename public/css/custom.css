@@ -26,3 +26,21 @@ body {
 footer p {
     text-align: center;
 }
+
+/****** Locations List ******/
+.locations-list {
+    padding: 20px;
+}
+
+.location-name {
+    font-size: 18px;
+}
+
+.locations-list:not(:last-child) {
+    border-bottom: 1px solid #DDD;
+}
+
+.locations-msg {
+    font-family: 'Lobster', sans-serif;
+    font-size: 30px;
+}

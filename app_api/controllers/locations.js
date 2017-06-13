@@ -40,10 +40,10 @@ module.exports.locationsListByDistance = function(req, res) {
     };
     const geoOptions = { 
         spherical: true, 
-        maxDistance: meterConversion.milesToM(1),
+        maxDistance: meterConversion.miToM(req.query.maxDistance),
         num: 10
      };
-     if (!longitude || !latitude) {
+     if (!longitude && longitude !== 0 || !latitude && latitude !== 0) {
          sendJsonResponse(res, 404, {
              "message": "longitude and latitude required"
          });
@@ -55,7 +55,6 @@ module.exports.locationsListByDistance = function(req, res) {
             sendJsonResponse(res, 404, err);
         } else {
             results.forEach(function(doc) {
-                console.log(doc.dis);
                     locations.push({
                         distance: meterConversion.mToMi(doc.dis),
                         name: doc.obj.name,
