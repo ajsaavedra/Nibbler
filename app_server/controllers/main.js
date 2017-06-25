@@ -19,9 +19,12 @@ const renderLocations = function(req, res, responseBody) {
     });
 };
 
-const renderLocationDetails = function(req, res) {
+const renderLocationDetails = function(req, res, locationDetail) {
     res.render('main/location-info', {
-        title: title,
+        title: locationDetail.name,
+        location: locationDetail,
+        starRating: starRating,
+        formatDate: formatDate
     });
 }
 
@@ -35,6 +38,23 @@ const starRating = function(rating) {
     }
     return stars;
 };
+
+const formatDate = function(date) {
+    var str, formattedDate;
+    formattedDate = new Date(date);
+    str = getMonthString(formattedDate.getMonth()) + " " +
+          formattedDate.getDay() + ", " +
+          formattedDate.getFullYear();
+    return str;
+};
+
+const getMonthString = function(month) {
+    var months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return months[month-1];
+}
 
 module.exports.renderHomePage = function(req, res) {
     res.render('main/home', {
@@ -64,5 +84,22 @@ module.exports.renderLocatePage = function(req, res) {
 };
 
 module.exports.renderLocationDetailsPage = function(req, res) {
-    renderLocationDetails(req, res);
+    var requestOptions, path;
+    path = '/api/locations/' + req.params.locationid;
+    requestOptions = {
+        url: apiOptions.server + path,
+        method: 'GET',
+        json: {},
+    };
+    request(
+        requestOptions,
+        function(err, response, body) {
+            var data = body;
+            data.coords = {
+                lng: body.coords[0],
+                lat: body.coords[1]
+            };
+            renderLocationDetails(req, res, data);
+        }
+    );
 };

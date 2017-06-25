@@ -1,1 +1,69 @@
 <% layout('layout') %>
+<div class="row location-name">
+    <h2><%= location.name %></h2>
+</div>
+<div class="row location-details">
+    <span><%- starRating(location.rating) %></span>
+</div>
+<div class="row location-details">
+    <div class="col-md-4 col-sm-4 col-xs-12">
+        <div class="row location-hours">
+            <div class="panel panel-default">
+                <div class="panel panel-heading location-panel">
+                    Location Details
+                </div>
+                <div class="panel-body">
+                    <p><%= location.openingTimes[0].days %></p>
+                    <p><%= location.openingTimes[0].opening %> -
+                    <%= location.openingTimes[0].closing %></p>
+                </div>
+            </div>
+        </div>
+        <div class="row location-options">
+            <div class="panel panel-default">
+                <div class="panel panel-heading location-panel">
+                    Dietary Options
+                </div>
+                <div class="panel-body">
+                        <% if (location.options.gluten_free) { %>
+                        <span class="label label-warning">Gluten-free</span>
+                        <% } %>
+                        <% if (location.options.vegan) { %>
+                        <span class="label label-primary">Vegan</span>
+                        <% } %>
+                        <% if (location.options.vegetarian) { %>
+                        <span class="label label-success">Vegetarian</span>
+                        <% } %>
+                        <% if (location.options.soy_free) { %>
+                        <span class="label label-danger">Soy-free</span>
+                        <% } %>
+                        <% if (location.options.nut_free) { %>
+                        <span class="label label-info">Nut-free</span>
+                        <% } %>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8 col-sm-8 col-xs-12">
+    <div id="map"></div>
+    </div>
+</div>
+<div class="row location-details">
+    <div class="col-md-12">
+        <div class="row location-hours">
+            <div class="panel panel-default">
+                <div class="panel panel-heading location-panel">
+                    Customer Reviews
+                </div>
+                <div class="panel-body">
+                    <% for (var i = 0; i < location.reviews.length; i++) { %>
+                    <span><%- starRating(location.reviews[i].rating) %></span>
+                    <p>By <a><%= location.reviews[i].author%></a> on
+                    <%= formatDate(location.reviews[i].createdOn) %></p>
+                    <p><%= location.reviews[i].reviewText %></p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
