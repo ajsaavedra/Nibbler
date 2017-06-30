@@ -61,6 +61,7 @@
                 <div class="panel-body">
                     <% for (var i = 0; i < location.reviews.length; i++) { %>
                     <span><%- starRating(location.reviews[i].rating) %></span>
+                    <div id="review-title"><%= location.reviews[i].title %></div>
                     <p>By <a><%= location.reviews[i].author%></a> on
                     <%= formatDate(location.reviews[i].createdOn) %></p>
                     <p><%= location.reviews[i].reviewText %></p>

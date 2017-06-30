@@ -14,6 +14,7 @@ var addReview = function(req, res, location) {
     } else {
         location.reviews.push({
             author: req.body.author,
+            title: req.body.title,
             rating: req.body.rating,
             reviewText: req.body.reviewText
         });

@@ -39,7 +39,7 @@ footer p {
 }
 
 .location-name {
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .locations-list:not(:last-child) {
@@ -68,4 +68,9 @@ footer p {
 
 .dropdown-rating-menu {
     width: 100px;
+}
+
+#review-title {
+    font-weight: 500;
+    font-size: 16px;
 }

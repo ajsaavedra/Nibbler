@@ -31,7 +31,8 @@ const renderLocationDetails = function(req, res, locationDetail) {
 const renderReviewForm = function(req, res, locationDetail) {
     res.render('main/review-form', {
         title: title,
-        location: locationDetail
+        location: locationDetail,
+        error: req.query.err
     });
 };
 
@@ -127,12 +128,17 @@ module.exports.renderReviewFormPage = function(req, res) {
     });
 };
 
+var isValidData = function(postdata) {
+    return postdata.author && postdata.rating && postdata.reviewText
+};
+
 module.exports.addUserReview = function(req, res) {
     var requestOptions, path, locationid, postdata;
     locationid = req.params.locationid;
     path = '/api/locations/' + locationid + '/reviews';
     postdata = {
         author: 'Tester',
+        title: req.body.reviewTitle,
         rating: parseInt(req.body.reviewRating, 10),
         reviewText: req.body.reviewText
     };
@@ -142,14 +148,21 @@ module.exports.addUserReview = function(req, res) {
         method: 'POST',
         json: postdata
     };
-    request(
-        requestOptions,
-        function(err, response, body) {
-            if (response.statusCode === 201) {
-                res.redirect('/locate/' + locationid);
-            } else {
-                console.log("Error adding review" + response.statusCode);
+    if (isValidData(postdata)) { 
+        request(
+            requestOptions,
+            function(err, response, body) {
+                if (response.statusCode === 201) {
+                    res.redirect('/locate/' + locationid);
+                } else if (response.statusCode === 400 && body.name 
+                            && body.name == "ValidationError") {
+                    res.redirect('/locate/' + locationid + '/reviews/new?err=val');
+                } else {
+                    console.log("Error adding review" + response.statusCode);
+                }
             }
-        }
-    );
+        );
+    } else {
+        res.redirect('/locate/' + locationid + '/reviews/new?err=val');
+    }
 };

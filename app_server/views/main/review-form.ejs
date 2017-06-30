@@ -1,5 +1,8 @@
 <% layout('layout') %>
 <div class="row location-name">
+    <% if (error === "val") { %>
+        <div class="alert alert-danger">All fields required. Please try again.</div>
+    <% } %>
     <h2>Review <%= location.name %></h2>
 </div>
 <div class="row review-form">
