@@ -28,6 +28,13 @@ const renderLocationDetails = function(req, res, locationDetail) {
     });
 }
 
+const renderReviewForm = function(req, res, locationDetail) {
+    res.render('main/review-form', {
+        title: title,
+        location: locationDetail
+    });
+};
+
 const starRating = function(rating) {
     var stars = "";
     for (var i = 0; i < Math.floor(rating); i++) {
@@ -55,6 +62,31 @@ const getMonthString = function(month) {
     ];
     return months[month-1];
 }
+
+const getLocationInfo = function(req, res, callback) {
+    var requestOptions, path;
+    path = '/api/locations/' + req.params.locationid;
+    requestOptions = {
+        url: apiOptions.server + path,
+        method: 'GET',
+        json: {},
+    };
+    request(
+        requestOptions,
+        function(err, response, body) {
+            var data = body;
+            if (response.statusCode === 200) {
+                data.coords = {
+                    lng: body.coords[0],
+                    lat: body.coords[1]
+                };
+                callback(req, res, data);   
+            } else {
+                console.log("Error getting location: " + response.statusCode);
+            }
+        }
+    );
+};
 
 module.exports.renderHomePage = function(req, res) {
     res.render('main/home', {
@@ -84,22 +116,40 @@ module.exports.renderLocatePage = function(req, res) {
 };
 
 module.exports.renderLocationDetailsPage = function(req, res) {
-    var requestOptions, path;
-    path = '/api/locations/' + req.params.locationid;
+    getLocationInfo(req, res, function(req, res, responseData) {
+        renderLocationDetails(req, res, responseData);
+    });
+};
+
+module.exports.renderReviewFormPage = function(req, res) {
+    getLocationInfo(req, res, function(req, res, responseData) {
+        renderReviewForm(req, res, responseData);
+    });
+};
+
+module.exports.addUserReview = function(req, res) {
+    var requestOptions, path, locationid, postdata;
+    locationid = req.params.locationid;
+    path = '/api/locations/' + locationid + '/reviews';
+    postdata = {
+        author: 'Tester',
+        rating: parseInt(req.body.reviewRating, 10),
+        reviewText: req.body.reviewText
+    };
+
     requestOptions = {
         url: apiOptions.server + path,
-        method: 'GET',
-        json: {},
+        method: 'POST',
+        json: postdata
     };
     request(
         requestOptions,
         function(err, response, body) {
-            var data = body;
-            data.coords = {
-                lng: body.coords[0],
-                lat: body.coords[1]
-            };
-            renderLocationDetails(req, res, data);
+            if (response.statusCode === 201) {
+                res.redirect('/locate/' + locationid);
+            } else {
+                console.log("Error adding review" + response.statusCode);
+            }
         }
     );
 };
