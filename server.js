@@ -7,10 +7,11 @@ const ejs_mate = require('ejs-mate');
 const config = require('./config/secret');
 const mainRoutes = require('./app_server/routes/main');
 const userRoutes = require('./app_server/routes/user');
-const routesAPI = require('./app_api/routes/locations');
+const apiRoutes = require('./app_api/routes/locations');
 
 // Middleware
 app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/client'));
 app.engine('ejs', ejs_mate);
 app.set('views', __dirname + '/app_server/views');
 app.set('view engine', 'ejs');
@@ -18,7 +19,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(mainRoutes);
 app.use(userRoutes);
-app.use('/api', routesAPI);
+app.use('/api', apiRoutes);
 
 mongoose.connect(config.database, function(err) {
     if (err) console.log(err);

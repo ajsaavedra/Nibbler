@@ -90,7 +90,7 @@ const getLocationInfo = function(req, res, callback) {
 };
 
 module.exports.renderHomePage = function(req, res) {
-    res.render('main/home', {
+    res.render('index', {
         title: title
     });
 };

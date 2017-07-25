@@ -2,3 +2,7 @@
 /config/
 Procfile
 npm-debug.log
+.vscode
+client/node_modules/
+client/typings/
+client/dist/

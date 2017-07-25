@@ -1,0 +1,66 @@
+<div *ngIf="location">
+    <div class="row location-name">
+        <h2>{{ location.name }}</h2>
+    </div>
+    <div class="row location-details">
+        <span [innerHTML]="starRating(location.rating)"></span>
+    </div>
+    <div class="row location-details">
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            <div class="row location-hours">
+                <div class="panel panel-default">
+                    <div class="panel panel-heading location-panel">
+                        Location Details
+                    </div>
+                    <div class="panel-body">
+                        <p>{{ location.openingTimes[0].days }}</p>
+                        <p>{{ location.openingTimes[0].opening }} -
+                        {{ location.openingTimes[0].closing }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row location-options">
+                <div class="panel panel-default">
+                    <div class="panel panel-heading location-panel">
+                        Dietary Options
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-sm-6 col-md-6">
+                            <span class="label label-warning" *ngIf="location.options.gluten_free">Gluten-free</span>
+                            <span class="label label-primary" *ngIf="location.options.vegan">Vegan</span>
+                            <span class="label label-success" *ngIf="location.options.vegetarian">Vegetarian</span>
+                            <span class="label label-danger" *ngIf="location.options.soy_free">Soy-free</span>
+                            <span class="label label-info" *ngIf="location.options.nut_free">Nut-free</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 col-sm-8 col-xs-12">
+        <div id="map"></div>
+        </div>
+    </div>
+    <div class="row location-details">
+        <a class="btn btn-default pull-right" href="/locate/location._id/reviews/new">Add Review</a>
+    </div>
+    <div class="row location-details">
+        <div class="col-md-12">
+            <div class="row location-hours">
+                <div class="panel panel-default">
+                    <div class="panel panel-heading location-panel">
+                        Customer Reviews
+                    </div>
+                    <div class="panel-body">
+                        <div *ngFor="let review of location.reviews">
+                            <span [innerHTML]="starRating(review.rating)"></span>
+                            <div id="review-title">{{ review.title }}</div>
+                            <p>By <a>{{ review.author }}</a> on
+                            <span [innerHTML]="formatDate(review.createdOn)"></span></p>
+                            <p>{{ review.reviewText }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
