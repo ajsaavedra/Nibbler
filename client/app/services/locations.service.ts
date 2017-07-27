@@ -18,4 +18,15 @@ export class LocationServiceComponent {
     getLocationById(id) {
         return this.http.get(this.API_URL + '/' + id).map(res => res.json());
     }
+
+    addReviewToLocation(id, title, rating, text) {
+        const body = {
+            author: 'Tester',
+            title: title,
+            rating: rating,
+            reviewText: text
+        };
+
+        return this.http.post(this.API_URL + '/' + id + '/reviews', body).map(res => res.json());
+    }
 }

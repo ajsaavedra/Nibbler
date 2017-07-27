@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { LocationsComponent } from './locations/locations.component';
 import { LocationDetailsComponent } from './locations/location-details.component';
+import { LocationReviewComponent } from './locations/location-review.component';
 import { LoginComponent } from './accounts/login.component';
 import { SignupComponent } from './accounts/signup.component';
 
@@ -25,6 +26,7 @@ export const routingComponents = [
     AppComponent,
     LocationsComponent,
     LocationDetailsComponent,
+    LocationReviewComponent,
     LoginComponent,
     SignupComponent
 ];
