@@ -53,7 +53,7 @@
                     <div class="panel-body">
                         <div *ngFor="let review of location.reviews">
                             <span [innerHTML]="starRating(review.rating)"></span>
-                            <div id="review-title">{{ review.title }}</div>
+                            <div class="reviewTitle">{{ review.title }}</div>
                             <p>By <a>{{ review.author }}</a> on
                             <span [innerHTML]="formatDate(review.createdOn)"></span></p>
                             <p>{{ review.reviewText }}</p>

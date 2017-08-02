@@ -2,7 +2,7 @@
     <form [formGroup]="reviewForm" id="revform" action="">
         <div class="row form-row">
             <div class="col-md-2">Title</div>
-            <input class="col-md-10" id="reviewTitle" type="text" name="reviewTitle" 
+            <input class="col-md-10 reviewTitle" type="text" name="reviewTitle" 
                     [formControl]="reviewForm.controls['title']">
         </div>
         <div *ngIf="reviewForm.controls['title'].hasError('required') 

@@ -13,7 +13,7 @@ export class LocationReviewComponent {
 
     reviewForm: FormGroup;
 
-    constructor(private locationService: LocationServiceComponent, fb: FormBuilder) {
+    constructor(private locationService: LocationServiceComponent, private fb: FormBuilder) {
         this.reviewForm = fb.group({
             'title': [null, Validators.required],
             'rating': [5, Validators.required],

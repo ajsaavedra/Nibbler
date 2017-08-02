@@ -74,7 +74,7 @@ footer p {
     width: 100px;
 }
 
-#reviewTitle {
+.reviewTitle {
     font-weight: 500;
     font-size: 16px;
     width: 100%;
