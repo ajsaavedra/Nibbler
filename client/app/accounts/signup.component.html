@@ -1,26 +1,45 @@
 <div class="row">
     <div class="col-lg-6 col-md-offset-3">
-        <form method="post">
+        <form method="post" [formGroup]="signupForm">
             <h1>Signup</h1>
             <div class="form-group row">
                 <div class="col-lg-3 col-md-3">
-                    <label>First Name: </label>
-                    <input type="text" class="form-control" name="firstname"/>
+                    <label>First Name</label>
+                    <input type="text" class="form-control" name="firstname"
+                        [formControl]="signupForm.controls['fname']"/>
+                    <div *ngIf="signupForm.controls['fname'].hasError('pattern')
+                        || signupForm.controls['fname'].touched && signupForm.controls['fname'].hasError('required')"
+                        class="alert alert-danger">Please enter a valid first name</div>
                 </div>
                 <div class="col-lg-3 col-md-3">
-                    <label>Last Name: </label>
-                    <input type="text" class="form-control" name="lastname"/>
+                    <label>Last Name</label>
+                    <input type="text" class="form-control" name="lastname"
+                        [formControl]="signupForm.controls['lname']"/>
+                    <div *ngIf="signupForm.controls['lname'].hasError('pattern')
+                        || signupForm.controls['lname'].touched && signupForm.controls['lname'].hasError('required')"
+                        class="alert alert-danger">Please enter a valid last name</div>
                 </div>
             </div>
             <div class="form-group">
-                <label>Email: </label>
-                <input type="email" class="form-control" name="email"/>
+                <label>Email</label>
+                <input type="email" class="form-control" name="email"
+                    [formControl]="signupForm.controls['email']"/>
+                <div *ngIf="signupForm.controls['email'].hasError('pattern')
+                    || signupForm.controls['email'].touched && signupForm.controls['email'].hasError('required')"
+                    class="alert alert-danger">Please enter a valid email</div>
             </div>
             <div class="form-group">
-                <label>Password: </label>
-                <input type="password" class="form-control" name="password"/>
+                <label>Password</label>
+                <input type="password" class="form-control" name="password"
+                    [formControl]="signupForm.controls['password']"/>
+                <div *ngIf="signupForm.controls['password'].hasError('pattern')
+                    || signupForm.controls['password'].touched && signupForm.controls['password'].hasError('required')"
+                    class="alert alert-danger">Password must contain 8 characters, 
+                    at least one uppercase and lowercase letter, 
+                    one number and one special character</div>
             </div>
-            <button type="submit" class="btn btn-success">Submit</button>
+            <button type="submit" class="btn btn-success"
+                [disabled]="!signupForm.valid">Submit</button>
         </form>
     </div>
 </div>
