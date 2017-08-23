@@ -27,5 +27,4 @@ const locationSchema = new Schema({
     reviews: [reviewSchema]
 });
 
-const Location = mongoose.model('Location', locationSchema);
-module.exports = Location;
+module.exports = mongoose.model('Location', locationSchema);

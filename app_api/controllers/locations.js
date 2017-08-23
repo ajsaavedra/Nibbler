@@ -85,14 +85,14 @@ module.exports.locationsCreate = function(req, res) {
             opening: req.body.opening2,
             closing: req.body.closing2,
             closed: req.body.closed2
-        }], function(err, loction) {
+        }]}, function(err, location) {
             if (err) {
                 sendJsonResponse(res, 400, err);
             } else {
                 sendJsonResponse(res, 201, location);
             }
         }
-    });
+    );
 };
 
 module.exports.locationsReadOne = function(req, res) {
