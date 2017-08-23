@@ -6,8 +6,8 @@ const ejs = require('ejs');
 const ejs_mate = require('ejs-mate');
 const config = require('./config/secret');
 const mainRoutes = require('./app_server/routes/main');
-const userRoutes = require('./app_server/routes/user');
-const apiRoutes = require('./app_api/routes/locations');
+const userRoutes = require('./app_api/routes/users');
+const locationRoutes = require('./app_api/routes/locations');
 
 // Middleware
 app.use(express.static(__dirname + '/public'));
@@ -18,8 +18,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(mainRoutes);
-app.use(userRoutes);
-app.use('/api', apiRoutes);
+app.use('/api', [userRoutes, locationRoutes]);
 
 mongoose.connect(config.database, function(err) {
     if (err) console.log(err);

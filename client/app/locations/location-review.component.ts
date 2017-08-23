@@ -28,17 +28,14 @@ export class LocationReviewComponent {
                     id,
                     this.reviewForm.get('title').value,
                     this.reviewForm.get('rating').value,
-                    this.reviewForm.get('review').value
-                ).subscribe(results => resolve(results));
+                    this.reviewForm.get('review').value)
+                .subscribe(results => resolve(results));
         });
     }
 
     submitReview() {
         this.addReview(this.location._id)
-        .then((result) => {
-            window.location.reload();
-        }).catch((err) => {
-            console.log('Error: ' + err);
-        })
+        .then(result => window.location.reload())
+        .catch(err => console.log('Error: ' + err))
     }
 }
