@@ -90,3 +90,18 @@ footer p {
 .alert-danger {
     text-align: center;
 }
+
+/* Login Page  */
+#login-title {
+    text-align: center;
+}
+.user-icon, .signup-link {
+    padding: 10px;
+}
+
+.form-page {
+    background-color: #EFF0F1;
+    border-radius: 5px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
