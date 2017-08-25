@@ -91,10 +91,7 @@ footer p {
     text-align: center;
 }
 
-/* Login Page  */
-#login-title {
-    text-align: center;
-}
+/***** Login Page  *****/
 .user-icon, .signup-link {
     padding: 10px;
 }
