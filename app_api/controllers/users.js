@@ -34,7 +34,7 @@ module.exports.registerUser = function(req, res) {
             });
             return;
         } else {
-            this.createUser(req, res);
+            createUser(req, res);
         }
     });
 };
