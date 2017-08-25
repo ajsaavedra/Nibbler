@@ -10,7 +10,7 @@ body {
 
 @media screen and (max-width: 992px) {
     /***** Signup Form *****/
-    .firstname-row {
+    .firstname-row, .password-row {
         margin-bottom: 15px;
     }
 }

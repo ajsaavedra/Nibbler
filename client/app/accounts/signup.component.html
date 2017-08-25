@@ -1,37 +1,34 @@
-<div class="row">
-    <div class="col-lg-12">
+<div class="row form-page">
+    <div class="col-md-offset-2 col-md-8">
         <form method="post" [formGroup]="signupForm">
-            <h1>Signup</h1>
-            <div class="form-group row">
-                <div class="col-lg-6 col-md-6 firstname-row">
-                    <label>First Name</label>
-                    <input type="text" class="form-control" name="firstname"
-                        [formControl]="signupForm.controls['fname']"/>
-                    <div *ngIf="signupForm.controls['fname'].hasError('pattern')
-                        || signupForm.controls['fname'].touched && signupForm.controls['fname'].hasError('required')"
-                        class="alert alert-danger">Please enter a valid first name</div>
-                </div>
-                <div class="col-lg-6 col-md-6">
-                    <label>Last Name</label>
-                    <input type="text" class="form-control" name="lastname"
-                        [formControl]="signupForm.controls['lname']"/>
-                    <div *ngIf="signupForm.controls['lname'].hasError('pattern')
-                        || signupForm.controls['lname'].touched && signupForm.controls['lname'].hasError('required')"
-                        class="alert alert-danger">Please enter a valid last name</div>
-                </div>
+            <h1 class="text-center">Signup</h1>
+            <div class="text-center user-icon">
+                <i class="fa fa-user-plus fa-5x" aria-hidden="true"></i>
             </div>
             <div class="form-group">
-                <label>Email</label>
+                <input type="text" class="form-control" name="firstname"
+                    [formControl]="signupForm.controls['fname']" placeholder="First name"/>
+                <div *ngIf="signupForm.controls['fname'].hasError('pattern')
+                    || signupForm.controls['fname'].touched && signupForm.controls['fname'].hasError('required')"
+                    class="alert alert-danger">Please enter a valid first name</div>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" name="lastname"
+                    [formControl]="signupForm.controls['lname']" placeholder="Last name"/>
+                <div *ngIf="signupForm.controls['lname'].hasError('pattern')
+                    || signupForm.controls['lname'].touched && signupForm.controls['lname'].hasError('required')"
+                    class="alert alert-danger">Please enter a valid last name</div>
+            </div>
+            <div class="form-group">
                 <input type="email" class="form-control" name="email"
-                    [formControl]="signupForm.controls['email']"/>
+                    [formControl]="signupForm.controls['email']" placeholder="Email"/>
                 <div *ngIf="signupForm.controls['email'].hasError('pattern')
                     || signupForm.controls['email'].touched && signupForm.controls['email'].hasError('required')"
                     class="alert alert-danger">Please enter a valid email</div>
             </div>
             <div class="form-group">
-                <label>Password</label>
                 <input type="password" class="form-control" name="password"
-                    [formControl]="signupForm.controls['password']"/>
+                    [formControl]="signupForm.controls['password']" placeholder="Password"/>
                 <div *ngIf="signupForm.controls['password'].hasError('pattern')
                     || signupForm.controls['password'].touched && signupForm.controls['password'].hasError('required')"
                     class="alert alert-danger">Password must contain 8 characters, 
@@ -39,15 +36,14 @@
                     one number and one special character</div>
             </div>
             <div class="form-group">
-                <label>Confirm Password</label>
                 <input type="password" class="form-control" name="confirmation"
-                    [formControl]="signupForm.controls['confirmation']"/>
+                    [formControl]="signupForm.controls['confirmation']" placeholder="Confirm password"/>
                 <div *ngIf="signupForm.controls['confirmation'].touched && 
                     signupForm.controls.confirmation.errors?.PasswordMatch"
-                    class="alert alert-danger">Passwords do not match</div>
+                    class="alert alert-danger">Passwords do not match</div>             
             </div>
-            <button type="submit" class="btn btn-success"
-                [disabled]="!signupForm.valid" (click)="registerUser()">Submit</button>
+            <button type="submit" class="col-xs-12 btn btn-success"
+                [disabled]="!signupForm.valid" (click)="registerUser()">Signup</button>
         </form>
     </div>
 </div>

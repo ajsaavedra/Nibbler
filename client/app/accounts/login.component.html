@@ -1,5 +1,5 @@
 <div class="row form-page">
-    <div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-12">
+    <div class="col-sm-6 col-sm-offset-3 col-xs-12">
         <form method="post" [formGroup]="loginForm">
             <h1 class="text-center">Login</h1>
             <div class="text-center user-icon">
@@ -23,7 +23,7 @@
             [disabled]="!loginForm.valid">Login</button>
         </form>
     </div>
-    <div class="signup-link col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-12 text-center">
+    <div class="signup-link col-sm-6 col-sm-offset-3 col-xs-12 text-center">
         <a (click)="rerouteGuest()">Create an account</a>
     </div>
 </div>
