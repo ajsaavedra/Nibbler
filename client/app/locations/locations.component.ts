@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { LocationServiceComponent } from '../services/locations.service';
+import { LocationService } from '../services/locations.service';
 
 @Component({
     templateUrl: './app/locations/locations.component.html',
-    providers: [ LocationServiceComponent ]
+    providers: [ LocationService ]
 })
 
 export class LocationsComponent implements OnInit {
     private sub: any;
     private locations: any;
     
-    constructor(private locationService: LocationServiceComponent) {}
+    constructor(private locationService: LocationService) {}
     
     locationPromise = new Promise((resolve, reject) => {
         this.sub = this.locationService.getNearbyLocations().subscribe(results => {

@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
+const passport = require('passport');
 
 const sendJsonResponse = function(res, status, content) {
-    res.status(status);
-    res.json(content);
+    res.status(status).json(content);
 };
 
 const createUser = function (req, res) {
@@ -37,4 +37,21 @@ module.exports.registerUser = function(req, res) {
             createUser(req, res);
         }
     });
+};
+
+module.exports.getUserProfile = function(req, res) {
+    passport.authenticate('local-login', function(err, user, info) {
+        if (err) {
+            sendJsonResponse(res, 500, info);
+        } else if (!user) {
+            sendJsonResponse(res, 404, { 'Error': 'No user found.' });
+        } else if (!user.validPassword(req.body.password)) {
+            sendJsonResponse(res, 403, { 'Error': 'Unauthorized password.' });
+        } else {
+            req.logIn(user, function(err) {
+                if (err) sendJsonResponse(res, 400, { 'Error' : 'Something went wrong '});
+                sendJsonResponse(res, 200, null);
+            });
+        }
+    })(req.params.username, req.body.password);
 };

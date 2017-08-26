@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { LocationServiceComponent } from '../services/locations.service';
+import { LocationService } from '../services/locations.service';
 
 @Component({
     templateUrl: './app/locations/location-details.component.html',
-    providers: [ LocationServiceComponent ]
+    providers: [ LocationService ]
 })
 
 export class LocationDetailsComponent implements OnInit {
     private sub: any;
     private location: any;
 
-    constructor(private locationService: LocationServiceComponent, 
+    constructor(private locationService: LocationService, 
                 private route: ActivatedRoute) {}
 
     ngOnInit() {

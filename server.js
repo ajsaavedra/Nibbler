@@ -1,10 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const passport = require('passport');
+const session = require('express-session');
 const app = express();
 const ejs = require('ejs');
 const ejs_mate = require('ejs-mate');
+const locationModel = require('./app_api/models/locations');
+const userModel = require('./app_api/models/user');
 const config = require('./config/secret');
+const passportConfig = require('./config/passport')(passport);
 const mainRoutes = require('./app_server/routes/main');
 const userRoutes = require('./app_api/routes/users');
 const locationRoutes = require('./app_api/routes/locations');
@@ -25,7 +30,11 @@ mongoose.connect(config.database, function(err) {
     console.log("Connected to the database...");
 });
 
+app.use(session({ secret: config.secretKey }));
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.listen(config.port, function(err) {
     if (err) throw err;
     console.log("Server is running on port " + config.port);
-})
+});

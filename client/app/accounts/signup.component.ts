@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AccountsServiceComponent } from '../services/accounts.service';
+import { AccountsService } from '../services/accounts.service';
 import { PasswordValidation } from './password.validation';
 
 @Component({
     templateUrl: './app/accounts/signup.component.html',
-    providers: [ AccountsServiceComponent ]
+    providers: [ AccountsService ]
 })
 
 export class SignupComponent {
@@ -19,7 +19,7 @@ export class SignupComponent {
 
     constructor(private router: Router,
                 private fb: FormBuilder,
-                private accountsService: AccountsServiceComponent) {
+                private accountsService: AccountsService) {
         this.signupForm = fb.group({
             'fname': [null, Validators.compose([
                 Validators.required,

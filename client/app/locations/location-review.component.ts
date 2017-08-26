@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LocationServiceComponent } from '../services/locations.service';
+import { LocationService } from '../services/locations.service';
 
 @Component({
     selector: 'location-review-form',
     templateUrl: './app/locations/location-review.component.html',
-    providers: [ LocationServiceComponent ]
+    providers: [ LocationService ]
 })
 
 export class LocationReviewComponent {
@@ -13,7 +13,7 @@ export class LocationReviewComponent {
 
     reviewForm: FormGroup;
 
-    constructor(private locationService: LocationServiceComponent, private fb: FormBuilder) {
+    constructor(private locationService: LocationService, private fb: FormBuilder) {
         this.reviewForm = fb.group({
             'title': [null, Validators.required],
             'rating': [5, Validators.required],

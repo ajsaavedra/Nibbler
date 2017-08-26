@@ -20,7 +20,7 @@
                     class="alert alert-danger">Password required</div>
             </div>
             <button type="submit" class="btn btn-success col-xs-12 col-sm-12"
-            [disabled]="!loginForm.valid">Login</button>
+            [disabled]="!loginForm.valid" (click)="loginUser()">Login</button>
         </form>
     </div>
     <div class="signup-link col-sm-6 col-sm-offset-3 col-xs-12 text-center">
