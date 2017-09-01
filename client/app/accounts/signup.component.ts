@@ -48,7 +48,7 @@ export class SignupComponent {
             .subscribe(
                 res => this.router.navigateByUrl('/login'),
                 err => {
-                    if (err.status === 404) {
+                    if (err.status === 401) {
                         alert("Oops. A user with this email already exists. Please login to continue.");
                     } else {
                         alert("Something went wrong with our server. Please try again.");

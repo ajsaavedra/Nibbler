@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LocationService } from '../services/locations.service';
+import { Helper } from '../services/helper.service';
 
 @Component({
     templateUrl: './app/locations/location-details.component.html',
-    providers: [ LocationService ]
+    providers: [ LocationService, Helper ]
 })
 
 export class LocationDetailsComponent implements OnInit {
     private sub: any;
     private location: any;
 
-    constructor(private locationService: LocationService, 
+    constructor(private locationService: LocationService,
+                private helper: Helper,
                 private route: ActivatedRoute) {}
 
     ngOnInit() {
@@ -27,16 +29,9 @@ export class LocationDetailsComponent implements OnInit {
         this.sub.unsubscribe();
     }
 
-    starRating(rating) {
-        var stars = "";
-        for (var i = 0; i < Math.floor(rating); i++) {
-            stars += "<i class=\"fa fa-star\"></i>";
-        }
-        for (var i = Math.floor(rating); i < 5; i++) {
-            stars += "<i class=\"fa fa-star-o\"></i>";
-        }
-        return stars;
-    }
+    starRating = function(rating) {
+        return this.helper.starRating(rating);
+    };
 
     formatDate = function(date) {
         var str, formattedDate;

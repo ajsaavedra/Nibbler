@@ -26,10 +26,7 @@ var meterConversion = (function() {
     };
 })();
 
-const sendJsonResponse = function(res, status, content) {
-    res.status(status);
-    res.json(content);
-};
+const sendJsonResponse = require('../../config/tools').sendJsonResponse;
 
 module.exports.locationsListByDistance = function(req, res) {
     const longitude = parseFloat(req.query.lng);

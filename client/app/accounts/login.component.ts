@@ -27,12 +27,12 @@ export class LoginComponent{
         this.accountsService
             .loginUser(email, pw)
             .subscribe(
-                res => this.router.navigateByUrl('/'),
+                res => this.router.navigateByUrl(''),
                 err => {
                     if (err.status === 403) {
-                        alert("Wrong password");
+                        alert('Invalid password. Please try again.');
                     } else if (err.status === 404) {
-                        alert("User not found. Create an account today.");
+                        alert("User not found. Create an account today!");
                     } else {
                         alert("Oops. Something went wrong on our server. Please try again.");
                     }

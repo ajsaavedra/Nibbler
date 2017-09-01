@@ -26,6 +26,7 @@ export class AccountsService {
 
     loginUser(email, pw) {
         const body = {
+            email: email,
             password: pw
         };
 
