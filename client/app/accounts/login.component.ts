@@ -16,18 +16,18 @@ export class LoginComponent{
                 private router: Router,
                 private accountsService: AccountsService) {
         this.loginForm = fb.group({
-            'email': [null, Validators.required],
+            'username': [null, Validators.required],
             'password': [null, Validators.required]
         })
     }
 
     loginUser() {
-        var email = this.loginForm.get('email').value;
-        var pw  = this.loginForm.get('password').value;
+        var username = this.loginForm.get('username').value;
+        var password  = this.loginForm.get('password').value;
         this.accountsService
-            .loginUser(email, pw)
+            .loginUser(username, password)
             .subscribe(
-                res => this.router.navigateByUrl(''),
+                res => this.router.navigateByUrl('/profile/' + username),
                 err => {
                     if (err.status === 403) {
                         alert('Invalid password. Please try again.');

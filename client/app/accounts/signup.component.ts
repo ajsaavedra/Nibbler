@@ -30,6 +30,7 @@ export class SignupComponent {
             'email': [null, Validators.compose([
                 Validators.required,
                 Validators.pattern(this.emailRegex)])],
+            'uname': [null, Validators.required],
             'password': [null, Validators.compose([
                 Validators.required,
                 Validators.pattern(this.passwordRegex)])],
@@ -40,16 +41,18 @@ export class SignupComponent {
     registerUser() {
         var fname = this.signupForm.get('fname').value;
         var lname = this.signupForm.get('lname').value;
+        var uname = this.signupForm.get('uname').value;
         var email = this.signupForm.get('email').value;
         var pw = this.signupForm.get('password').value;
 
         this.accountsService
-            .registerUser(fname, lname, email, pw)
+            .registerUser(fname, lname, uname, email, pw)
             .subscribe(
                 res => this.router.navigateByUrl('/login'),
                 err => {
                     if (err.status === 401) {
-                        alert("Oops. A user with this email already exists. Please login to continue.");
+                        const body = JSON.parse(err._body);
+                        alert(body['message']);
                     } else {
                         alert("Something went wrong with our server. Please try again.");
                     }

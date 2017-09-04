@@ -6,11 +6,11 @@
                 <i class="fa fa-user-circle fa-5x" aria-hidden="true"></i>
             </div>
             <div class="form-group">
-                <input type="email" class="form-control" name="email"
-                    [formControl]="loginForm.controls['email']" placeholder="Email"/>
-                <div *ngIf="loginForm.controls['email'].hasError('required')
-                    && loginForm.controls['email'].touched"
-                    class="alert alert-danger">Email required</div>
+                <input type="username" class="form-control" name="username"
+                    [formControl]="loginForm.controls['username']" placeholder="Username"/>
+                <div *ngIf="loginForm.controls['username'].hasError('required')
+                    && loginForm.controls['username'].touched"
+                    class="alert alert-danger">Username required</div>
             </div>
             <div class="form-group">
                 <input type="password" class="form-control" name="password"

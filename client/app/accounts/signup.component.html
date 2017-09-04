@@ -20,6 +20,12 @@
                     class="alert alert-danger">Please enter a valid last name</div>
             </div>
             <div class="form-group">
+                <input type="email" class="form-control" name="username"
+                    [formControl]="signupForm.controls['uname']" placeholder="Username"/>
+                <div *ngIf="signupForm.controls['uname'].touched && signupForm.controls['uname'].hasError('required')"
+                    class="alert alert-danger">Please enter a username</div>
+            </div>
+            <div class="form-group">
                 <input type="email" class="form-control" name="email"
                     [formControl]="signupForm.controls['email']" placeholder="Email"/>
                 <div *ngIf="signupForm.controls['email'].hasError('pattern')
