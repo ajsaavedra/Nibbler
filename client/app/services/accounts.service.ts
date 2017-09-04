@@ -11,10 +11,11 @@ export class AccountsService {
     options = new RequestOptions({ headers: this.headers });
     constructor(private http: Http) {}
 
-    registerUser(fname, lname, email, pw) {
+    registerUser(fname, lname, uname, email, pw) {
         const body = {
             firstname: fname,
             lastname: lname,
+            username: uname,
             email: email,
             password: pw
         };
@@ -24,14 +25,20 @@ export class AccountsService {
                         .catch(err => Observable.throw(err) || 'Server error');
     }
 
-    loginUser(email, pw) {
+    loginUser(uname, pw) {
         const body = {
-            email: email,
+            username: uname,
             password: pw
         };
 
-        return this.http.post(this.API_URL + '/' + email, body)
+        return this.http.post(this.API_URL + '/' + uname, body)
                         .map(res => res.json())
                         .catch(err => Observable.throw(err) || 'Server error');;
+    }
+
+    getLoginStatus(uname) {
+        return this.http.get(this.API_URL + '/' + uname)
+                        .map(res => res.json())
+                        .catch(err => Observable.throw(err) || 'Server error');
     }
 }

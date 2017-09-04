@@ -2,12 +2,15 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const sendJsonResponse = require('../../config/tools').sendJsonResponse;
 
-const createUser = function (req, res) {
+module.exports.createUser = function (req, res) {
     User
         .create({
             name: {
                 first: req.body.firstname,
                 last: req.body.lastname
+            },
+            profile: {
+                username: req.body.username
             },
             email: req.body.email,
             password: req.body.password
@@ -20,7 +23,7 @@ const createUser = function (req, res) {
         });
 }
 
-module.exports.registerUser = function(req, res) {
+module.exports.findUserByEmail = function(req, res, next) {
     User
         .findOne({ email: req.body.email })
         .exec(function(err, existingUser) {
@@ -28,10 +31,26 @@ module.exports.registerUser = function(req, res) {
                 sendJsonResponse(res, 400, err);
             } else if (existingUser) {
                 sendJsonResponse(res, 401, {
-                    'message': 'Existing user'
+                    'message': 'Oops. A user with this email already exists. Please login to continue.'
                 });
             } else {
-                createUser(req, res);
+                next();
+            }
+        });
+};
+
+module.exports.findUserByName = function(req, res, next) {
+    User
+        .findOne({ 'profile.username': req.body.username })
+        .exec(function(err, existingUser) {
+            if (err) {
+                sendJsonResponse(res, 400, err);
+            } else if (existingUser) {
+                sendJsonResponse(res, 401, {
+                    'message': 'Oops. A user with this username already exists. Please login to continue.'
+                });
+            } else {
+                next();
             }
         });
 };

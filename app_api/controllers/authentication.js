@@ -1,4 +1,6 @@
 const sendJsonResponse = require('../../config/tools').sendJsonResponse;
+const mongoose = require('mongoose');
+const User = mongoose.model('User');
 
 module.exports = function(passport) {
     const authenticateUser = function(req, res, next) {
@@ -21,8 +23,37 @@ module.exports = function(passport) {
         });
     };
 
+    const isLoggedIn = function(req, res, next) {
+        if (req.isAuthenticated()) return next();
+
+        sendJsonResponse(res, 403, {
+            'message': 'Unathenticated user. Please login.'
+        });
+    };
+
+    const logoutUser = function(req, res) {
+        req.logout();
+        sendJsonResponse(res, 200, null);
+    };
+
+    const getUserProfile = function(req, res) {
+        User
+            .findOne({
+                'profile.username': req.params.username
+            }, function(err, user) {
+                if (err) {
+                    sendJsonResponse(res, 400, null);
+                } else {
+                    sendJsonResponse(res, 200, user);
+                }
+            });
+    };
+
     return {
         authenticateUser: authenticateUser,
-        loginUser: loginUser
+        loginUser: loginUser,
+        isLoggedIn: isLoggedIn,
+        logoutUser: logoutUser,
+        getUserProfile: getUserProfile
     }
 };

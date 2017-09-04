@@ -6,6 +6,7 @@ import { LocationDetailsComponent } from './locations/location-details.component
 import { LocationReviewComponent } from './locations/location-review.component';
 import { LoginComponent } from './accounts/login.component';
 import { SignupComponent } from './accounts/signup.component';
+import { ProfileComponent } from './accounts/profile.component';
 
 const routes: Routes = [
     { path: '', component: AppComponent },
@@ -13,6 +14,7 @@ const routes: Routes = [
     { path: 'locations/:id', component: LocationDetailsComponent },
     { path: 'login', component: LoginComponent },
     { path: 'signup', component: SignupComponent },
+    { path: 'profile/:username', component: ProfileComponent }
 ];
 
 @NgModule({
@@ -28,5 +30,6 @@ export const routingComponents = [
     LocationDetailsComponent,
     LocationReviewComponent,
     LoginComponent,
-    SignupComponent
+    SignupComponent,
+    ProfileComponent
 ];
