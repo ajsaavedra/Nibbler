@@ -34,6 +34,11 @@ body {
     font-family: 'Shrikhand', sans-serif;
 }
 
+.navbar .navbar-nav > li.open > a:hover,
+.navbar .navbar-nav > li.open > a:focus {
+  background-color: #f73845;
+  color: #fff;
+}
 
 /****** Footer ******/
 footer p {

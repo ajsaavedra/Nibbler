@@ -35,7 +35,13 @@ export class AccountsService {
 
         return this.http.post(this.API_URL + '/' + uname, body)
                         .map(res => res.json())
-                        .catch(err => Observable.throw(err) || 'Server error');;
+                        .catch(err => Observable.throw(err) || 'Server error');
+    }
+
+    logoutUser(uname) {
+        return this.http.get(this.API_URL + '/logout')
+                        .map(res => res.json())
+                        .catch(err => Observable.throw(err) || 'Server error');
     }
 
     getLoginStatusByName(uname) {

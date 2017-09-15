@@ -24,16 +24,18 @@ module.exports = function(passport) {
     };
 
     const isLoggedIn = function(req, res, next) {
-        if (req.isAuthenticated()) return next();
+        if (req.isAuthenticated()) {
+            if (req.params.username === 'logout') {
+                req.logout();
+                return sendJsonResponse(res, 200, null);
+            } else {
+                return next();
+            }
+        }
 
         sendJsonResponse(res, 403, {
             'message': 'Unathenticated user. Please login.'
         });
-    };
-
-    const logoutUser = function(req, res) {
-        req.logout();
-        sendJsonResponse(res, 200, null);
     };
 
     const getUserProfile = function(req, res) {
@@ -53,7 +55,6 @@ module.exports = function(passport) {
         authenticateUser: authenticateUser,
         loginUser: loginUser,
         isLoggedIn: isLoggedIn,
-        logoutUser: logoutUser,
         getUserProfile: getUserProfile
     }
 };
