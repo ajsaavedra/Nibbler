@@ -19,7 +19,7 @@ export class ProfileComponent implements OnInit {
         this.sub = this.route.params.subscribe(params => {
             let username = params['username'];
             this.accountsService
-                .getLoginStatus(username)
+                .getLoginStatusByName(username)
                 .subscribe(
                     res => this.user = res,
                     err => {

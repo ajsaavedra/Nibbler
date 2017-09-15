@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const MongoStore = require('connect-mongo')(session);
 const app = express();
 const ejs = require('ejs');
 const path = require('path');
@@ -23,7 +24,11 @@ app.set('view engine', 'ejs');
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({ resave: true, saveUninitialized: true, secret: config.secretKey }));
+app.use(session({
+    resave: true,
+    saveUninitialized: true,
+    secret: config.secretKey
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 

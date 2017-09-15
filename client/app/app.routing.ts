@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
+import { NavigationComponent } from './navigation/navigation.component';
 import { LocationsComponent } from './locations/locations.component';
 import { LocationDetailsComponent } from './locations/location-details.component';
 import { LocationReviewComponent } from './locations/location-review.component';
@@ -26,6 +27,7 @@ export class AppRoutingModule {}
 
 export const routingComponents = [
     AppComponent,
+    NavigationComponent,
     LocationsComponent,
     LocationDetailsComponent,
     LocationReviewComponent,

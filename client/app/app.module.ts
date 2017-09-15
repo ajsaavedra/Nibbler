@@ -4,6 +4,7 @@ import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { AppRoutingModule, routingComponents } from './app.routing';
+import { GlobalEventsManager } from './GlobalEventsManager';
 
 @NgModule({
     imports: [
@@ -17,6 +18,7 @@ import { AppRoutingModule, routingComponents } from './app.routing';
         AppComponent,
         routingComponents
     ],
+    providers: [ GlobalEventsManager ],
     bootstrap: [ AppComponent ]
 })
 
