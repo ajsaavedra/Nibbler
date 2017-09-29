@@ -31,6 +31,8 @@ module.exports = function(passport) {
             } else {
                 return next();
             }
+        } else if (req.params.username) {
+            return next();
         }
 
         sendJsonResponse(res, 403, {

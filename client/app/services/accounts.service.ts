@@ -44,7 +44,7 @@ export class AccountsService {
                         .catch(err => Observable.throw(err) || 'Server error');
     }
 
-    getLoginStatusByName(uname) {
+    getUserProfile(uname) {
         return this.http.get(this.API_URL + '/' + uname)
                         .map(res => res.json())
                         .catch(err => Observable.throw(err) || 'Server error');

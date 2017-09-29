@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AccountsService } from '../services/accounts.service';
 
@@ -7,9 +7,10 @@ import { AccountsService } from '../services/accounts.service';
     providers: [ AccountsService ]
 })
 
-export class ProfileComponent implements OnInit {
-    sub: any;
-    user: any;
+export class ProfileComponent implements OnInit, OnDestroy {
+    private sub: any;
+    private user: any;
+    private isLocalUser: boolean;
 
     constructor(private accountsService: AccountsService,
                 private route: ActivatedRoute,
@@ -18,8 +19,9 @@ export class ProfileComponent implements OnInit {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             let username = params['username'];
+            this.isLocalUser = username === localStorage.getItem('username');
             this.accountsService
-                .getLoginStatusByName(username)
+                .getUserProfile(username)
                 .subscribe(
                     res => this.user = res,
                     err => {
@@ -27,5 +29,9 @@ export class ProfileComponent implements OnInit {
                     }
                 );
         })
+    }
+
+    ngOnDestroy() {
+        this.sub.unsubscribe();
     }
 }

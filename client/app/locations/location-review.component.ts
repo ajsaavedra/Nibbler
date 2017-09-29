@@ -26,6 +26,7 @@ export class LocationReviewComponent {
             const call = this.locationService
                 .addReviewToLocation(
                     id,
+                    localStorage.getItem('username'),
                     this.reviewForm.get('title').value,
                     this.reviewForm.get('rating').value,
                     this.reviewForm.get('review').value)

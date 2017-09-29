@@ -19,9 +19,9 @@ export class LocationService {
         return this.http.get(this.API_URL + '/' + id).map(res => res.json());
     }
 
-    addReviewToLocation(id, title, rating, text) {
+    addReviewToLocation(id, author, title, rating, text) {
         const body = {
-            author: 'Tester',
+            author: author,
             title: title,
             rating: rating,
             reviewText: text

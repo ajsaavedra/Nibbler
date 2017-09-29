@@ -11,6 +11,7 @@ import { Helper } from '../services/helper.service';
 export class LocationDetailsComponent implements OnInit {
     private sub: any;
     private location: any;
+    private isLoggedIn: boolean;
 
     constructor(private locationService: LocationService,
                 private helper: Helper,
@@ -22,6 +23,8 @@ export class LocationDetailsComponent implements OnInit {
             let id = params['id'];
 
             this.locationService.getLocationById(id).subscribe(location => this.location = location);
+
+            this.isLoggedIn = localStorage.getItem('username') && true;
         })
     }
 
