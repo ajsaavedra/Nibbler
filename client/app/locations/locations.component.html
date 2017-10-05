@@ -1,4 +1,9 @@
-<div class="panel panel-default">
+<div>
+    <input class="locations-search-bar col-xs-12" 
+    type="text" placeholder="Search for a city"
+    [(ngModel)]="locationSearchItem" (keyup.enter)="keystrokeListener()"/>
+</div>
+<div *ngIf="locations" class="panel panel-default">
     <div class="panel-body">
         <div class="row locations-list" *ngFor='let location of locations'>
             <div class="col-sm-6 col-md-6">
