@@ -13,13 +13,26 @@ export class AccountsService {
 
     constructor(private http: Http) {}
 
-    registerUser(fname, lname, uname, email, pw) {
+    checkIfUserExists(email, uname) {
+        return this.http.get(this.API_URL + '/' + email + '/' + uname)
+                        .map(res => res.json())
+                        .catch(err => Observable.throw(err) || 'Server error');
+    }
+
+    registerUser(fname, lname, uname, email, pw, lat, lng, gf, vg, veg, nf, sf) {
         const body = {
             firstname: fname,
             lastname: lname,
             username: uname,
             email: email,
-            password: pw
+            password: pw,
+            latitude: lat,
+            longitude: lng,
+            gluten_free: gf,
+            vegan: vg,
+            vegetarian: veg,
+            nut_free: nf,
+            soy_free: sf
         };
 
         return this.http.post(this.API_URL + '/new', body)

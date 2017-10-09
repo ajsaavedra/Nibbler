@@ -46,7 +46,13 @@ module.exports = function(passport) {
                 'profile.username': req.params.username
             }, function(err, user) {
                 if (err) {
-                    sendJsonResponse(res, 400, null);
+                    sendJsonResponse(res, 400, {
+                        'Error': 'Something went wrong with our lookup'
+                    });
+                } else if (!user) {
+                    sendJsonResponse(res, 404, {
+                        'Error': 'Looks like that user does not exist!'
+                    })
                 } else {
                     sendJsonResponse(res, 200, user);
                 }

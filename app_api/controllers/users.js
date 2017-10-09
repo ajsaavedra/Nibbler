@@ -13,7 +13,15 @@ module.exports.createUser = function (req, res) {
                 username: req.body.username
             },
             email: req.body.email,
-            password: req.body.password
+            password: req.body.password,
+            coords: [req.body.longitude, req.body.latitude],
+            diet: {
+                gluten_free: req.body.gluten_free,
+                soy_free: req.body.soy_free,
+                nut_free: req.body.nut_free,
+                vegan: req.body.vegan,
+                vegetarian: req.body.vegetarian
+            }
         }, function(err, user) {
             if (err) {
                 sendJsonResponse(res, 400, err);
@@ -25,7 +33,7 @@ module.exports.createUser = function (req, res) {
 
 module.exports.findUserByEmail = function(req, res, next) {
     User
-        .findOne({ email: req.body.email })
+        .findOne({ email: req.params.email })
         .exec(function(err, existingUser) {
             if (err) {
                 sendJsonResponse(res, 400, err);
@@ -41,7 +49,7 @@ module.exports.findUserByEmail = function(req, res, next) {
 
 module.exports.findUserByName = function(req, res, next) {
     User
-        .findOne({ 'profile.username': req.body.username })
+        .findOne({ 'profile.username': req.params.username })
         .exec(function(err, existingUser) {
             if (err) {
                 sendJsonResponse(res, 400, err);
@@ -50,7 +58,9 @@ module.exports.findUserByName = function(req, res, next) {
                     'message': 'Oops. A user with this username already exists. Please login to continue.'
                 });
             } else {
-                next();
+                sendJsonResponse(res, 200, {
+                    'message': 'No user exists. Proceed to register'
+                });
             }
         });
 };

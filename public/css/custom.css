@@ -2,17 +2,8 @@ body {
     padding-top: 100px;
 }
 
-@media screen and (min-width: 1024px) {
-    .container {
-        width: 950px;
-    }
-}
-
-@media screen and (max-width: 992px) {
-    /***** Signup Form *****/
-    .firstname-row, .password-row {
-        margin-bottom: 15px;
-    }
+.btn {
+    margin: 20px 0; 
 }
 
 /****** Navigation Bar ******/
@@ -31,7 +22,7 @@ body {
 #logo {
     color: white;
     font-size: 35px;
-    font-family: 'Shrikhand', sans-serif;
+    font-family: 'Pacifico', sans-serif;
 }
 
 .navbar .navbar-nav > li.open > a:hover,
@@ -58,9 +49,10 @@ footer p {
     border-bottom: 1px solid #DDD;
 }
 
-.locations-msg {
-    font-family: 'Shrikhand', sans-serif;
+.locations-msg, .errorMessage {
+    font-family: 'Pacifico', sans-serif;
     font-size: 30px;
+    text-align: center;
 }
 
 #map {
@@ -112,4 +104,38 @@ footer p {
     border-radius: 5px;
     padding-bottom: 20px;
     margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.signupForm {
+    width: 3000px;
+}
+
+.signupFormPageOne, .signupFormPageTwo {
+    float: left;
+    width: 950px;
+    padding: 0 100px;
+}
+
+@media screen and (min-width: 1024px) {
+    .container {
+        width: 950px;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    /***** Signup Form *****/
+    .firstname-row, .password-row {
+        margin-bottom: 15px;
+    }
+
+    .signupFormPageOne, .signupFormPageTwo {
+        width: 750px;
+    }
+}
+
+@media screen and (max-width: 414px) {
+    .signupFormPageOne, .signupFormPageTwo {
+        width: 400px;
+    }
 }
