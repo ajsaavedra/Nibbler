@@ -32,11 +32,39 @@ body {
 }
 
 /****** Footer ******/
-footer p {
+footer {
+    padding: 20px 0;
+}
+
+footer img {
+    width: 35px;
+}
+
+/****** Home Page ******/
+#banner{
+    max-height: 600px;
+    max-width: 100%;
+    margin-top: -50px;
+    position: relative;
+    background-color: #cfe8fc;
+}
+
+.welcome-page {
     text-align: center;
+    height: 300px;
+}
+
+.welcome-page > img {
+    width: 80px;
+    padding: 40px 0;
 }
 
 /****** Locations List ******/
+.shop img {
+    width: 70px;
+    padding-bottom: 20px;
+}
+
 .locations-list {
     padding: 20px;
 }
@@ -49,10 +77,10 @@ footer p {
     border-bottom: 1px solid #DDD;
 }
 
-.locations-msg, .errorMessage {
-    font-family: 'Pacifico', sans-serif;
+.errorMessage {
     font-size: 30px;
     text-align: center;
+    font-weight: lighter;
 }
 
 #map {
@@ -65,6 +93,13 @@ footer p {
     line-height: 30px;
     margin-bottom: 20px;
     font-size: 16px;
+}
+
+#locations-map {
+    background-color: grey;
+    height: 300px;
+    width: 100%;
+    margin: 20px 0;
 }
 
 /***** Review Form *****/

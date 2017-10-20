@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { NavigationComponent } from './navigation/navigation.component';
+import { HomeComponent } from './home/home.component';
 import { LocationsComponent } from './locations/locations.component';
 import { LocationDetailsComponent } from './locations/location-details.component';
 import { LocationReviewComponent } from './locations/location-review.component';
@@ -10,7 +11,7 @@ import { SignupComponent } from './accounts/signup.component';
 import { ProfileComponent } from './accounts/profile.component';
 
 const routes: Routes = [
-    { path: '', component: AppComponent },
+    { path: '', component: HomeComponent },
     { path: 'locations', component: LocationsComponent },
     { path: 'locations/:id', component: LocationDetailsComponent },
     { path: 'login', component: LoginComponent },
@@ -28,6 +29,7 @@ export class AppRoutingModule {}
 export const routingComponents = [
     AppComponent,
     NavigationComponent,
+    HomeComponent,
     LocationsComponent,
     LocationDetailsComponent,
     LocationReviewComponent,
