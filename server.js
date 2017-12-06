@@ -12,8 +12,7 @@ require('./app_api/models/user');
 require('./config/passport')(passport);
 
 // Middleware
-app.use(express.static(path.join(__dirname, '/public')));
-app.use(express.static(path.join(__dirname, '/client')));
+app.use(express.static(path.join(__dirname, '/client/dist')));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
