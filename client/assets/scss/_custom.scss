@@ -1,5 +1,5 @@
-body {
-    padding-top: 100px;
+.app-content {
+    padding-top: 40px;
 }
 
 .btn {
@@ -44,7 +44,6 @@ footer img {
 #banner{
     max-height: 600px;
     max-width: 100%;
-    margin-top: -50px;
     position: relative;
     background-color: #cfe8fc;
 }
@@ -103,10 +102,15 @@ footer img {
 }
 
 /***** Review Form *****/
+#reviewForm {
+    width: 100%;
+}
+
 #reviewText {
     height: 150px;
     resize: vertical;
     width: 100%;
+    margin: auto;
 }
 
 .form-row {
@@ -119,10 +123,15 @@ footer img {
     width: 100px;
 }
 
-.reviewTitle {
+#reviewTitle {
     font-weight: 500;
     font-size: 16px;
     width: 100%;
+    margin: auto;
+}
+
+.modal-footer {
+    padding: 0;
 }
 
 .alert-danger {
@@ -130,8 +139,17 @@ footer img {
 }
 
 /***** Login Page  *****/
+#createAccountButton {
+    color: #0060C9;
+    cursor: pointer;
+}
+
 .user-icon, .signup-link {
     padding: 10px;
+}
+
+form {
+    padding-top: 20px;
 }
 
 .form-page {

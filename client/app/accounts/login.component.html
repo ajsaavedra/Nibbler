@@ -1,6 +1,6 @@
-<div class="container">
+<div class="container app-content">
     <div class="row form-page">
-        <div class="col-sm-6 col-sm-offset-3 col-xs-12">
+        <div class="col-sm-6 offset-sm-3 col-xs-12">
             <form method="post" [formGroup]="loginForm">
                 <h1 class="text-center">Login</h1>
                 <div class="text-center user-icon">
@@ -24,8 +24,8 @@
                 [disabled]="!loginForm.valid" (click)="loginUser()">Login</button>
             </form>
         </div>
-        <div class="signup-link col-sm-6 col-sm-offset-3 col-xs-12 text-center">
-            <a (click)="rerouteGuest()">Create an account</a>
+        <div class="signup-link col-sm-6 offset-sm-3 col-xs-12 text-center">
+            <a (click)="rerouteGuest()" id="createAccountButton">Create an account</a>
         </div>
     </div>
 </div>

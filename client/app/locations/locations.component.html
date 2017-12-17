@@ -1,5 +1,5 @@
-<div class="container">
-    <div class="text-center shop"><img src="../../assets/images/shop.svg"></div>
+<div class="container app-content">
+    <div class="text-center shop"><img src="{{ homeIcon }}"></div>
     <div>
         <input class="locations-search-bar form-control" 
         type="text" placeholder="Search by city, address, or zipcode"
@@ -7,8 +7,8 @@
     </div>
     <div class="text-center">&mdash; or &mdash;</div>
     <div id="locations-map"></div>
-    <div *ngIf="locations?.length > 0" class="panel panel-default">
-        <div class="panel-body">
+    <div *ngIf="locations?.length > 0" class="card">
+        <div class="card-body">
             <div class="row locations-list" *ngFor='let location of locations'>
                 <div class="col-sm-6 col-md-6">
                     <p class="location-name">
@@ -18,11 +18,11 @@
                     <span [innerHTML]="starRating(location.rating)"></span>
                 </div>
                 <div class="col-sm-6 col-md-6">
-                    <span class="label label-warning" *ngIf="location.options.gluten_free">Gluten-free</span>
-                    <span class="label label-primary" *ngIf="location.options.vegan">Vegan</span>
-                    <span class="label label-success" *ngIf="location.options.vegetarian">Vegetarian</span>
-                    <span class="label label-danger" *ngIf="location.options.soy_free">Soy-free</span>
-                    <span class="label label-info" *ngIf="location.options.nut_free">Nut-free</span>
+                    <span class="badge badge-pill badge-warning" *ngIf="location.options.gluten_free">Gluten-free</span>
+                    <span class="badge badge-pill badge-primary" *ngIf="location.options.vegan">Vegan</span>
+                    <span class="badge badge-pill badge-success" *ngIf="location.options.vegetarian">Vegetarian</span>
+                    <span class="badge badge-pill badge-danger" *ngIf="location.options.soy_free">Soy-free</span>
+                    <span class="badge badge-pill badge-info" *ngIf="location.options.nut_free">Nut-free</span>
                 </div>
             </div>
         </div>

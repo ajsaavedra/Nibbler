@@ -12,6 +12,8 @@ export class LocationsComponent implements OnInit, OnDestroy {
     private sub: any;
     private locations: any;
     private locationSearchItem: string;
+
+    private homeIcon: any = require('../../assets/images/home.svg');
     
     constructor(private locationService: LocationService,
                 private geocodingService: GeocodingService,

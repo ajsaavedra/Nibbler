@@ -1,5 +1,5 @@
-<div class="container">
-    <div class="row form-page">
+<div class="container app-content">
+    <div class="form-page">
         <div class="signupForm clearfix">
             <div [@firstState]="formState" class="signupFormPageOne">
                 <form [formGroup]="signupFormPageOne">
@@ -34,12 +34,12 @@
                             || signupFormPageOne.controls['email'].touched && signupFormPageOne.controls['email'].hasError('required')"
                             class="alert alert-danger">Please enter a valid email</div>
                     </div>
-                    <button class="col-xs-12 btn btn-success" (click)="checkUserInfo()"
+                    <button class="col-12 btn btn-success" (click)="checkUserInfo()"
                     [disabled]="!signupFormPageOne.valid"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                 </form>
             </div>
             <div class="signupFormPageTwo">
-                <button class="col-xs-2 btn btn-success" (click)="toggleState()">
+                <button class="col-2 btn btn-success" (click)="toggleState()">
                     <i class="fa fa-arrow-left" aria-hidden="true"></i></button>
                 <form [formGroup]="signupFormPageTwo">
                     <div class="form-group">
@@ -74,7 +74,7 @@
                         <label class="checkbox-inline"><input type="checkbox" value="" [formControl]="signupFormPageTwo.controls['soy-free']">Soy Free</label>
                         <label class="checkbox-inline"><input type="checkbox" value="" [formControl]="signupFormPageTwo.controls['nut-free']">Nut Free</label>
                     </div>
-                    <button class="col-xs-12 btn btn-success"
+                    <button class="col btn btn-success"
                         [disabled]="!signupFormPageTwo.valid" (click)="collectUserData()">Signup</button>
                 </form>
             </div>

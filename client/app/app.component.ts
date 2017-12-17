@@ -9,7 +9,7 @@ import { AccountsService } from './services/accounts.service';
         <router-outlet></router-outlet>
         <footer class="container">
             <div class="text-center">
-                <img src="{{ butterfly }}" title="&copy; 2017">
+                <img src="{{ butterfly }}" title="&copy; {{ date }}">
             </div>
         </footer>
     `,
@@ -28,4 +28,5 @@ export class AppComponent {
     }
     
     private butterfly: any = require('../assets/images/butterfly-center.svg');
+    private date: number = new Date().getFullYear();
 }
