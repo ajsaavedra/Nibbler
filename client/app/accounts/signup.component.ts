@@ -16,7 +16,7 @@ import {
     templateUrl: './app/accounts/signup.component.html',
     providers: [ AccountsService, GeocodingService ],
     animations: [
-        trigger('firstState', [        
+        trigger('firstState', [
            state('inactive', style({
                'margin-left': 0
            })),
@@ -30,12 +30,14 @@ import {
 
 export class SignupComponent {
 
-    private formState: string = 'inactive';
+    private formState = 'inactive';
     private signupFormPageOne: FormGroup;
     private signupFormPageTwo: FormGroup;
     private fnameRegex = new RegExp(/[A-Z][a-z]+/);
     private lnameRegex = new RegExp(/^([A-Z]'?[a-z]+)(-?[A-Z]'?[a-z]+)?$/);
-    private emailRegex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+    private emailRegex = new RegExp(['/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))',
+                                    '@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])',
+                                    '|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/'].join(''));
     private passwordRegex = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/);
     private zipcodeRegex = new RegExp(/^\d{5}(?:[-\s]\d{4})?$/);
 
@@ -74,8 +76,8 @@ export class SignupComponent {
     }
 
     checkUserInfo() {
-        var email = this.signupFormPageOne.get('email').value;
-        var uname = this.signupFormPageOne.get('uname').value;
+        const email = this.signupFormPageOne.get('email').value;
+        const uname = this.signupFormPageOne.get('uname').value;
 
         this.accountsService
             .checkIfUserExists(email, uname)
@@ -93,18 +95,18 @@ export class SignupComponent {
     }
 
     collectUserData() {
-        var fname = this.signupFormPageOne.get('fname').value;
-        var lname = this.signupFormPageOne.get('lname').value;
-        var uname = this.signupFormPageOne.get('uname').value;
-        var email = this.signupFormPageOne.get('email').value;
-        var pw = this.signupFormPageTwo.get('password').value;
-        var zip = this.signupFormPageTwo.get('zipcode').value;
-        var gf = this.signupFormPageTwo.get('gluten-free').value;
-        var vg = this.signupFormPageTwo.get('vegan').value;
-        var veg = this.signupFormPageTwo.get('vegetarian').value;
-        var nf = this.signupFormPageTwo.get('nut-free').value;
-        var sf = this.signupFormPageTwo.get('soy-free').value;
-        
+        const fname = this.signupFormPageOne.get('fname').value;
+        const lname = this.signupFormPageOne.get('lname').value;
+        const uname = this.signupFormPageOne.get('uname').value;
+        const email = this.signupFormPageOne.get('email').value;
+        const pw = this.signupFormPageTwo.get('password').value;
+        const zip = this.signupFormPageTwo.get('zipcode').value;
+        const gf = this.signupFormPageTwo.get('gluten-free').value;
+        const vg = this.signupFormPageTwo.get('vegan').value;
+        const veg = this.signupFormPageTwo.get('vegetarian').value;
+        const nf = this.signupFormPageTwo.get('nut-free').value;
+        const sf = this.signupFormPageTwo.get('soy-free').value;
+
         this.searchLocation(zip)
             .then(fulfilled => {
                 const result = fulfilled.results[0];
@@ -128,7 +130,7 @@ export class SignupComponent {
                     const body = JSON.parse(err._body);
                     alert(body['message']);
                 } else {
-                    alert("Something went wrong with our server. Please try again.");
+                    alert('Something went wrong with our server. Please try again.');
                 }
             }
         );
