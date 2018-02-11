@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Pipe } from '@angular/core';
 import { LocationService } from '../services/locations.service';
 import { GeocodingService } from '../services/geocoding.service';
 import { Helper } from '../services/helper.service';
@@ -12,13 +12,15 @@ export class LocationsComponent implements OnInit, OnDestroy {
     private sub: any;
     private locations: any;
     private locationSearchItem: string;
-
+    private isLoggedIn: boolean;
+    private filters: string[] = [];
+    private currentFilter: string;
     private homeIcon: any = require('../../assets/images/home.svg');
-    
+
     constructor(private locationService: LocationService,
                 private geocodingService: GeocodingService,
                 private helper: Helper) {}
-    
+
     private locationPromise = new Promise((resolve, reject) => {
         this.sub = this.locationService.getNearbyLocations().subscribe(results => {
             this.locations = results;
@@ -28,6 +30,17 @@ export class LocationsComponent implements OnInit, OnDestroy {
         }
     });
 
+    onFilterChange(event) {
+        const newFilter = event.target.value;
+
+        if (this.filters.length > 0 && this.filters.includes(newFilter)) {
+            this.filters = this.filters.filter(f => f !== newFilter);
+        } else {
+            this.filters.push(newFilter);
+        }
+        this.currentFilter = this.filters.join(' ');
+    }
+
     getNearbyLocations() {
         this.locationPromise
         .then((fulfilled) => {
@@ -35,7 +48,7 @@ export class LocationsComponent implements OnInit, OnDestroy {
         })
         .catch((err) => {
             console.log(err.message);
-        })
+        });
     }
 
     starRating = function(rating) {
@@ -44,6 +57,7 @@ export class LocationsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getNearbyLocations();
+        this.isLoggedIn = localStorage.getItem('username') && true;
     }
 
     ngOnDestroy() {

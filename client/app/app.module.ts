@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { AppRoutingModule, routingComponents } from './app.routing';
 import { GlobalEventsManager } from './GlobalEventsManager';
+import { LocationsFilterPipe } from './locations/locations-filter.pipe';
 
 @NgModule({
     imports: [
@@ -18,7 +19,8 @@ import { GlobalEventsManager } from './GlobalEventsManager';
      ],
     declarations: [
         AppComponent,
-        routingComponents
+        routingComponents,
+        LocationsFilterPipe
     ],
     providers: [ GlobalEventsManager ],
     bootstrap: [ AppComponent ]
