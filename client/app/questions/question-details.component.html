@@ -1,0 +1,48 @@
+<div class="container app-content" *ngIf="question">
+    <div class="row post-header">
+        <h2 class="col-11">{{ question.title }}</h2>
+        <div *ngIf="isFavorited" class="row post-fav" (click)="toggleFavorite()"><i class="fas fa-heart"></i></div>
+        <div *ngIf="!isFavorited" class="row post-fav" (click)="toggleFavorite()"><i class="far fa-heart"></i></div>
+    </div>
+    <div class="post-body">
+        <div class="row">
+            <div class="col-1">
+                <div class="row vote">
+                    <i class="fas fa-chevron-up"></i>
+                </div>
+                <div class="row post-votes">{{ question.votes }}</div>
+                <div class="row vote">
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+            <div class="col-10">{{ question.questionText }}</div>
+        </div>
+        <div class="row post-metadata">
+            <div class="col-4">asked by <a routerLink="/profile/{{ question.author }}">{{ question.author }}</a></div>
+            <div class="col-6">Tag Tag Tag</div>
+        </div>
+    </div>
+    <div *ngIf="question.replies.length > 0" class="card answers-body">
+        <div class="row answers-header">
+            <h4>{{ question.replies.length }} {{ question.replies.length == 1 ? 'Answer' : 'Answers' }}</h4>
+        </div>
+        <div class="card-body">
+            <div class="row" *ngFor='let reply of question.replies'>
+                <div class="col-1 reply-karma-btns">
+                    <div class="row vote" (click)="toggleVote()">
+                        <i class="fas fa-chevron-up"></i>
+                    </div>
+                    <div class="row vote" (click)="toggleVote()">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="col-10 main-reply">
+                    <div class="row">{{ reply.reviewText }}</div>
+                    <div class="row">
+                        {{ reply.votes }} {{ reply.votes == 1 ? 'vote' : 'votes' }} by&nbsp;<a routerLink="/profile/{{ reply.author }}">{{ reply.author }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

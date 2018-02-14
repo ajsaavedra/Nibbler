@@ -1,0 +1,35 @@
+<div class="container app-content">
+    <div class="text-center shop"><img src="{{ questionsIcon }}"></div>
+    <div>
+        <input class="locations-search-bar form-control" 
+        type="text" placeholder="Search by title"
+        [(ngModel)]="questionSearchItem" (keyup.enter)="keystrokeListener()"/>
+    </div>
+    <div *ngIf="questions?.length > 0" class="card">
+        <div class="card-body">
+            <div class="row locations-list" *ngFor='let question of questions'>
+                <div class="col-1 karma-btns">
+                    <div class="row vote" (click)="toggleVote()">
+                        <i class="fas fa-chevron-up"></i>
+                    </div>
+                    <div class="row vote" (click)="toggleVote()">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="col-10 main-question">
+                    <div class="row">
+                        <p class="location-name">
+                            <a [routerLink]="['/questions/', question._id]">{{ question.title }}</a>
+                        </p>
+                    </div>
+                    <div class="row" class="question-text">
+                        <p>{{ question.questionText.split(' ').slice(0, 20).join(' ') }}...</p>
+                    </div>
+                    <div class="row">
+                        {{ question.votes }} {{ question.votes == 1 ? 'vote' : 'votes' }} by&nbsp;<a routerLink="/profile/{{ question.author }}">{{ question.author }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
