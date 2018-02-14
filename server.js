@@ -26,8 +26,9 @@ app.use(passport.session());
 
 const userRoutes = require('./app_api/routes/users')(passport);
 const locationRoutes = require('./app_api/routes/locations');
+const questionRoutes = require('./app_api/routes/questions');
 
-app.use('/api', [userRoutes, locationRoutes]);
+app.use('/api', [userRoutes, locationRoutes, questionRoutes]);
 
 mongoose.connect(config.database, function(err) {
     if (err) console.log(err);

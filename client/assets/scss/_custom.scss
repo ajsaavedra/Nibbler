@@ -1,9 +1,22 @@
+$blueColor: #007bff;
+$submitBtnColor: #ec6f74;
+
 .app-content {
     padding-top: 40px;
 }
 
 .btn {
     margin: 20px 0; 
+}
+
+.submit-btn {
+    background-color: $submitBtnColor;
+    color: white;
+}
+
+.time-btn {
+    background-color: #2FA599;
+    color: white;
 }
 
 /****** Navigation Bar ******/
@@ -101,6 +114,24 @@ footer img {
     margin: 20px 0;
 }
 
+#add-business-btn {
+    padding-top: 20px;
+    color: $blueColor;
+    cursor: pointer;
+}
+
+.form-check-inline {
+    margin-right: 1.75rem;
+}
+
+.badge-warning {
+    color: floralwhite;
+}
+
+.filter-label {
+    padding-left: 20px;
+}
+
 /***** Review Form *****/
 #reviewForm {
     width: 100%;
@@ -138,9 +169,53 @@ footer img {
     text-align: center;
 }
 
+/********* Questions List ********/
+.question-text {
+    font-size: 13px;
+    font-weight: lighter;
+    margin-left: -15px;
+}
+
+.post-header {
+    padding-bottom: 5px;
+    border-bottom: 1px solid #DDD;
+}
+
+.post-body, .answers-body, .answers-header {
+    margin-left: 15px;
+}
+
+.answers-header {
+    margin-top: 20px;
+}
+
+.answers-body {
+    margin-top: 40px;
+}
+
+.post-body, .post-metadata {
+    margin-top: 20px;
+}
+
+.reply-karma-btns {
+    margin-top: -15px;
+}
+
+.post-votes {
+    font-size: 30px;
+    font-weight: lighter;
+    line-height: 2.5;
+}
+
+.vote, .post-fav {
+    font-size: 25px;
+    color: #ec6f74;
+    margin: 10px 0;
+}
+
 /***** Login Page  *****/
 #createAccountButton {
-    color: #0060C9;
+    color: $blueColor;
     cursor: pointer;
 }
 
@@ -184,6 +259,11 @@ form {
 
     .signupFormPageOne, .signupFormPageTwo {
         width: 750px;
+    }
+
+    /****** Questions List *****/
+    .main-question {
+        padding-left: 40px;
     }
 }
 
