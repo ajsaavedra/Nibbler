@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LocationService } from '../services/locations.service';
 import { Helper } from '../services/helper.service';
@@ -8,7 +8,7 @@ import { Helper } from '../services/helper.service';
     providers: [ LocationService, Helper ]
 })
 
-export class LocationDetailsComponent implements OnInit {
+export class LocationDetailsComponent implements OnInit, OnDestroy {
     private sub: any;
     private location: any;
     private isLoggedIn: boolean;
@@ -19,13 +19,13 @@ export class LocationDetailsComponent implements OnInit {
 
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
-            
-            let id = params['id'];
+
+            const id = params['id'];
 
             this.locationService.getLocationById(id).subscribe(location => this.location = location);
 
             this.isLoggedIn = localStorage.getItem('username') && true;
-        })
+        });
     }
 
     ngOnDestroy() {
@@ -37,10 +37,10 @@ export class LocationDetailsComponent implements OnInit {
     };
 
     formatDate = function(date) {
-        var str, formattedDate;
+        let str, formattedDate;
         formattedDate = new Date(date);
-        str = this.getMonthString(formattedDate.getMonth()) + " " +
-            formattedDate.getDay() + ", " +
+        str = this.getMonthString(formattedDate.getMonth()) + ' ' +
+            formattedDate.getDay() + ', ' +
             formattedDate.getFullYear();
         return str;
     };
@@ -50,6 +50,6 @@ export class LocationDetailsComponent implements OnInit {
             'January', 'February', 'March', 'April', 'May', 'June',
             'July', 'August', 'September', 'October', 'November', 'December'
         ];
-        return months[month-1];
-    }
+        return months[month - 1];
+    };
 }
