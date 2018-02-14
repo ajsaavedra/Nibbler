@@ -15,7 +15,7 @@ export class LocationsComponent implements OnInit, OnDestroy {
     private isLoggedIn: boolean;
     private filters: string[] = [];
     private currentFilter: string;
-    private homeIcon: any = require('../../assets/images/home.svg');
+    private homeIcon = require('../../assets/images/home.svg');
 
     constructor(private locationService: LocationService,
                 private geocodingService: GeocodingService,
