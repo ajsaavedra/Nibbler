@@ -11,5 +11,9 @@ module.exports = function(passport) {
     router.post('/users/:username', ctrlAuth.authenticateUser, ctrlAuth.loginUser);
     router.get('/users/:username', ctrlAuth.isLoggedIn, ctrlAuth.getUserProfile);
 
+    router.get('/questions-favorite/:username/:postid', ctrlUsers.savedPosts);
+    router.post('/save', ctrlUsers.savePost);
+    router.post('/unsave', ctrlUsers.removePost);
+
     return router;
 }

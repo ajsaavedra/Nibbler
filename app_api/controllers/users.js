@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const sendJsonResponse = require('../../config/tools').sendJsonResponse;
+const questionSchema = require('../models/questions');
+const Question = mongoose.model('Question', questionSchema);
 
 module.exports.createUser = function (req, res) {
     User
@@ -64,3 +66,88 @@ module.exports.findUserByName = function(req, res, next) {
             }
         });
 };
+
+const saveUser = function(user, res) {
+    user.save(function(err, user) {
+        if (err) {
+            sendJsonResponse(res, 400, err);
+        } else {
+            sendJsonResponse(res, 200, null);
+        }
+    });
+};
+
+const findPost = function(req, res, user) {
+    const posts = user.savedPosts.filter(post => {
+        return post._id.toString() === req.params.postid
+    });
+    if (posts.length > 0) {
+        sendJsonResponse(res, 200, null);
+    } else {
+        sendJsonResponse(res, 404, null);
+    }
+};
+
+module.exports.savedPosts = function(req, res) {
+    User
+        .findOne({ 'profile.username': req.params.username })
+        .exec(function(err, user) {
+            if (err) {
+                sendJsonResponse(res, 400, err);
+            } else {
+                findPost(req, res, user);
+            }
+        });
+};
+
+const savePostObject = function(req, res, user) {
+    Question
+        .findById(req.body.postid)
+        .exec(function(err, post) {
+            if (err) {
+                sendJsonResponse(res, 404, err);
+            } else {
+                user.savedPosts.push(post);
+                saveUser(user, res);
+            }
+        })
+};
+
+const removePostObject = function(req, res, user) {
+    Question
+        .findById(req.body.postid)
+        .exec(function(err, post) {
+            if (err) {
+                sendJsonResponse(res, 404, err);
+            } else {
+                user.savedPosts = user.savedPosts.filter(p => {
+                    return p._id.toString() !== req.body.postid
+                });
+                saveUser(user, res);
+            }
+        });
+};
+
+module.exports.savePost = function(req, res) {
+    User
+        .findOne({ 'profile.username': req.body.username })
+        .exec(function(err, user) {
+            if (err) {
+                sendJsonResponse(res, 400, err);
+            } else {
+                savePostObject(req, res, user);
+            }
+        });
+}
+
+module.exports.removePost = function(req, res) {
+    User
+        .findOne({ 'profile.username': req.body.username })
+        .exec(function(err, user) {
+            if (err) {
+                sendJsonResponse(res, 400, err);
+            } else {
+                removePostObject(req, res, user);
+            }
+        })
+}

@@ -26,7 +26,9 @@
                         <p>{{ question.questionText.split(' ').slice(0, 20).join(' ') }}...</p>
                     </div>
                     <div class="row">
-                        {{ question.votes }} {{ question.votes == 1 ? 'vote' : 'votes' }} by&nbsp;<a routerLink="/profile/{{ question.author }}">{{ question.author }}</a>
+                        {{ question.votes }} {{ question.votes == 1 ? 'vote' : 'votes' }} 
+                        by&nbsp;<a routerLink="/profile/{{ question.author }}">{{ question.author }}</a>
+                        &nbsp;{{ getTimeSince(question.createdOn) }} ago
                     </div>
                 </div>
             </div>
