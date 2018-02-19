@@ -9,11 +9,25 @@
         <div class="card-body">
             <div class="row locations-list" *ngFor='let question of questions'>
                 <div class="col-1 karma-btns">
-                    <div class="row vote" (click)="toggleVote()">
-                        <i class="fas fa-chevron-up"></i>
+                    <div *ngIf="!isLiked(question._id) || !likedQuestions[question._id]">
+                        <div class="row vote vote-like" (click)="like(question._id)">
+                            <i class="fas fa-chevron-up"></i>
+                        </div>
                     </div>
-                    <div class="row vote" (click)="toggleVote()">
-                        <i class="fas fa-chevron-down"></i>
+                    <div *ngIf="isLiked(question._id)">
+                        <div class="row vote" (click)="like(question._id)">
+                            <i class="fas fa-chevron-up liked"></i>
+                        </div>
+                    </div>
+                    <div *ngIf="!isUnliked(question._id) || !unlikedQuestions[question._id]">
+                        <div class="row vote" (click)="unlike(question._id)">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div *ngIf="isUnliked(question._id)">
+                        <div class="row vote" (click)="unlike(question._id)">
+                            <i class="fas fa-chevron-down disliked"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="col-10 main-question">
@@ -26,8 +40,16 @@
                         <p>{{ question.questionText.split(' ').slice(0, 20).join(' ') }}...</p>
                     </div>
                     <div class="row">
-                        {{ question.votes }} {{ question.votes == 1 ? 'vote' : 'votes' }} 
-                        by&nbsp;<a routerLink="/profile/{{ question.author }}">{{ question.author }}</a>
+                        <div *ngIf="isLiked(question._id)" class="liked">
+                            {{ question.votes + 1 }} {{ question.votes + 1 == 1 ? 'vote' : 'votes' }}
+                        </div>
+                        <div *ngIf="isUnliked(question._id)" class="disliked">
+                            {{ question.votes - 1 }} {{ question.votes - 1 == 1 ? 'vote' : 'votes' }}
+                        </div>
+                        <div *ngIf="!isLiked(question._id) && !isUnliked(question._id)">
+                            {{ question.votes }} {{ question.votes == 1 ? 'vote' : 'votes' }}
+                        </div>
+                        &nbsp;by&nbsp;<a routerLink="/profile/{{ question.author }}">{{ question.author }}</a>
                         &nbsp;{{ getTimeSince(question.createdOn) }} ago
                     </div>
                 </div>

@@ -63,15 +63,15 @@ export class AccountsService {
                         .catch(err => Observable.throw(err) || 'Server error');
     }
 
-    getUserSavedPosts(uname, post_id) {
-        return this.http.get('http://localhost:3000/api/questions-favorite/' + uname + '/' + post_id)
+    getUserSavedPosts(uname) {
+        return this.http.get('http://localhost:3000/api/saved-favorites/' + uname)
                         .map(res => res.json());
     }
 
     savePostToUser(uname, post_id) {
         const body = {
             username: uname,
-            postid: post_id
+            post_id: post_id
         };
 
         return this.http.post('http://localhost:3000/api/save/', body)
@@ -81,10 +81,40 @@ export class AccountsService {
     removePostFromUser(uname, post_id) {
         const body = {
             username: uname,
-            postid: post_id
+            post_id: post_id
         };
 
         return this.http.post('http://localhost:3000/api/unsave/', body)
+                        .map(res => res.json());
+    }
+
+    saveLikedPostToUser(uname, post_id) {
+        const body = {
+            username: uname,
+            post_id: post_id
+        };
+
+        return this.http.post('http://localhost:3000/api/like/', body)
+                        .map(res => res.json());
+    }
+
+    removeLikedPostFromUser(uname, post_id) {
+        const body = {
+            username: uname,
+            post_id: post_id
+        };
+
+        return this.http.post('http://localhost:3000/api/unlike/', body)
+                        .map(res => res.json());
+    }
+
+    getLikedPosts(uname) {
+        return this.http.get('http://localhost:3000/api/liked-posts/' + uname)
+                        .map(res => res.json());
+    }
+
+    getUnlikedPosts(uname) {
+        return this.http.get('http://localhost:3000/api/unliked-posts/' + uname)
                         .map(res => res.json());
     }
 }

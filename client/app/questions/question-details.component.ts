@@ -15,6 +15,8 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
     private isFavorited = false;
     private accountSub: any;
     private user: any;
+    private liked = false;
+    private disliked = false;
 
     constructor(private route: ActivatedRoute,
                 private questionService: QuestionService,
@@ -25,6 +27,7 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
             this.questionId = params['id'];
             this.questionService.getQuestionById(this.questionId).subscribe(question => this.question = question);
             this.getIsFavorited(this.questionId);
+            this.getLikedAndUnlikedPosts(this.questionId);
         });
     }
 
@@ -36,9 +39,9 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
         if (localStorage.getItem('username')) {
             this.accountSub =
                 this.accountsService
-                    .getUserSavedPosts(localStorage.getItem('username'), id)
-                    .subscribe(post => {
-                        this.isFavorited = true;
+                    .getUserSavedPosts(localStorage.getItem('username'))
+                    .subscribe(res => {
+                        this.isFavorited = res.posts && res.posts[id];
                     }, err => {
                         this.isFavorited = false;
                     });
@@ -48,12 +51,44 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
     toggleFavorite() {
         if (localStorage.getItem('username') && !this.isFavorited) {
             this.accountsService.savePostToUser(localStorage.getItem('username'), this.questionId)
-                .subscribe(res => this.isFavorited = !this.isFavorited, err => this.isFavorited = false);
+                .subscribe(res => this.isFavorited = true, err => this.isFavorited = false);
         } else if (localStorage.getItem('username') && this.isFavorited) {
             this.accountsService.removePostFromUser(localStorage.getItem('username'), this.questionId)
-                .subscribe(res => this.isFavorited = !this.isFavorited);
+                .subscribe(res => this.isFavorited = false);
         } else {
             alert('You must be logged in to save a post.');
+        }
+    }
+
+    like(question_id) {
+        const uname = localStorage.getItem('username');
+        if (uname) {
+            this.accountsService.saveLikedPostToUser(uname, question_id).subscribe(res => {
+                this.liked = !this.liked;
+                this.disliked = false;
+            });
+        }
+    }
+
+    unlike(question_id) {
+        const uname = localStorage.getItem('username');
+        if (uname) {
+            this.accountsService.removeLikedPostFromUser(uname, question_id).subscribe(res => {
+                this.disliked = !this.disliked;
+                this.liked = false;
+            });
+        }
+    }
+
+    getLikedAndUnlikedPosts(id) {
+        const uname = localStorage.getItem('username');
+        if (uname && true) {
+            this.accountsService.getLikedPosts(uname).subscribe(res => {
+                this.liked = res.posts[id] && true;
+            });
+            this.accountsService.getUnlikedPosts(uname).subscribe(res => {
+                this.disliked = res.posts[id] && true;
+            });
         }
     }
 }
