@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const sendJsonResponse = require('../../config/tools').sendJsonResponse;
-const questionSchema = require('../models/questions');
-const Question = mongoose.model('Question', questionSchema);
 
 module.exports.createUser = function (req, res) {
     User
@@ -68,24 +66,13 @@ module.exports.findUserByName = function(req, res, next) {
 };
 
 const saveUser = function(user, res) {
-    user.save(function(err, user) {
+    user.save(function(err, userSaved) {
         if (err) {
             sendJsonResponse(res, 400, err);
-        } else {
-            sendJsonResponse(res, 200, null);
+        } else if (userSaved) {
+            sendJsonResponse(res, 200, userSaved.savedPosts);
         }
     });
-};
-
-const findPost = function(req, res, user) {
-    const posts = user.savedPosts.filter(post => {
-        return post._id.toString() === req.params.postid
-    });
-    if (posts.length > 0) {
-        sendJsonResponse(res, 200, null);
-    } else {
-        sendJsonResponse(res, 404, null);
-    }
 };
 
 module.exports.savedPosts = function(req, res) {
@@ -95,37 +82,71 @@ module.exports.savedPosts = function(req, res) {
             if (err) {
                 sendJsonResponse(res, 400, err);
             } else {
-                findPost(req, res, user);
+                sendJsonResponse(res, 200, {
+                    'posts': user.savedPosts
+                })
             }
         });
 };
 
 const savePostObject = function(req, res, user) {
-    Question
-        .findById(req.body.postid)
-        .exec(function(err, post) {
-            if (err) {
-                sendJsonResponse(res, 404, err);
-            } else {
-                user.savedPosts.push(post);
-                saveUser(user, res);
-            }
-        })
+    const id = req.body.post_id;
+    if (!user.savedPosts) {
+        user.savedPosts = {};
+    }
+    if (!user.savedPosts[id]) {
+        user.savedPosts[id] =
+            'http://localhost:3000/api/questions/' + id;
+        user.markModified('savedPosts');
+        saveUser(user, res);
+    }
 };
 
 const removePostObject = function(req, res, user) {
-    Question
-        .findById(req.body.postid)
-        .exec(function(err, post) {
-            if (err) {
-                sendJsonResponse(res, 404, err);
-            } else {
-                user.savedPosts = user.savedPosts.filter(p => {
-                    return p._id.toString() !== req.body.postid
-                });
-                saveUser(user, res);
-            }
-        });
+    const id = req.body.post_id;
+    if (user.savedPosts && user.savedPosts[id]) {
+        delete user.savedPosts[id];
+        user.markModified('savedPosts');
+        saveUser(user, res);
+    }
+};
+
+const saveLikedPost = function(req, res, user) {
+    if (!user.likedPosts) {
+        user.likedPosts = {};
+    }
+    const id = req.body.post_id;
+    if (!user.likedPosts[id]) {
+        if (user.unlikedPosts && user.unlikedPosts[id]) {
+            delete user.unlikedPosts[id];
+        }
+        user.likedPosts[id] =
+            'http://localhost:3000/api/questions/' + id;
+    } else {
+        delete user.likedPosts[id];
+    }
+    user.markModified('likedPosts');
+    user.markModified('unlikedPosts');
+    saveUser(user, res);
+};
+
+const removeLikedPost = function(req, res, user) {
+    if (!user.unlikedPosts) {
+        user.unlikedPosts = {};
+    }
+    const id = req.body.post_id;
+    if (!user.unlikedPosts[id]) {
+        if (user.likedPosts && user.likedPosts[id]) {
+            delete user.likedPosts[id];
+        }
+        user.unlikedPosts[id] =
+            'http://localhost:3000/api/questions' + id;
+    } else {
+        delete user.unlikedPosts[id];
+    }
+    user.markModified('unlikedPosts');
+    user.markModified('likedPosts');
+    saveUser(user, res);
 };
 
 module.exports.savePost = function(req, res) {
@@ -134,11 +155,11 @@ module.exports.savePost = function(req, res) {
         .exec(function(err, user) {
             if (err) {
                 sendJsonResponse(res, 400, err);
-            } else {
+            } else if (user) {
                 savePostObject(req, res, user);
             }
         });
-}
+};
 
 module.exports.removePost = function(req, res) {
     User
@@ -146,8 +167,60 @@ module.exports.removePost = function(req, res) {
         .exec(function(err, user) {
             if (err) {
                 sendJsonResponse(res, 400, err);
-            } else {
+            } else if (user) {
                 removePostObject(req, res, user);
             }
-        })
-}
+        });
+};
+
+module.exports.likePost = function(req, res) {
+    User
+        .findOne({ 'profile.username': req.body.username })
+        .exec(function(err, user) {
+            if (err) {
+                sendJsonResponse(res, 400, err);
+            } else if (user) {
+                saveLikedPost(req, res, user);
+            }
+        });
+};
+
+module.exports.unlikePost = function(req, res) {
+    User
+        .findOne({ 'profile.username': req.body.username })
+        .exec(function(err, user) {
+            if (err) {
+                sendJsonResponse(res, 400, err);
+            } else if (user) {
+                removeLikedPost(req, res, user);
+            }
+        });
+};
+
+module.exports.likedPosts = function(req, res) {
+    User
+        .findOne({ 'profile.username': req.params.username })
+        .exec(function(err, user) {
+            if (err) {
+                sendJsonResponse(res, 400, err);
+            } else {
+                sendJsonResponse(res, 200, {
+                    'posts': user.likedPosts
+                })
+            }
+        });
+};
+
+module.exports.unlikedPosts = function(req, res) {
+    User
+        .findOne({ 'profile.username': req.params.username })
+        .exec(function(err, user) {
+            if (err) {
+                sendJsonResponse(res, 400, err);
+            } else {
+                sendJsonResponse(res, 200, {
+                    'posts': user.unlikedPosts
+                })
+            }
+        });
+};

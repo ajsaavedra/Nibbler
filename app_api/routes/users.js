@@ -11,9 +11,13 @@ module.exports = function(passport) {
     router.post('/users/:username', ctrlAuth.authenticateUser, ctrlAuth.loginUser);
     router.get('/users/:username', ctrlAuth.isLoggedIn, ctrlAuth.getUserProfile);
 
-    router.get('/questions-favorite/:username/:postid', ctrlUsers.savedPosts);
+    router.get('/saved-favorites/:username', ctrlUsers.savedPosts);
     router.post('/save', ctrlUsers.savePost);
     router.post('/unsave', ctrlUsers.removePost);
+    router.post('/like', ctrlUsers.likePost);
+    router.post('/unlike', ctrlUsers.unlikePost);
+    router.get('/liked-posts/:username/', ctrlUsers.likedPosts);
+    router.get('/unliked-posts/:username/', ctrlUsers.unlikedPosts);
 
     return router;
 }

@@ -15,7 +15,9 @@ const userSchema = new Schema({
         picture: { type: String, 'default': '' }
     },
     diet: dietSchema,
-    savedPosts: [],
+    savedPosts: Object,
+    likedPosts: Object,
+    unlikedPosts: Object,
     dob: { type: Date, required: false },
     coords: { type: [Number], index: '2dsphere' },
     created_at: Date,
