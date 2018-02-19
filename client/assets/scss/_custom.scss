@@ -217,6 +217,26 @@ footer img {
     margin: 10px 0;
 }
 
+.vote:hover, .post-fav:hover {
+    color:  #d32323
+}
+
+.liked, .vote-like:active {
+    color: #50b948;
+}
+
+.vote .liked:hover {
+    color: #31823d;
+}
+
+.disliked, .vote-dislike:active {
+    color: #999;
+}
+
+.vote .disliked:hover {
+    color: #555;
+}
+
 /***** Login Page  *****/
 #createAccountButton {
     color: $blueColor;
