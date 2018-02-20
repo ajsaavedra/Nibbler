@@ -14,12 +14,14 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     private questionSub: any;
     private likedQuestions: any;
     private unlikedQuestions: any;
+    private votesMap = new Map<string, number>();
 
     constructor(private questionService: QuestionService, private accountsService: AccountsService) {}
 
     ngOnInit() {
         this.questionSub = this.questionService.getAllQuestions().subscribe(results => {
             this.questions = results;
+            this.questions.forEach(q => this.votesMap.set(q._id, q.votes));
         });
         this.getLikedAndUnlikedPosts();
     }
@@ -57,6 +59,7 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     like(id) {
         const uname = localStorage.getItem('username');
         if (uname) {
+            this.updateVotesMapOnUpvote(id);
             this.accountsService.saveLikedPostToUser(uname, id).subscribe(res => {
                 if (this.likedQuestions[id]) {
                     delete this.likedQuestions[id];
@@ -73,6 +76,7 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     unlike(id) {
         const uname = localStorage.getItem('username');
         if (uname) {
+            this.updateVotesMapOnDownvote(id);
             this.accountsService.removeLikedPostFromUser(uname, id).subscribe(res => {
                 if (this.unlikedQuestions[id]) {
                     delete this.unlikedQuestions[id];
@@ -83,6 +87,36 @@ export class QuestionsComponent implements OnInit, OnDestroy {
                     delete this.likedQuestions[id];
                 }
             }, err => false);
+        }
+    }
+
+    updateVotesMapOnDownvote(id) {
+        const disliked = this.isUnliked(id);
+        const liked = this.isLiked(id);
+        if (disliked) {
+            this.questionService.updateQuestionVoteCount(id, 1)
+                .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) + 1));
+        } else if (liked) {
+            this.questionService.updateQuestionVoteCount(id, -2)
+                .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) - 2));
+        } else {
+            this.questionService.updateQuestionVoteCount(id, -1)
+                .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) - 1));
+        }
+    }
+
+    updateVotesMapOnUpvote(id) {
+        const disliked = this.isUnliked(id);
+        const liked = this.isLiked(id);
+        if (liked) {
+            this.questionService.updateQuestionVoteCount(id, -1)
+                .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) - 1));
+        } else if (disliked) {
+            this.questionService.updateQuestionVoteCount(id, 2)
+                .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) + 2));
+        } else {
+            this.questionService.updateQuestionVoteCount(id, 1)
+                .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) + 1));
         }
     }
 

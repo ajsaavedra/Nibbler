@@ -17,6 +17,7 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
     private user: any;
     private liked = false;
     private disliked = false;
+    private votes = 0;
 
     constructor(private route: ActivatedRoute,
                 private questionService: QuestionService,
@@ -25,7 +26,10 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.questionId = params['id'];
-            this.questionService.getQuestionById(this.questionId).subscribe(question => this.question = question);
+            this.questionService.getQuestionById(this.questionId).subscribe(question => {
+                this.question = question;
+                this.votes = question.votes;
+            });
             this.getIsFavorited(this.questionId);
             this.getLikedAndUnlikedPosts(this.questionId);
         });
@@ -63,6 +67,14 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
     like(question_id) {
         const uname = localStorage.getItem('username');
         if (uname) {
+            if (this.liked) {
+                this.questionService.updateQuestionVoteCount(question_id, -1).subscribe(res => this.votes -= 1);
+            } else if (this.disliked) {
+                this.questionService.updateQuestionVoteCount(question_id, 2).subscribe(res => this.votes += 2);
+            } else {
+                this.questionService.updateQuestionVoteCount(question_id, 1).subscribe(res => this.votes += 1);
+            }
+
             this.accountsService.saveLikedPostToUser(uname, question_id).subscribe(res => {
                 this.liked = !this.liked;
                 this.disliked = false;
@@ -73,6 +85,14 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
     unlike(question_id) {
         const uname = localStorage.getItem('username');
         if (uname) {
+            if (this.disliked) {
+                this.questionService.updateQuestionVoteCount(question_id, 1).subscribe(res => this.votes += 1);
+            } else if (this.liked) {
+                this.questionService.updateQuestionVoteCount(question_id, -2).subscribe(res => this.votes -= 2);
+            } else {
+                this.questionService.updateQuestionVoteCount(question_id, -1).subscribe(res => this.votes -= 1);
+            }
+
             this.accountsService.removeLikedPostFromUser(uname, question_id).subscribe(res => {
                 this.disliked = !this.disliked;
                 this.liked = false;

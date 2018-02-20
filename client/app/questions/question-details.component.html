@@ -13,9 +13,9 @@
                 <div *ngIf="liked" class="row vote" (click)="like(question._id)">
                     <i class="fas fa-chevron-up liked"></i>
                 </div>
-                <div *ngIf="liked" class="row post-votes liked">{{ question.votes + 1 }}</div>
-                <div *ngIf="disliked" class="row post-votes disliked">{{ question.votes - 1 }}</div>
-                <div *ngIf="!liked && !disliked" class="row post-votes">{{ question.votes }}</div>
+                <div *ngIf="liked" class="row post-votes liked">{{ votes }}</div>
+                <div *ngIf="disliked" class="row post-votes disliked">{{ votes }}</div>
+                <div *ngIf="!liked && !disliked" class="row post-votes">{{ votes }}</div>
                 <div *ngIf="!disliked" class="row vote vote-dislike" (click)="unlike(question._id)">
                     <i class="fas fa-chevron-down"></i>
                 </div>

@@ -41,13 +41,13 @@
                     </div>
                     <div class="row">
                         <div *ngIf="isLiked(question._id)" class="liked">
-                            {{ question.votes + 1 }} {{ question.votes + 1 == 1 ? 'vote' : 'votes' }}
+                            {{ votesMap.get(question._id) }} {{ votesMap.get(question._id) == 1 ? 'vote' : 'votes' }}
                         </div>
                         <div *ngIf="isUnliked(question._id)" class="disliked">
-                            {{ question.votes - 1 }} {{ question.votes - 1 == 1 ? 'vote' : 'votes' }}
+                            {{ votesMap.get(question._id) }} {{ votesMap.get(question._id) == 1 ? 'vote' : 'votes' }}
                         </div>
                         <div *ngIf="!isLiked(question._id) && !isUnliked(question._id)">
-                            {{ question.votes }} {{ question.votes == 1 ? 'vote' : 'votes' }}
+                            {{ votesMap.get(question._id) }} {{ votesMap.get(question._id) == 1 ? 'vote' : 'votes' }}
                         </div>
                         &nbsp;by&nbsp;<a routerLink="/profile/{{ question.author }}">{{ question.author }}</a>
                         &nbsp;{{ getTimeSince(question.createdOn) }} ago

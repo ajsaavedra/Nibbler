@@ -50,6 +50,25 @@ module.exports.questionsReadOne = function(req, res) {
         });
 };
 
+module.exports.questionsUpdateVotes = function(req, res) {
+    Question
+        .findById(req.body.id)
+        .exec(function(err, question) {
+            if (err || !question) {
+                sendJsonResponse(res, 400, err);
+            } else {
+                question.votes += req.body.vote;
+                question.save(function(err, savedQuestion) {
+                    if (err) {
+                        sendJsonResponse(res, 400, err);
+                    } else {
+                        sendJsonResponse(res, 204, null);
+                    }
+                });
+            }
+        });
+};
+
 module.exports.questionsUpdateOne = function(req, res) {
 
 };

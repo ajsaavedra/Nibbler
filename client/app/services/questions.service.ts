@@ -18,4 +18,12 @@ export class QuestionService {
     getQuestionById(id) {
         return this.http.get(this.API_URL + '/' + id).map(res => res.json());
     }
+
+    updateQuestionVoteCount(id, num) {
+        const body = {
+            id: id,
+            vote: num
+        };
+        return this.http.put(this.API_URL + '-update-vote', body).map(res => res.json());
+    }
 }
