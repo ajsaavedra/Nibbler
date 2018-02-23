@@ -20,19 +20,22 @@ export class LocationDetailsComponent implements OnInit, OnDestroy {
                 private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.sub = this.route.params.subscribe(params => {
-            const id = params['id'];
-
-            if (!this.cacheService._data['location'] ||
-                !this.cacheService._data['location'][id]) {
-                this.cacheService.getLocationById(id);
-            }
-            this.cacheService._data['location'][id].subscribe(loc => {
-                this.location = loc;
+        this.sub = this.route.params
+            .map(params => params['id'])
+            .switchMap(id => {
+                if (id !== null && id !== undefined) {
+                    if (!this.cacheService._data['location'] ||
+                        !this.cacheService._data['location'][id]) {
+                            this.cacheService.getLocationById(id);
+                    }
+                    return this.cacheService._data['location'][id];
+                }
+            })
+            .subscribe(data => {
+                this.location = data;
             });
 
-            this.isLoggedIn = localStorage.getItem('username') && true;
-        });
+        this.isLoggedIn = localStorage.getItem('username') && true;
     }
 
     ngOnDestroy() {

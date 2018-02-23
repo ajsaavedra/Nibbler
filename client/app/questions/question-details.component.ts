@@ -28,7 +28,7 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
         const sub = this.route.params
             .map(params => params['id'])
             .switchMap(id => {
-                if (id != null && id !== undefined) {
+                if (id !== null && id !== undefined) {
                     this.questionId = id;
                     if (!this.cacheService._data['question'] ||
                         !this.cacheService._data['question'][id]) {
