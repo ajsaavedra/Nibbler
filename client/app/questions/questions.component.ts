@@ -12,7 +12,7 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     private questionsIcon = require('../../assets/images/questions.svg');
     private questionSearchItem: any;
     private questions = [];
-    private questionSub: any;
+    private subscriptions = [];
     private likedQuestions: any;
     private unlikedQuestions: any;
     private votesMap = new Map<string, number>();
@@ -26,15 +26,16 @@ export class QuestionsComponent implements OnInit, OnDestroy {
                 }
 
     ngOnInit() {
-        this.questionSub = this.cacheService._data['questions'].subscribe(results => {
+       const questionSub = this.cacheService._data['questions'].subscribe(results => {
             this.questions = results;
             this.questions.forEach(q => this.votesMap.set(q._id, q.votes));
         });
+        this.subscriptions.push(questionSub);
         this.getLikedAndUnlikedPosts();
     }
 
     ngOnDestroy() {
-        this.questionSub.unsubscribe();
+        this.subscriptions.forEach(sub => sub.unsubscribe());
     }
 
     getTimeSince(datetime) {
@@ -67,7 +68,7 @@ export class QuestionsComponent implements OnInit, OnDestroy {
         const uname = localStorage.getItem('username');
         if (uname) {
             this.updateVotesMapOnUpvote(id);
-            this.accountsService.saveLikedPostToUser(uname, id).subscribe(res => {
+            const sub = this.accountsService.saveLikedPostToUser(uname, id).subscribe(res => {
                 if (this.likedQuestions[id]) {
                     delete this.likedQuestions[id];
                     return;
@@ -77,6 +78,8 @@ export class QuestionsComponent implements OnInit, OnDestroy {
                     delete this.unlikedQuestions[id];
                 }
             }, err => false);
+
+            this.subscriptions.push(sub);
         }
     }
 
@@ -84,7 +87,7 @@ export class QuestionsComponent implements OnInit, OnDestroy {
         const uname = localStorage.getItem('username');
         if (uname) {
             this.updateVotesMapOnDownvote(id);
-            this.accountsService.removeLikedPostFromUser(uname, id).subscribe(res => {
+            const sub = this.accountsService.removeLikedPostFromUser(uname, id).subscribe(res => {
                 if (this.unlikedQuestions[id]) {
                     delete this.unlikedQuestions[id];
                     return;
@@ -94,37 +97,45 @@ export class QuestionsComponent implements OnInit, OnDestroy {
                     delete this.likedQuestions[id];
                 }
             }, err => false);
+
+            this.subscriptions.push(sub);
         }
     }
 
     updateVotesMapOnDownvote(id) {
         const disliked = this.isUnliked(id);
         const liked = this.isLiked(id);
+        let sub;
         if (disliked) {
-            this.questionService.updateQuestionVoteCount(id, 1)
+            sub = this.questionService.updateQuestionVoteCount(id, 1)
                 .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) + 1));
         } else if (liked) {
-            this.questionService.updateQuestionVoteCount(id, -2)
+            sub = this.questionService.updateQuestionVoteCount(id, -2)
                 .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) - 2));
         } else {
-            this.questionService.updateQuestionVoteCount(id, -1)
+            sub = this.questionService.updateQuestionVoteCount(id, -1)
                 .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) - 1));
         }
+
+        this.subscriptions.push(sub);
     }
 
     updateVotesMapOnUpvote(id) {
         const disliked = this.isUnliked(id);
         const liked = this.isLiked(id);
+        let sub;
         if (liked) {
-            this.questionService.updateQuestionVoteCount(id, -1)
+            sub = this.questionService.updateQuestionVoteCount(id, -1)
                 .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) - 1));
         } else if (disliked) {
-            this.questionService.updateQuestionVoteCount(id, 2)
+            sub = this.questionService.updateQuestionVoteCount(id, 2)
                 .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) + 2));
         } else {
-            this.questionService.updateQuestionVoteCount(id, 1)
+            sub = this.questionService.updateQuestionVoteCount(id, 1)
                 .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) + 1));
         }
+
+        this.subscriptions.push(sub);
     }
 
     isLiked(id) {
@@ -138,12 +149,14 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     getLikedAndUnlikedPosts() {
         const uname = localStorage.getItem('username');
         if (uname && true) {
-            this.accountsService.getLikedPosts(uname).subscribe(res => {
+            const sub1 = this.accountsService.getLikedPosts(uname).subscribe(res => {
                 this.likedQuestions = res.posts;
             });
-            this.accountsService.getUnlikedPosts(uname).subscribe(res => {
+            const sub2 = this.accountsService.getUnlikedPosts(uname).subscribe(res => {
                 this.unlikedQuestions = res.posts;
             });
+
+            this.subscriptions.push(sub1, sub2);
         }
     }
 
