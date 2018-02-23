@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Pipe } from '@angular/core';
 import { LocationService } from '../services/locations.service';
 import { GeocodingService } from '../services/geocoding.service';
 import { Helper } from '../services/helper.service';
+import { CacheService } from '../services/cache.service';
 
 @Component({
     templateUrl: './app/locations/locations.component.html',
@@ -19,16 +20,13 @@ export class LocationsComponent implements OnInit, OnDestroy {
 
     constructor(private locationService: LocationService,
                 private geocodingService: GeocodingService,
-                private helper: Helper) {}
+                private cacheService: CacheService,
+                private helper: Helper) {
 
-    private locationPromise = new Promise((resolve, reject) => {
-        this.sub = this.locationService.getNearbyLocations().subscribe(results => {
-            this.locations = results;
-        });
-        if (this.locations) {
-            resolve(this.locations);
+        if (!this.cacheService._data['locations']) {
+            this.cacheService.getLocations();
         }
-    });
+    }
 
     onFilterChange(event) {
         const newFilter = event.target.value;
@@ -41,22 +39,14 @@ export class LocationsComponent implements OnInit, OnDestroy {
         this.currentFilter = this.filters.join(' ');
     }
 
-    getNearbyLocations() {
-        this.locationPromise
-        .then((fulfilled) => {
-            console.log(fulfilled);
-        })
-        .catch((err) => {
-            console.log(err.message);
-        });
-    }
-
     starRating = function(rating) {
         return this.helper.starRating(rating);
     };
 
     ngOnInit() {
-        this.getNearbyLocations();
+        this.sub = this.cacheService._data['locations'].subscribe(res => {
+            this.locations = res;
+        });
         this.isLoggedIn = localStorage.getItem('username') && true;
     }
 

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { QuestionService } from '../services/questions.service';
 import { AccountsService } from '../services/accounts.service';
+import { CacheService } from '../services/cache.service';
 
 @Component({
     templateUrl: './app/questions/question-details.component.html',
@@ -10,10 +11,9 @@ import { AccountsService } from '../services/accounts.service';
 
 export class QuestionDetailsComponent implements OnInit, OnDestroy {
     private question: any;
-    private sub: any;
+    private subscriptions = [];
     private questionId: any;
     private isFavorited = false;
-    private accountSub: any;
     private user: any;
     private liked = false;
     private disliked = false;
@@ -21,27 +21,39 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
 
     constructor(private route: ActivatedRoute,
                 private questionService: QuestionService,
-                private accountsService: AccountsService) {}
+                private accountsService: AccountsService,
+                private cacheService: CacheService) {}
 
     ngOnInit() {
-        this.sub = this.route.params.subscribe(params => {
-            this.questionId = params['id'];
-            this.questionService.getQuestionById(this.questionId).subscribe(question => {
-                this.question = question;
-                this.votes = question.votes;
+        const sub = this.route.params
+            .map(params => params['id'])
+            .switchMap(id => {
+                if (id != null && id !== undefined) {
+                    this.questionId = id;
+                    if (!this.cacheService._data['question'] ||
+                        !this.cacheService._data['question'][id]) {
+                            this.cacheService.getQuestionById(id);
+                    }
+                    return this.cacheService._data['question'][id];
+                }
+            })
+            .subscribe(data => {
+                this.question = data;
+                this.votes = data['votes'];
             });
-            this.getIsFavorited(this.questionId);
-            this.getLikedAndUnlikedPosts(this.questionId);
-        });
+
+        this.subscriptions.push(sub);
+        this.getIsFavorited(this.questionId);
+        this.getLikedAndUnlikedPosts(this.questionId);
     }
 
     ngOnDestroy() {
-        this.sub.unsubscribe();
+        this.subscriptions.forEach(sub => sub.unsubscribe());
     }
 
     getIsFavorited(id) {
         if (localStorage.getItem('username')) {
-            this.accountSub =
+            const accountSub =
                 this.accountsService
                     .getUserSavedPosts(localStorage.getItem('username'))
                     .subscribe(res => {
@@ -49,6 +61,7 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
                     }, err => {
                         this.isFavorited = false;
                     });
+            this.subscriptions.push(accountSub);
         }
     }
 
@@ -66,49 +79,57 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
 
     like(question_id) {
         const uname = localStorage.getItem('username');
+        let sub;
         if (uname) {
             if (this.liked) {
-                this.questionService.updateQuestionVoteCount(question_id, -1).subscribe(res => this.votes -= 1);
+                sub = this.questionService.updateQuestionVoteCount(question_id, -1).subscribe(res => this.votes -= 1);
             } else if (this.disliked) {
-                this.questionService.updateQuestionVoteCount(question_id, 2).subscribe(res => this.votes += 2);
+                sub = this.questionService.updateQuestionVoteCount(question_id, 2).subscribe(res => this.votes += 2);
             } else {
-                this.questionService.updateQuestionVoteCount(question_id, 1).subscribe(res => this.votes += 1);
+                sub = this.questionService.updateQuestionVoteCount(question_id, 1).subscribe(res => this.votes += 1);
             }
 
-            this.accountsService.saveLikedPostToUser(uname, question_id).subscribe(res => {
+            const sub2 = this.accountsService.saveLikedPostToUser(uname, question_id).subscribe(res => {
                 this.liked = !this.liked;
                 this.disliked = false;
             });
+
+            this.subscriptions.push(sub, sub2);
         }
     }
 
     unlike(question_id) {
         const uname = localStorage.getItem('username');
+        let sub;
         if (uname) {
             if (this.disliked) {
-                this.questionService.updateQuestionVoteCount(question_id, 1).subscribe(res => this.votes += 1);
+                sub = this.questionService.updateQuestionVoteCount(question_id, 1).subscribe(res => this.votes += 1);
             } else if (this.liked) {
-                this.questionService.updateQuestionVoteCount(question_id, -2).subscribe(res => this.votes -= 2);
+                sub = this.questionService.updateQuestionVoteCount(question_id, -2).subscribe(res => this.votes -= 2);
             } else {
-                this.questionService.updateQuestionVoteCount(question_id, -1).subscribe(res => this.votes -= 1);
+                sub = this.questionService.updateQuestionVoteCount(question_id, -1).subscribe(res => this.votes -= 1);
             }
 
-            this.accountsService.removeLikedPostFromUser(uname, question_id).subscribe(res => {
+            const sub2 = this.accountsService.removeLikedPostFromUser(uname, question_id).subscribe(res => {
                 this.disliked = !this.disliked;
                 this.liked = false;
             });
+
+            this.subscriptions.push(sub, sub2);
         }
     }
 
     getLikedAndUnlikedPosts(id) {
         const uname = localStorage.getItem('username');
         if (uname && true) {
-            this.accountsService.getLikedPosts(uname).subscribe(res => {
+            const sub1 = this.accountsService.getLikedPosts(uname).subscribe(res => {
                 this.liked = res.posts[id] && true;
             });
-            this.accountsService.getUnlikedPosts(uname).subscribe(res => {
+            const sub2 = this.accountsService.getUnlikedPosts(uname).subscribe(res => {
                 this.disliked = res.posts[id] && true;
             });
+
+            this.subscriptions.push(sub1, sub2);
         }
     }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { QuestionService } from '../services/questions.service';
 import { AccountsService } from '../services/accounts.service';
+import { CacheService } from '../services/cache.service';
 
 @Component({
     templateUrl: './app/questions/questions.component.html',
@@ -16,10 +17,16 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     private unlikedQuestions: any;
     private votesMap = new Map<string, number>();
 
-    constructor(private questionService: QuestionService, private accountsService: AccountsService) {}
+    constructor(private questionService: QuestionService,
+                private accountsService: AccountsService,
+                private cacheService: CacheService) {
+                    if (!this.cacheService._data['questions']) {
+                        this.cacheService.getQuestions();
+                    }
+                }
 
     ngOnInit() {
-        this.questionSub = this.questionService.getAllQuestions().subscribe(results => {
+        this.questionSub = this.cacheService._data['questions'].subscribe(results => {
             this.questions = results;
             this.questions.forEach(q => this.votesMap.set(q._id, q.votes));
         });

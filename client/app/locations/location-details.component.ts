@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LocationService } from '../services/locations.service';
 import { Helper } from '../services/helper.service';
+import { CacheService } from '../services/cache.service';
 
 @Component({
     templateUrl: './app/locations/location-details.component.html',
@@ -14,15 +15,21 @@ export class LocationDetailsComponent implements OnInit, OnDestroy {
     private isLoggedIn: boolean;
 
     constructor(private locationService: LocationService,
+                private cacheService: CacheService,
                 private helper: Helper,
                 private route: ActivatedRoute) {}
 
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
-
             const id = params['id'];
 
-            this.locationService.getLocationById(id).subscribe(location => this.location = location);
+            if (!this.cacheService._data['location'] ||
+                !this.cacheService._data['location'][id]) {
+                this.cacheService.getLocationById(id);
+            }
+            this.cacheService._data['location'][id].subscribe(loc => {
+                this.location = loc;
+            });
 
             this.isLoggedIn = localStorage.getItem('username') && true;
         });
