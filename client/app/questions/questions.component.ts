@@ -23,19 +23,35 @@ export class QuestionsComponent implements OnInit, OnDestroy {
                     if (!this.cacheService._data['questions']) {
                         this.cacheService.getQuestions();
                     }
-                }
+    }
 
     ngOnInit() {
-       const questionSub = this.cacheService._data['questions'].subscribe(results => {
-            this.questions = results;
-            this.questions.forEach(q => this.votesMap.set(q._id, q.votes));
-        });
-        this.subscriptions.push(questionSub);
+        this.getCacheSubscription();
         this.getLikedAndUnlikedPosts();
     }
 
     ngOnDestroy() {
         this.subscriptions.forEach(sub => sub.unsubscribe());
+    }
+
+    getCacheSubscription() {
+        const questionSub = this.cacheService._data['questions'].subscribe(results => {
+            this.questions = results;
+            this.questions.forEach(q => this.votesMap.set(q._id, q.votes));
+        });
+        this.subscriptions.push(questionSub);
+    }
+
+    updateCachedVotes(id, point) {
+        const sub1 = this.cacheService._data['questions'].subscribe(results => {
+            results.filter(res => res._id === id).forEach(q => q['votes'] += point);
+        });
+        if (this.cacheService._data['question']) {
+            const sub2 = this.cacheService._data['question'][id].subscribe(result => {
+                result['votes'] += point;
+            });
+            this.subscriptions.push(sub1, sub2);
+        }
     }
 
     getTimeSince(datetime) {
@@ -68,6 +84,13 @@ export class QuestionsComponent implements OnInit, OnDestroy {
         const uname = localStorage.getItem('username');
         if (uname) {
             this.updateVotesMapOnUpvote(id);
+            if (this.likedQuestions[id]) {
+                this.updateCachedVotes(id, -1);
+            } else if (this.unlikedQuestions[id]) {
+                this.updateCachedVotes(id, 2);
+            } else {
+                this.updateCachedVotes(id, 1);
+            }
             const sub = this.accountsService.saveLikedPostToUser(uname, id).subscribe(res => {
                 if (this.likedQuestions[id]) {
                     delete this.likedQuestions[id];
@@ -87,6 +110,13 @@ export class QuestionsComponent implements OnInit, OnDestroy {
         const uname = localStorage.getItem('username');
         if (uname) {
             this.updateVotesMapOnDownvote(id);
+            if (this.likedQuestions[id]) {
+                this.updateCachedVotes(id, -2);
+            } else if (this.unlikedQuestions[id]) {
+                this.updateCachedVotes(id, 1);
+            } else {
+                this.updateCachedVotes(id, -1);
+            }
             const sub = this.accountsService.removeLikedPostFromUser(uname, id).subscribe(res => {
                 if (this.unlikedQuestions[id]) {
                     delete this.unlikedQuestions[id];

@@ -51,6 +51,18 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
         this.subscriptions.forEach(sub => sub.unsubscribe());
     }
 
+    updateCachedVotes(id, point) {
+        const sub1 = this.cacheService._data['questions'].subscribe(results => {
+            results.filter(res => res._id === id).forEach(q => q['votes'] += point);
+        });
+        if (this.cacheService._data['question']) {
+            const sub2 = this.cacheService._data['question'][id].subscribe(result => {
+                result['votes'] += point;
+            });
+            this.subscriptions.push(sub1, sub2);
+        }
+    }
+
     getIsFavorited(id) {
         if (localStorage.getItem('username')) {
             const accountSub =
@@ -82,10 +94,13 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
         let sub;
         if (uname) {
             if (this.liked) {
+                this.updateCachedVotes(question_id, -1);
                 sub = this.questionService.updateQuestionVoteCount(question_id, -1).subscribe(res => this.votes -= 1);
             } else if (this.disliked) {
+                this.updateCachedVotes(question_id, 2);
                 sub = this.questionService.updateQuestionVoteCount(question_id, 2).subscribe(res => this.votes += 2);
             } else {
+                this.updateCachedVotes(question_id, 1);
                 sub = this.questionService.updateQuestionVoteCount(question_id, 1).subscribe(res => this.votes += 1);
             }
 
@@ -103,10 +118,13 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
         let sub;
         if (uname) {
             if (this.disliked) {
+                this.updateCachedVotes(question_id, 1);
                 sub = this.questionService.updateQuestionVoteCount(question_id, 1).subscribe(res => this.votes += 1);
             } else if (this.liked) {
+                this.updateCachedVotes(question_id, -2);
                 sub = this.questionService.updateQuestionVoteCount(question_id, -2).subscribe(res => this.votes -= 2);
             } else {
+                this.updateCachedVotes(question_id, -1);
                 sub = this.questionService.updateQuestionVoteCount(question_id, -1).subscribe(res => this.votes -= 1);
             }
 
