@@ -70,7 +70,7 @@ const saveUser = function(user, res) {
         if (err) {
             sendJsonResponse(res, 400, err);
         } else if (userSaved) {
-            sendJsonResponse(res, 200, userSaved.savedPosts);
+            sendJsonResponse(res, 200, null);
         }
     });
 };

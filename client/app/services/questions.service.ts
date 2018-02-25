@@ -24,6 +24,6 @@ export class QuestionService {
             id: id,
             vote: num
         };
-        return this.http.put(this.API_URL + '-update-vote', body).map(res => res.json());
+        return this.http.put(this.API_URL + '-update-vote', body).map(res => res ? res.json() : {});
     }
 }

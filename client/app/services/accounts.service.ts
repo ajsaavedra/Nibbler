@@ -75,7 +75,7 @@ export class AccountsService {
         };
 
         return this.http.post('http://localhost:3000/api/save/', body)
-                        .map(res => res.json());
+                        .map(res => res ? res.json() : {});
     }
 
     removePostFromUser(uname, post_id) {
@@ -85,7 +85,7 @@ export class AccountsService {
         };
 
         return this.http.post('http://localhost:3000/api/unsave/', body)
-                        .map(res => res.json());
+                        .map(res => res ? res.json() : {});
     }
 
     saveLikedPostToUser(uname, post_id) {
@@ -95,7 +95,7 @@ export class AccountsService {
         };
 
         return this.http.post('http://localhost:3000/api/like/', body)
-                        .map(res => res.json());
+                        .map(res => res ? res.json() : {});
     }
 
     removeLikedPostFromUser(uname, post_id) {
@@ -105,7 +105,7 @@ export class AccountsService {
         };
 
         return this.http.post('http://localhost:3000/api/unlike/', body)
-                        .map(res => res.json());
+                        .map(res => res ? res.json() : {});
     }
 
     getLikedPosts(uname) {
