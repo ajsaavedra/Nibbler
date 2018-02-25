@@ -237,6 +237,15 @@ footer img {
     color: #555;
 }
 
+.tags {
+    background-color: red;
+    margin-right: 2px;
+}
+
+.metadata {
+    padding: 0;
+}
+
 /***** Login Page  *****/
 #createAccountButton {
     color: $blueColor;

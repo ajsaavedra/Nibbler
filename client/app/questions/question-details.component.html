@@ -26,8 +26,13 @@
             <div class="col-10">{{ question.questionText }}</div>
         </div>
         <div class="row post-metadata">
-            <div class="col-4">asked by <a routerLink="/profile/{{ question.author }}">{{ question.author }}</a></div>
-            <div class="col-6">Tag Tag Tag</div>
+            <div class="col-8">asked by <a routerLink="/profile/{{ question.author }}">{{ question.author }}</a></div>
+            <div>
+                <span class="tags badge badge-pill badge-primary"
+                        *ngFor='let tag of question.tags'>
+                    {{ tag }}
+                </span>
+            </div>
         </div>
     </div>
     <div *ngIf="question.replies.length > 0" class="card answers-body">

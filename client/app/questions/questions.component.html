@@ -20,7 +20,7 @@
                         </div>
                     </div>
                     <div *ngIf="!isUnliked(question._id) || !unlikedQuestions[question._id]">
-                        <div class="row vote" (click)="unlike(question._id)">
+                        <div class="row vote vote-dislike" (click)="unlike(question._id)">
                             <i class="fas fa-chevron-down"></i>
                         </div>
                     </div>
@@ -30,7 +30,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-10 main-question">
+                <div class="col-11 main-question">
                     <div class="row">
                         <p class="location-name">
                             <a [routerLink]="['/questions/', question._id]">{{ question.title }}</a>
@@ -40,17 +40,25 @@
                         <p>{{ question.questionText.split(' ').slice(0, 20).join(' ') }}...</p>
                     </div>
                     <div class="row">
-                        <div *ngIf="isLiked(question._id)" class="liked">
-                            {{ votesMap.get(question._id) }} {{ votesMap.get(question._id) == 1 ? 'vote' : 'votes' }}
+                        <div class="col-6 metadata">
+                            <span *ngIf="isLiked(question._id)" class="liked">
+                                {{ votesMap.get(question._id) }} {{ votesMap.get(question._id) == 1 ? 'vote' : 'votes' }}
+                            </span>
+                            <span *ngIf="isUnliked(question._id)" class="disliked">
+                                {{ votesMap.get(question._id) }} {{ votesMap.get(question._id) == 1 ? 'vote' : 'votes' }}
+                            </span>
+                            <span *ngIf="!isLiked(question._id) && !isUnliked(question._id)">
+                                {{ votesMap.get(question._id) }} {{ votesMap.get(question._id) == 1 ? 'vote' : 'votes' }}
+                            </span>
+                            by&nbsp;<a routerLink="/profile/{{ question.author }}">{{ question.author }}</a>
+                            {{ getTimeSince(question.createdOn) }} ago
                         </div>
-                        <div *ngIf="isUnliked(question._id)" class="disliked">
-                            {{ votesMap.get(question._id) }} {{ votesMap.get(question._id) == 1 ? 'vote' : 'votes' }}
+                        <div>
+                            <span class="tags badge badge-pill badge-primary"
+                                 *ngFor='let tag of question.tags'>
+                               {{ tag }}
+                            </span>
                         </div>
-                        <div *ngIf="!isLiked(question._id) && !isUnliked(question._id)">
-                            {{ votesMap.get(question._id) }} {{ votesMap.get(question._id) == 1 ? 'vote' : 'votes' }}
-                        </div>
-                        &nbsp;by&nbsp;<a routerLink="/profile/{{ question.author }}">{{ question.author }}</a>
-                        &nbsp;{{ getTimeSince(question.createdOn) }} ago
                     </div>
                 </div>
             </div>
