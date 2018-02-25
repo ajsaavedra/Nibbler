@@ -8,6 +8,7 @@ const questionSchema = new Schema({
     questionText: { type: String, required: true },
     votes: { type: Number, 'default': 1 },
     replies: [commentSchema],
+    tags: [],
     resolved: { type: Boolean, 'default': false },
     createdOn: { type: Date, 'default': Date.now },
     coords: { type: [Number], index: '2dsphere', required: false }
