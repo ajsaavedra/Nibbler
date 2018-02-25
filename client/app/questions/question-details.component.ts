@@ -52,14 +52,17 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
     }
 
     updateCachedVotes(id, point) {
-        const sub1 = this.cacheService._data['questions'].subscribe(results => {
-            results.filter(res => res._id === id).forEach(q => q['votes'] += point);
-        });
+        if (this.cacheService._data['questions']) {
+            const sub1 = this.cacheService._data['questions'].subscribe(results => {
+                results.filter(res => res._id === id).forEach(q => q['votes'] += point);
+            });
+            this.subscriptions.push(sub1);
+        }
         if (this.cacheService._data['question']) {
             const sub2 = this.cacheService._data['question'][id].subscribe(result => {
                 result['votes'] += point;
             });
-            this.subscriptions.push(sub1, sub2);
+            this.subscriptions.push(sub2);
         }
     }
 
@@ -110,6 +113,8 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
             });
 
             this.subscriptions.push(sub, sub2);
+        } else {
+            alert('You must be a member to vote. Sign up today!');
         }
     }
 
@@ -134,6 +139,8 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
             });
 
             this.subscriptions.push(sub, sub2);
+        } else {
+            alert('You must be a member to vote. Sign up today!');
         }
     }
 
@@ -141,10 +148,10 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
         const uname = localStorage.getItem('username');
         if (uname && true) {
             const sub1 = this.accountsService.getLikedPosts(uname).subscribe(res => {
-                this.liked = res.posts[id] && true;
+                this.liked = res.posts && res.posts[id] && true;
             });
             const sub2 = this.accountsService.getUnlikedPosts(uname).subscribe(res => {
-                this.disliked = res.posts[id] && true;
+                this.disliked = res.posts && res.posts[id] && true;
             });
 
             this.subscriptions.push(sub1, sub2);

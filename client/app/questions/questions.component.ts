@@ -46,12 +46,13 @@ export class QuestionsComponent implements OnInit, OnDestroy {
         const sub1 = this.cacheService._data['questions'].subscribe(results => {
             results.filter(res => res._id === id).forEach(q => q['votes'] += point);
         });
-        if (this.cacheService._data['question']) {
+        if (this.cacheService._data['question'] && this.cacheService._data['question'][id]) {
             const sub2 = this.cacheService._data['question'][id].subscribe(result => {
                 result['votes'] += point;
             });
-            this.subscriptions.push(sub1, sub2);
+            this.subscriptions.push(sub2);
         }
+        this.subscriptions.push(sub1);
     }
 
     getTimeSince(datetime) {
@@ -103,6 +104,8 @@ export class QuestionsComponent implements OnInit, OnDestroy {
             }, err => false);
 
             this.subscriptions.push(sub);
+        } else {
+            alert('You must be a member to vote. Sign up today!');
         }
     }
 
@@ -129,6 +132,8 @@ export class QuestionsComponent implements OnInit, OnDestroy {
             }, err => false);
 
             this.subscriptions.push(sub);
+        } else {
+            alert('You must be a member to vote. Sign up today!');
         }
     }
 
@@ -180,10 +185,10 @@ export class QuestionsComponent implements OnInit, OnDestroy {
         const uname = localStorage.getItem('username');
         if (uname && true) {
             const sub1 = this.accountsService.getLikedPosts(uname).subscribe(res => {
-                this.likedQuestions = res.posts;
+                this.likedQuestions = res.posts ? res.posts : [];
             });
             const sub2 = this.accountsService.getUnlikedPosts(uname).subscribe(res => {
-                this.unlikedQuestions = res.posts;
+                this.unlikedQuestions = res.posts ? res.posts : [];
             });
 
             this.subscriptions.push(sub1, sub2);
