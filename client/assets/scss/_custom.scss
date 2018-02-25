@@ -217,16 +217,18 @@ footer img {
     margin: 10px 0;
 }
 
-.vote:hover, .post-fav:hover {
+.vote .fa-arrow-alt-circle-up:hover,
+.vote .fa-arrow-alt-circle-down:hover,
+.post-fav:hover {
     color:  #d32323
 }
 
 .liked, .vote-like:active {
-    color: #50b948;
+    color: #ec6f74;
 }
 
 .vote .liked:hover {
-    color: #31823d;
+    color: #d32323;
 }
 
 .disliked, .vote-dislike:active {
