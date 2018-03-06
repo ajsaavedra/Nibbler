@@ -1,0 +1,15 @@
+<div class="container app-content">
+    <div class="text-center shop"><img src="{{ questionsIcon }}"></div>
+    <div class="card question-card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-5 nav nav-tabs" id="nav-tab" role="tablist">
+                    <a class="nav-item nav-link active" data-toggle="tab" role="tab" aria-selected="true" routerLink="/questions">Questions</a>
+                    <a class="nav-item nav-link" data-toggle="tab" role="tab" aria-selected="false" [routerLink]="['/questions', {field: 'popularity'}]">Popular</a>
+                    <a class="nav-item nav-link" data-toggle="tab" role="tab" aria-selected="false" [routerLink]="['/questions', {field: 'resolved'}]">Answered</a>
+                </div>
+            </div>
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>
