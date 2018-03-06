@@ -10,7 +10,7 @@ const questionSchema = new Schema({
     replies: [commentSchema],
     tags: [],
     resolved: { type: Boolean, 'default': false },
-    createdOn: { type: Date, 'default': Date.now },
+    createdOn: { type: Date, 'default': new Date() },
     coords: { type: [Number], index: '2dsphere', required: false }
 })
 
