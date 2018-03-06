@@ -6,6 +6,8 @@ import { HomeComponent } from './home/home.component';
 import { LocationsComponent } from './locations/locations.component';
 import { LocationDetailsComponent } from './locations/location-details.component';
 import { LocationReviewComponent } from './locations/location-review.component';
+import { LocationAddComponent } from './locations/location-add.component';
+import { QuestionsCardComponent } from './questions/questions-card.component';
 import { QuestionsComponent } from './questions/questions.component';
 import { QuestionDetailsComponent } from './questions/question-details.component';
 import { LoginComponent } from './accounts/login.component';
@@ -16,7 +18,18 @@ const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'locations', component: LocationsComponent },
     { path: 'locations/:id', component: LocationDetailsComponent },
-    { path: 'questions', component: QuestionsComponent },
+    { path: 'add-location', component: LocationAddComponent },
+    {
+        path: 'questions',
+        component: QuestionsCardComponent,
+        children: [
+            {
+                path: '',
+                component: QuestionsComponent,
+                pathMatch: 'full'
+            }
+        ]
+    },
     { path: 'questions/:id', component: QuestionDetailsComponent },
     { path: 'login', component: LoginComponent },
     { path: 'signup', component: SignupComponent },
@@ -37,6 +50,8 @@ export const routingComponents = [
     LocationsComponent,
     LocationDetailsComponent,
     LocationReviewComponent,
+    LocationAddComponent,
+    QuestionsCardComponent,
     QuestionsComponent,
     QuestionDetailsComponent,
     LoginComponent,
