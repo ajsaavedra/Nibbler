@@ -15,6 +15,14 @@ export class QuestionService {
         return this.http.get(this.API_URL).map(res => res.json());
     }
 
+    getAllPopularQuestions() {
+        return this.http.get(this.API_URL + '-by-popularity').map(res => res.json());
+    }
+
+    getResolvedQuestions() {
+        return this.http.get(this.API_URL + '-resolved').map(res => res.json());
+    }
+
     getQuestionById(id) {
         return this.http.get(this.API_URL + '/' + id).map(res => res.json());
     }
