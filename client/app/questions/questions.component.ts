@@ -1,33 +1,45 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { QuestionService } from '../services/questions.service';
 import { AccountsService } from '../services/accounts.service';
 import { CacheService } from '../services/cache.service';
 
 @Component({
     templateUrl: './app/questions/questions.component.html',
+    selector: 'all-questions',
     providers: [ QuestionService, AccountsService ]
 })
 
 export class QuestionsComponent implements OnInit, OnDestroy {
-    private questionsIcon = require('../../assets/images/questions.svg');
     private questionSearchItem: any;
     private questions = [];
     private subscriptions = [];
     private likedQuestions: any;
     private unlikedQuestions: any;
     private votesMap = new Map<string, number>();
+    private field: string;
 
-    constructor(private questionService: QuestionService,
+    constructor(private route: ActivatedRoute,
+                private questionService: QuestionService,
                 private accountsService: AccountsService,
-                private cacheService: CacheService) {
-                    if (!this.cacheService._data['questions']) {
-                        this.cacheService.getQuestions();
-                    }
-    }
+                private cacheService: CacheService) {}
 
     ngOnInit() {
-        this.getCacheSubscription();
-        this.getLikedAndUnlikedPosts();
+        const sub = this.route.params.subscribe(params => {
+            this.field = params['field'] ? params['field'] : 'questions';
+            if (this.field === 'questions' &&
+                !this.cacheService._data['questions']) {
+                    this.cacheService.getQuestions();
+            } else if (this.field === 'popularity' &&
+                !this.cacheService._data['popularity']) {
+                    this.cacheService.getQuestionsByPopularity();
+            } else if (!this.cacheService._data['resolved']) {
+                this.cacheService.getResolvedQuestions();
+            }
+            this.getCacheSubscription();
+            this.getLikedAndUnlikedPosts();
+        });
+        this.subscriptions.push(sub);
     }
 
     ngOnDestroy() {
@@ -35,7 +47,7 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     }
 
     getCacheSubscription() {
-        const questionSub = this.cacheService._data['questions'].subscribe(results => {
+        const questionSub = this.cacheService._data[this.field].subscribe(results => {
             this.questions = results;
             this.questions.forEach(q => this.votesMap.set(q._id, q.votes));
         });
@@ -43,8 +55,13 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     }
 
     updateCachedVotes(id, point) {
-        const sub1 = this.cacheService._data['questions'].subscribe(results => {
-            results.filter(res => res._id === id).forEach(q => q['votes'] += point);
+        ['questions', 'popularity', 'resolved'].forEach(tab => {
+            if (this.cacheService._data[tab]) {
+                const sub1 = this.cacheService._data[tab].subscribe(results => {
+                    results.filter(res => res._id === id).forEach(item => item['votes'] += point);
+                });
+                this.subscriptions.push(sub1);
+            }
         });
         if (this.cacheService._data['question'] && this.cacheService._data['question'][id]) {
             const sub2 = this.cacheService._data['question'][id].subscribe(result => {
@@ -52,7 +69,6 @@ export class QuestionsComponent implements OnInit, OnDestroy {
             });
             this.subscriptions.push(sub2);
         }
-        this.subscriptions.push(sub1);
     }
 
     getTimeSince(datetime) {
@@ -184,10 +200,16 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     getLikedAndUnlikedPosts() {
         const uname = localStorage.getItem('username');
         if (uname && true) {
-            const sub1 = this.accountsService.getLikedPosts(uname).subscribe(res => {
+            if (!this.cacheService._data['liked'] &&
+                !this.cacheService._data['unliked']) {
+                this.cacheService.getLikedPosts(uname);
+                this.cacheService.getUnlikedPosts(uname);
+            }
+
+            const sub1 = this.cacheService._data['liked'].subscribe(res => {
                 this.likedQuestions = res.posts ? res.posts : [];
             });
-            const sub2 = this.accountsService.getUnlikedPosts(uname).subscribe(res => {
+            const sub2 = this.cacheService._data['unliked'].subscribe(res => {
                 this.unlikedQuestions = res.posts ? res.posts : [];
             });
 

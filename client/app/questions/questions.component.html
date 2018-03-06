@@ -1,66 +1,54 @@
-<div class="container app-content">
-    <div class="text-center shop"><img src="{{ questionsIcon }}"></div>
-    <div>
-        <input class="locations-search-bar form-control" 
-        type="text" placeholder="Search by title"
-        [(ngModel)]="questionSearchItem" (keyup.enter)="keystrokeListener()"/>
+<div class="row locations-list" *ngFor='let question of questions'>
+    <div class="col-1 karma-btns">
+        <div *ngIf="!isLiked(question._id) || !likedQuestions[question._id]">
+            <div class="row vote vote-like" (click)="like(question._id)">
+                <i class="far fa-arrow-alt-circle-up"></i>
+            </div>
+        </div>
+        <div *ngIf="isLiked(question._id)">
+            <div class="row vote" (click)="like(question._id)">
+                <i class="fas fa-arrow-alt-circle-up liked"></i>
+            </div>
+        </div>
+        <div *ngIf="!isUnliked(question._id) || !unlikedQuestions[question._id]">
+            <div class="row vote vote-dislike" (click)="unlike(question._id)">
+                <i class="far fa-arrow-alt-circle-down"></i>
+            </div>
+        </div>
+        <div *ngIf="isUnliked(question._id)">
+            <div class="row vote" (click)="unlike(question._id)">
+                <i class="fas fa-arrow-alt-circle-down disliked"></i>
+            </div>
+        </div>
     </div>
-    <div *ngIf="questions?.length > 0" class="card question-card">
-        <div class="card-body">
-            <div class="row locations-list" *ngFor='let question of questions'>
-                <div class="col-1 karma-btns">
-                    <div *ngIf="!isLiked(question._id) || !likedQuestions[question._id]">
-                        <div class="row vote vote-like" (click)="like(question._id)">
-                            <i class="far fa-arrow-alt-circle-up"></i>
-                        </div>
-                    </div>
-                    <div *ngIf="isLiked(question._id)">
-                        <div class="row vote" (click)="like(question._id)">
-                            <i class="fas fa-arrow-alt-circle-up liked"></i>
-                        </div>
-                    </div>
-                    <div *ngIf="!isUnliked(question._id) || !unlikedQuestions[question._id]">
-                        <div class="row vote vote-dislike" (click)="unlike(question._id)">
-                            <i class="far fa-arrow-alt-circle-down"></i>
-                        </div>
-                    </div>
-                    <div *ngIf="isUnliked(question._id)">
-                        <div class="row vote" (click)="unlike(question._id)">
-                            <i class="fas fa-arrow-alt-circle-down disliked"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-11 main-question">
-                    <div class="row">
-                        <p class="location-name">
-                            <a [routerLink]="['/questions/', question._id]">{{ question.title }}</a>
-                        </p>
-                    </div>
-                    <div class="row" class="question-text">
-                        <p>{{ question.questionText.split(' ').slice(0, 20).join(' ') }}...</p>
-                    </div>
-                    <div class="row">
-                        <div class="col-6 metadata">
-                            <span *ngIf="isLiked(question._id)" class="liked">
-                                {{ votesMap.get(question._id) }} {{ votesMap.get(question._id) == 1 ? 'vote' : 'votes' }}
-                            </span>
-                            <span *ngIf="isUnliked(question._id)" class="disliked">
-                                {{ votesMap.get(question._id) }} {{ votesMap.get(question._id) == 1 ? 'vote' : 'votes' }}
-                            </span>
-                            <span *ngIf="!isLiked(question._id) && !isUnliked(question._id)">
-                                {{ votesMap.get(question._id) }} {{ votesMap.get(question._id) == 1 ? 'vote' : 'votes' }}
-                            </span>
-                            by&nbsp;<a routerLink="/profile/{{ question.author }}">{{ question.author }}</a>
-                            {{ getTimeSince(question.createdOn) }} ago
-                        </div>
-                        <div>
-                            <span class="tags badge badge-pill badge-primary"
-                                 *ngFor='let tag of question.tags'>
-                               {{ tag }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
+    <div class="col-11 main-question">
+        <div class="row">
+            <p class="location-name">
+                <a [routerLink]="['/questions/', question._id]">{{ question.title }}</a>
+            </p>
+        </div>
+        <div class="row" class="question-text">
+            <p>{{ question.questionText.split(' ').slice(0, 20).join(' ') }}...</p>
+        </div>
+        <div class="row">
+            <div class="col-6 metadata">
+                <span *ngIf="isLiked(question._id)" class="liked">
+                    {{ votesMap.get(question._id) }} {{ votesMap.get(question._id) == 1 ? 'vote' : 'votes' }}
+                </span>
+                <span *ngIf="isUnliked(question._id)" class="disliked">
+                    {{ votesMap.get(question._id) }} {{ votesMap.get(question._id) == 1 ? 'vote' : 'votes' }}
+                </span>
+                <span *ngIf="!isLiked(question._id) && !isUnliked(question._id)">
+                    {{ votesMap.get(question._id) }} {{ votesMap.get(question._id) == 1 ? 'vote' : 'votes' }}
+                </span>
+                by&nbsp;<a routerLink="/profile/{{ question.author }}">{{ question.author }}</a>
+                {{ getTimeSince(question.createdOn) }} ago
+            </div>
+            <div>
+                <span class="tags badge badge-pill badge-primary"
+                        *ngFor='let tag of question.tags'>
+                    {{ tag }}
+                </span>
             </div>
         </div>
     </div>
