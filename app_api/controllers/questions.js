@@ -5,13 +5,16 @@ const Question = mongoose.model('Question', questionModel);
 const sendJsonResponse = require('../../config/tools').sendJsonResponse;
 
 module.exports.questionsGetAll = function(req, res) {
-    Question.find({}, function(err, questions) {
-        if (err) {
-            sendJsonResponse(res, 400, err);
-            return;
-        }
-        sendJsonResponse(res, 200, questions);
-    });
+    Question
+        .find({ resolved: { $ne: true } })
+        .sort({ 'createdOn': -1 })
+        .exec(function(err, questions) {
+            if (err) {
+                sendJsonResponse(res, 400, err);
+            } else {
+                sendJsonResponse(res, 200, questions);
+            }
+        });
 };
 
 module.exports.questionsListByDistance = function(req, res) {
@@ -32,6 +35,32 @@ module.exports.questionsCreate = function(req, res) {
             sendJsonResponse(res, 201, question);
         }
     });
+};
+
+module.exports.questionsListByPopularity = function(req, res) {
+    Question
+        .find({ votes: { $gt: 350 } })
+        .sort('-votes')
+        .exec(function(err, questions) {
+            if (err) {
+                sendJsonResponse(res, 400, err);
+            } else {
+                sendJsonResponse(res, 200, questions);
+            }
+        });
+};
+
+module.exports.questionsListResolved = function(req, res) {
+    Question
+        .find({ resolved: true })
+        .sort('-votes')
+        .exec(function(err, questions) {
+            if (err) {
+                sendJsonResponse(res, 400, err);
+            } else {
+                sendJsonResponse(res, 200, questions);
+            }
+        });
 };
 
 module.exports.questionsReadOne = function(req, res) {
