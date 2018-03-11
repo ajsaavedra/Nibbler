@@ -27,6 +27,20 @@ export class QuestionService {
         return this.http.get(this.API_URL + '/' + id).map(res => res.json());
     }
 
+    postQuestionReply(id, uname, text) {
+        const body = {
+            questionid: id,
+            username: uname,
+            replyText: text
+        };
+
+        return this.http.post(this.API_URL + '/' + id, body).map(res => res.json());
+    }
+
+    deleteQuestionReply(question_id, reply_id) {
+        return this.http.delete(this.API_URL + '-comment/' + question_id + '/' + reply_id).map(res => res.json());
+    }
+
     updateQuestionVoteCount(id, num) {
         const body = {
             id: id,
