@@ -77,15 +77,17 @@ footer img {
     padding-bottom: 20px;
 }
 
-.locations-list {
-    padding: 20px;
+.locations-list, .questions-list {
+    padding: 10px;
 }
 
 .location-name {
     font-size: 20px;
 }
 
-.locations-list:not(:last-child) {
+.locations-list:not(:last-child),
+.questions-list:not(:last-child),
+.answers-list:not(:last-child) {
     border-bottom: 1px solid #DDD;
 }
 
@@ -170,7 +172,7 @@ footer img {
 }
 
 /********* Questions List ********/
-.question-card {
+.card {
     border: none;
 }
 
@@ -223,6 +225,19 @@ footer img {
     color:  #d32323
 }
 
+.reply-btn {
+    background-color: #ec6f74;
+    color: white;
+}
+
+.reply-vote {
+    font-size: 20px;
+}
+
+.reply {
+    margin-bottom: 10px;
+}
+
 .liked, .vote-like:active {
     color: #ec6f74;
 }
@@ -246,6 +261,10 @@ footer img {
 
 .metadata {
     padding: 0;
+}
+
+.filter-dropdown-btn {
+    margin-top: 0;
 }
 
 /***** Login Page  *****/
