@@ -22,7 +22,7 @@ const appendComment = function(req, res, post) {
     post.replies.push({
         discussion_id: id,
         author: req.body.username,
-        reviewText: req.body.reviewText
+        replyText: req.body.replyText
     });
     post.save(function(err, obj) {
         if (err) {
@@ -73,5 +73,29 @@ module.exports.commentsUpdateOne = function(req, res) {
 };
 
 module.exports.commentsDeleteOne = function(req, res) {
-
+    const id = req.params.questionid;
+    if (id) {
+        Question
+            .findById(id)
+            .exec(function(err, question) {
+                if (err) {
+                    sendJsonResponse(res, 500, err);
+                } else if (question) {
+                    question.replies = question.replies.filter(reply => !reply._id.equals(req.params.commentid));
+                    question.save(function(err, savedQuestion) {
+                        if (err) {
+                            sendJsonResponse(res, 500, err);
+                        } else {
+                            sendJsonResponse(res, 200, {
+                                'message': 'Reply Deleted'
+                            });
+                        }
+                    });
+                }
+            });
+    } else {
+        sendJsonResponse(res, 400, {
+            'message': 'Question ID missing. Could not append to question.'
+        });
+    }
 };
