@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { QuestionService } from '../services/questions.service';
 import { AccountsService } from '../services/accounts.service';
 import { CacheService } from '../services/cache.service';
@@ -19,10 +20,19 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
     private disliked = false;
     private votes = 0;
 
-    constructor(private route: ActivatedRoute,
-                private questionService: QuestionService,
-                private accountsService: AccountsService,
-                private cacheService: CacheService) {}
+    private replyForm: FormGroup;
+
+    constructor(
+        private route: ActivatedRoute,
+        private questionService: QuestionService,
+        private accountsService: AccountsService,
+        private cacheService: CacheService,
+        private fb: FormBuilder
+    ) {
+        this.replyForm = fb.group({
+            'replyText': [null, Validators.required]
+        });
+    }
 
     ngOnInit() {
         const sub = this.route.params
@@ -63,6 +73,15 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
                 result['votes'] += point;
             });
             this.subscriptions.push(sub2);
+        }
+    }
+
+    updateCachedReplies(id, reply_id) {
+        if (this.cacheService._data['question']) {
+            const sub = this.cacheService._data['question'][id].subscribe(result => {
+                result['replies'] = result['replies'].filter(item => item._id !== reply_id);
+            });
+            this.subscriptions.push(sub);
         }
     }
 
@@ -156,5 +175,35 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
 
             this.subscriptions.push(sub1, sub2);
         }
+    }
+
+    submitReply() {
+        const uname = localStorage.getItem('username');
+        if (uname && true) {
+            const text = this.replyForm.get('replyText').value;
+
+            let reply = [];
+            const sub = this.questionService.postQuestionReply(this.questionId, uname, text)
+                .do(res => reply = res)
+                .flatMap(res => {
+                    return this.cacheService._data['question'][this.questionId];
+                })
+                .subscribe(result => {
+                    result['replies'].push(reply);
+                    this.replyForm.get('replyText').setValue('');
+                });
+            this.subscriptions.push(sub);
+        } else {
+            alert('You must sign in to reply to this question.');
+        }
+    }
+
+    replyBelongsToUser(reply) {
+        return reply.author === localStorage.getItem('username');
+    }
+
+    deleteReply(reply) {
+        return this.questionService.deleteQuestionReply(this.questionId, reply._id)
+                    .subscribe(res => this.updateCachedReplies(this.questionId, reply._id));
     }
 }

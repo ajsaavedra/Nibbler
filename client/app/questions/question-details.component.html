@@ -35,27 +35,38 @@
             </div>
         </div>
     </div>
-    <div *ngIf="question.replies.length > 0" class="card answers-body">
+    <div *ngIf="question.replies" class="card answers-body">
         <div class="row answers-header">
             <h4>{{ question.replies.length }} {{ question.replies.length == 1 ? 'Answer' : 'Answers' }}</h4>
         </div>
         <div class="card-body">
-            <div class="row" *ngFor='let reply of question.replies'>
+            <div class="row reply answers-list" *ngFor='let reply of question.replies'>
                 <div class="col-1 reply-karma-btns">
                     <div class="row vote" (click)="toggleVote()">
-                        <i class="fas fa-chevron-up"></i>
+                        <i class="far fa-arrow-alt-circle-up reply-vote"></i>
                     </div>
                     <div class="row vote" (click)="toggleVote()">
-                        <i class="fas fa-chevron-down"></i>
+                        <i class="far fa-arrow-alt-circle-down reply-vote"></i>
                     </div>
                 </div>
                 <div class="col-10 main-reply">
-                    <div class="row">{{ reply.reviewText }}</div>
+                    <div class="row">{{ reply.replyText }}</div>
                     <div class="row">
-                        {{ reply.votes }} {{ reply.votes == 1 ? 'vote' : 'votes' }} by&nbsp;<a routerLink="/profile/{{ reply.author }}">{{ reply.author }}</a>
+                        <div>{{ reply.votes }} {{ reply.votes == 1 ? 'vote' : 'votes' }} by&nbsp;<a routerLink="/profile/{{ reply.author }}">{{ reply.author }}</a></div>
+                        <div class="offset-8" *ngIf="replyBelongsToUser(reply)">
+                            <button class="tags badge badge-primary">Edit</button>
+                            <button class="tags badge badge-primary" (click)="deleteReply(reply)">Delete</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <form [formGroup]="replyForm">
+        <div class="form-group">
+            <label for="answerTextarea">Your response</label>
+            <textarea [formControl]="replyForm.controls['replyText']" class="form-control" id="answerTextarea" rows="5"></textarea>
+        </div>
+        <button [disabled]="!replyForm.valid" class="btn reply-btn" (click)="submitReply()">Submit reply</button>
+    </form>
 </div>
