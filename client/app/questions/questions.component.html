@@ -1,4 +1,4 @@
-<div class="row locations-list" *ngFor='let question of questions'>
+<div class="row questions-list" *ngFor='let question of questions'>
     <div class="col-1 karma-btns">
         <div *ngIf="!isLiked(question._id) || !likedQuestions[question._id]">
             <div class="row vote vote-like" (click)="like(question._id)">
