@@ -19,8 +19,10 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
     private liked = false;
     private disliked = false;
     private votes = 0;
+    private editing = false;
 
     private replyForm: FormGroup;
+    private editForm: FormGroup;
 
     constructor(
         private route: ActivatedRoute,
@@ -31,6 +33,9 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
     ) {
         this.replyForm = fb.group({
             'replyText': [null, Validators.required]
+        });
+        this.editForm = fb.group({
+            'editText': [null, Validators.required]
         });
     }
 
@@ -205,5 +210,27 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
     deleteReply(reply) {
         return this.questionService.deleteQuestionReply(this.questionId, reply._id)
                     .subscribe(res => this.updateCachedReplies(this.questionId, reply._id));
+    }
+
+    submitEdit(reply) {
+        const edit = this.editForm.get('editText').value;
+        let updatedReply;
+        const sub = this.questionService.editQuestionReply(this.questionId, reply._id, edit)
+            .do(res => updatedReply = res)
+            .flatMap(res => this.cacheService._data['question'][this.questionId])
+            .subscribe(res => {
+                res['replies'].forEach(item => {
+                    if (item._id === updatedReply._id) {
+                        item.replyText = updatedReply.replyText;
+                        this.editForm.get('editText').setValue('');
+                        this.toggleEditing();
+                    }
+                });
+            });
+        this.subscriptions.push(sub);
+    }
+
+    toggleEditing() {
+        this.editing = !this.editing;
     }
 }
