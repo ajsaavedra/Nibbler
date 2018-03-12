@@ -37,6 +37,13 @@ export class QuestionService {
         return this.http.post(this.API_URL + '/' + id, body).map(res => res.json());
     }
 
+    editQuestionReply(question_id, reply_id, text) {
+        const body = {
+            text: text
+        };
+        return this.http.put(this.API_URL + '-comment/' + question_id + '/' + reply_id, body, this.options).map(res => res.json());
+    }
+
     deleteQuestionReply(question_id, reply_id) {
         return this.http.delete(this.API_URL + '-comment/' + question_id + '/' + reply_id).map(res => res.json());
     }
