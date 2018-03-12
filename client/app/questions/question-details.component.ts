@@ -20,6 +20,7 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
     private disliked = false;
     private votes = 0;
     private editing = false;
+    private replyTextToEdit;
 
     private replyForm: FormGroup;
     private editForm: FormGroup;
@@ -223,14 +224,17 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
                     if (item._id === updatedReply._id) {
                         item.replyText = updatedReply.replyText;
                         this.editForm.get('editText').setValue('');
-                        this.toggleEditing();
+                        this.toggleEditing(null);
                     }
                 });
             });
         this.subscriptions.push(sub);
     }
 
-    toggleEditing() {
+    toggleEditing(reply) {
         this.editing = !this.editing;
+        if (reply) {
+            this.replyTextToEdit = reply.replyText;
+        }
     }
 }
