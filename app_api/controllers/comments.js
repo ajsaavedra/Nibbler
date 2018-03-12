@@ -69,7 +69,35 @@ module.exports.commentsReadOne = function(req, res) {
 };
 
 module.exports.commentsUpdateOne = function(req, res) {
-
+    const id = req.params.questionid;
+    if (id) {
+        Question
+            .findById(id)
+            .exec(function(err, question) {
+                if (err) {
+                    sendJsonResponse(res, 500, err);
+                } else if (question) {
+                    let returnVal;
+                    question.replies.forEach(reply => {
+                        if (reply._id.equals(req.params.commentid)) {
+                            reply.replyText = req.body.text;
+                            returnVal = reply;
+                        }
+                    });
+                    question.save(function(err, savedQuestion) {
+                        if (err) {
+                            sendJsonResponse(res, 500, err);
+                        } else {
+                            sendJsonResponse(res, 200, returnVal);
+                        }
+                    });
+                }
+            });
+    } else {
+        sendJsonResponse(res, 400, {
+            'message': 'Question ID missing. Could not append to question.'
+        });
+    }
 };
 
 module.exports.commentsDeleteOne = function(req, res) {
