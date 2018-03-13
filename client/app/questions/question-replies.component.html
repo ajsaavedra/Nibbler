@@ -1,0 +1,46 @@
+<div *ngIf="question.replies" class="card answers-body">
+    <div class="row answers-header">
+        <h4>{{ question.replies.length }} {{ question.replies.length == 1 ? 'Answer' : 'Answers' }}</h4>
+    </div>
+    <div class="card-body">
+        <div class="row reply answers-list" *ngFor='let reply of question.replies'>
+            <div *ngIf="!editing" class="col-1 reply-karma-btns">
+                <div class="row vote" (click)="toggleVote()">
+                    <i class="far fa-arrow-alt-circle-up reply-vote"></i>
+                </div>
+                <div class="row vote" (click)="toggleVote()">
+                    <i class="far fa-arrow-alt-circle-down reply-vote"></i>
+                </div>
+            </div>
+            <div class="col-10 main-reply">
+                <div *ngIf="!editing">
+                    <div class="row">{{ reply.replyText }}</div>
+                    <div class="row">
+                        <div>{{ reply.votes }} {{ reply.votes == 1 ? 'vote' : 'votes' }} by&nbsp;<a routerLink="/profile/{{ reply.author }}">{{ reply.author }}</a></div>
+                        <div class="offset-8" *ngIf="replyBelongsToUser(reply)">
+                            <button class="tags badge badge-primary" (click)="toggleEditing(reply)">Edit</button>
+                            <button class="tags badge badge-primary" (click)="deleteReply(reply)">Delete</button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="editing">
+                    <form [formGroup]="editForm">
+                        <div class="form-group">
+                            <label for="answerTextarea">Your response</label>
+                            <textarea [(ngModel)]="replyTextToEdit" [formControl]="editForm.controls['editText']" class="form-control" id="answerTextarea" rows="5"></textarea>
+                        </div>
+                        <button class="tags badge badge-primary" (click)="toggleEditing()">Cancel</button>
+                        <button [disabled]="!editForm.valid" class="tags badge badge-primary" (click)="submitEdit(reply)">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<form [formGroup]="replyForm">
+    <div class="form-group">
+        <label for="answerTextarea">Your response</label>
+        <textarea [formControl]="replyForm.controls['replyText']" class="form-control" id="answerTextarea" rows="5"></textarea>
+    </div>
+    <button [disabled]="!replyForm.valid" class="btn reply-btn" (click)="submitReply()">Submit reply</button>
+</form>

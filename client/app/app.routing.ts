@@ -10,6 +10,7 @@ import { LocationAddComponent } from './locations/location-add.component';
 import { QuestionsCardComponent } from './questions/questions-card.component';
 import { QuestionsComponent } from './questions/questions.component';
 import { QuestionDetailsComponent } from './questions/question-details.component';
+import { QuestionRepliesComponent } from './questions/question-replies.component';
 import { LoginComponent } from './accounts/login.component';
 import { SignupComponent } from './accounts/signup.component';
 import { ProfileComponent } from './accounts/profile.component';
@@ -54,6 +55,7 @@ export const routingComponents = [
     QuestionsCardComponent,
     QuestionsComponent,
     QuestionDetailsComponent,
+    QuestionRepliesComponent,
     LoginComponent,
     SignupComponent,
     ProfileComponent

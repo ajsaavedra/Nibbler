@@ -10,6 +10,7 @@ import { CacheService } from './services/cache.service';
 import { QuestionService } from './services/questions.service';
 import { LocationService } from './services/locations.service';
 import { LocationsFilterPipe } from './locations/locations-filter.pipe';
+import { AccountsService } from './services/accounts.service';
 
 @NgModule({
     imports: [
@@ -29,7 +30,8 @@ import { LocationsFilterPipe } from './locations/locations-filter.pipe';
         GlobalEventsManager,
         CacheService,
         QuestionService,
-        LocationService
+        LocationService,
+        AccountsService
     ],
     bootstrap: [ AppComponent ]
 })
