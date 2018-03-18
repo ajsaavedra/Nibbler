@@ -4,34 +4,35 @@
     </div>
     <div class="card-body">
         <div class="row reply answers-list" *ngFor='let reply of question.replies'>
-            <div *ngIf="!editing" class="col-1 reply-karma-btns">
-                <div class="row vote" (click)="toggleVote()">
-                    <i class="far fa-arrow-alt-circle-up reply-vote"></i>
-                </div>
-                <div class="row vote" (click)="toggleVote()">
-                    <i class="far fa-arrow-alt-circle-down reply-vote"></i>
-                </div>
-            </div>
-            <div class="col-10 main-reply">
-                <div *ngIf="!editing">
-                    <div class="row">{{ reply.replyText }}</div>
-                    <div class="row">
-                        <div>{{ reply.votes }} {{ reply.votes == 1 ? 'vote' : 'votes' }} by&nbsp;<a routerLink="/profile/{{ reply.author }}">{{ reply.author }}</a></div>
-                        <div class="offset-8" *ngIf="replyBelongsToUser(reply)">
-                            <button class="tags badge badge-primary" (click)="toggleEditing(reply)">Edit</button>
-                            <button class="tags badge badge-primary" (click)="deleteReply(reply)">Delete</button>
+            <div class="col-12 main-reply">
+                <div>
+                    <div *ngIf="!editing" class="row">{{ reply.replyText }}</div>
+                    <div *ngIf="editing && replyBelongsToUser(reply)">
+                        <form [formGroup]="editForm">
+                            <div class="form-group">
+                                <textarea [(ngModel)]="replyTextToEdit" [formControl]="editForm.controls['editText']" class="form-control" id="answerTextarea" rows="5"></textarea>
+                            </div>
+                            <button class="tags badge badge-primary" (click)="toggleEditing()">Cancel</button>
+                            <button [disabled]="!editForm.valid" class="tags badge badge-primary" (click)="submitEdit(reply)">Submit</button>
+                        </form>
+                    </div>
+                    <div class="row replyRow">
+                        <div class="replyInfo">{{ votesMap[reply._id] }} {{ votesMap[reply._id] === 1 ? 'vote' : 'votes' }} by&nbsp;<a routerLink="/profile/{{ reply.author }}">{{ reply.author }}</a></div>
+                        <div class="voteOrEdit">
+                            <div *ngIf="replyBelongsToUser(reply) && !editing">
+                                <button class="tags badge badge-primary" (click)="toggleEditing(reply)">Edit</button>
+                                <button class="tags badge badge-primary" (click)="deleteReply(reply)">Delete</button>
+                            </div>
+                            <div *ngIf="!replyBelongsToUser(reply)">
+                                <div *ngIf="!isHelpful(reply._id)" title="This answer is helpful!" (click)="saveHelpfulComment(reply._id, true)">
+                                    <i class="far fa-thumbs-up reply-vote"></i>
+                                </div>
+                                <div *ngIf="isHelpful(reply._id)" title="This answer is no longer helpful" (click)="saveHelpfulComment(reply._id, false)">
+                                    <i class="fas fa-thumbs-up reply-vote liked"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div *ngIf="editing">
-                    <form [formGroup]="editForm">
-                        <div class="form-group">
-                            <label for="answerTextarea">Your response</label>
-                            <textarea [(ngModel)]="replyTextToEdit" [formControl]="editForm.controls['editText']" class="form-control" id="answerTextarea" rows="5"></textarea>
-                        </div>
-                        <button class="tags badge badge-primary" (click)="toggleEditing()">Cancel</button>
-                        <button [disabled]="!editForm.valid" class="tags badge badge-primary" (click)="submitEdit(reply)">Submit</button>
-                    </form>
                 </div>
             </div>
         </div>

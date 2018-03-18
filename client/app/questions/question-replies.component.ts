@@ -2,6 +2,8 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { QuestionService } from '../services/questions.service';
 import { CacheService } from '../services/cache.service';
+import { AccountsService } from '../services/accounts.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'question-replies',
@@ -15,11 +17,13 @@ export class QuestionRepliesComponent implements OnInit, OnDestroy {
     private replyTextToEdit;
     private subscriptions = [];
     private questionId;
-    private likedReplies;
-    private unlikedReplies;
+    private replies;
+    private helpfulCommentsMap = [];
+    private votesMap = {};
     @Input() question: any;
 
-   constructor(private questionService: QuestionService,
+   constructor(private accountsService: AccountsService,
+               private questionService: QuestionService,
                private cacheService: CacheService,
                private fb: FormBuilder) {
         this.replyForm = fb.group({
@@ -32,6 +36,19 @@ export class QuestionRepliesComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.questionId = this.question._id;
+        this.getReplies();
+
+        const uname = localStorage.getItem('username');
+        if (uname && !this.cacheService._data['postHelpfulComments']) {
+            this.cacheService.getPostHelpfulComments(uname, this.questionId);
+        }
+        this.cacheService._data['postHelpfulComments'].subscribe(res => {
+            if (res.comments && res.comments[this.questionId]) {
+                this.helpfulCommentsMap = res.comments[this.questionId];
+            } else {
+                this.helpfulCommentsMap = [];
+            }
+        });
     }
 
     ngOnDestroy() {
@@ -77,6 +94,10 @@ export class QuestionRepliesComponent implements OnInit, OnDestroy {
                     .subscribe(res => this.updateCachedReplies(this.questionId, reply._id));
     }
 
+    isHelpful(reply_id) {
+        return this.helpfulCommentsMap && this.helpfulCommentsMap.includes(reply_id);
+    }
+
     submitEdit(reply) {
         const edit = this.editForm.get('editText').value;
         let updatedReply;
@@ -99,6 +120,65 @@ export class QuestionRepliesComponent implements OnInit, OnDestroy {
         this.editing = !this.editing;
         if (reply) {
             this.replyTextToEdit = reply.replyText;
+        }
+    }
+
+    saveHelpfulComment(reply_id, isHelpful) {
+        const uname = localStorage.getItem('username');
+        if (uname && true) {
+            this.updateReplyVotes(reply_id, isHelpful);
+            this.updateSavedReplies(uname, reply_id, isHelpful);
+        } else {
+            alert('Log in to vote');
+        }
+    }
+
+    updateReplyVotes(reply_id, isHelpful) {
+        const sub = this.questionService
+            .updateQuestionReplyVotes(this.questionId, reply_id, isHelpful)
+            .switchMap(res => this.cacheService._data['question'][this.questionId])
+            .subscribe(subResults => {
+                const vote = isHelpful ? 1 : -1;
+                subResults['replies'].filter(reply => reply._id === reply_id)[0].votes += vote;
+                this.votesMap[reply_id] += vote;
+            });
+        this.subscriptions.push(sub);
+    }
+
+    updateSavedReplies(uname, reply_id, isHelpful) {
+        const sub = this.accountsService
+            .saveHelpfulComment(uname, this.questionId, reply_id, isHelpful)
+            .switchMap(result => this.cacheService._data['postHelpfulComments'])
+            .subscribe(subResult => {
+                if (subResult['comments'][this.questionId] !== null) {
+                    this.updateMappedHelpfulComments(reply_id, isHelpful);
+                } else {
+                    this.helpfulCommentsMap.push(reply_id);
+                }
+                subResult['comments'][this.questionId] = this.helpfulCommentsMap;
+            });
+        this.subscriptions.push(sub);
+    }
+
+    updateMappedHelpfulComments(reply_id, isHelpful) {
+        if (isHelpful) {
+            this.helpfulCommentsMap.push(reply_id);
+        } else {
+            this.helpfulCommentsMap = this.helpfulCommentsMap.filter(reply => {
+                return reply_id !== reply;
+            });
+        }
+    }
+
+    getReplies() {
+        if (this.cacheService._data['question'] && this.cacheService._data['question'][this.questionId]) {
+            const sub = this.cacheService._data['question'][this.questionId].subscribe(result => {
+                this.replies = result['replies'];
+                this.replies.forEach(reply => {
+                    this.votesMap[reply._id] = reply.votes;
+                });
+            });
+            this.subscriptions.push(sub);
         }
     }
 }
