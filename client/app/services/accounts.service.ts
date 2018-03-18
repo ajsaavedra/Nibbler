@@ -108,6 +108,29 @@ export class AccountsService {
                         .map(res => res ? res.json() : {});
     }
 
+    saveHelpfulComment(uname, post_id, reply_id, helpful) {
+        const body = {
+            username: uname,
+            post_id: post_id,
+            reply_id: reply_id,
+            isHelpful: helpful
+        };
+
+        return this.http.post('http://localhost:3000/api/save-helpful-comment/', body)
+                        .map(res => res ? res.json() : {});
+    }
+
+    getSavedHelpfulCommentsForPost(uname, post) {
+        return this.http.get('http://localhost:3000/api/question-helpful-comments/' +
+                            uname + '/' + post)
+                        .map(res => res.json());
+    }
+
+    getSavedHelpfulComments(uname) {
+        return this.http.get('http://localhost:3000/api/saved-helpful-comments/' + uname)
+                        .map(res => res.json());
+    }
+
     getLikedPosts(uname) {
         return this.http.get('http://localhost:3000/api/liked-posts/' + uname)
                         .map(res => res.json());

@@ -55,4 +55,15 @@ export class QuestionService {
         };
         return this.http.put(this.API_URL + '-update-vote', body).map(res => res ? res.json() : {});
     }
+
+    updateQuestionReplyVotes(id, reply_id, isHelpful) {
+        let num = 0;
+        isHelpful ? num = 1 : num = -1;
+        const body = {
+            questionid: id,
+            replyid: reply_id,
+            vote: num
+        };
+        return this.http.put(this.API_URL + '-update-comment-votes', body).map(res => res.json());
+    }
 }

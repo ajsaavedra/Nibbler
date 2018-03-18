@@ -40,6 +40,14 @@ export class CacheService {
         this._data['unliked'] = this.accountsService.getUnlikedPosts(uname).shareReplay();
     }
 
+    getPostHelpfulComments(uname, post) {
+        this._data['postHelpfulComments'] = this.accountsService.getSavedHelpfulCommentsForPost(uname, post).shareReplay();
+    }
+
+    getHelpfulComments(uname) {
+        this._data['helpfulComments'] = this.accountsService.getSavedHelpfulComments(uname).shareReplay();
+    }
+
     getLocations() {
         this._data['locations'] = this.locationService.getNearbyLocations().shareReplay();
     }
