@@ -127,3 +127,32 @@ module.exports.commentsDeleteOne = function(req, res) {
         });
     }
 };
+
+module.exports.updateCommentVotes = function(req, res) {
+    const id = req.body.questionid;
+    if (id) {
+        Question.findById(id)
+            .exec(function(err, question) {
+                if (err) {
+                    sendJsonResponse(res, 500, err);
+                } else if (question) {
+                    question.replies.filter(reply => {
+                        return reply._id.equals(req.body.replyid);
+                    })[0].votes += req.body.vote;
+                    question.save(function(err, savedQuestion) {
+                        if (err) {
+                            sendJsonResponse(res, 500, err);
+                        } else {
+                            sendJsonResponse(res, 200, {
+                                'message': 'Comment votes updated'
+                            });
+                        }
+                    });
+                }
+            });
+    } else {
+        sendJsonResponse(res, 400, {
+            'message': 'Comment ID missing.'
+        });
+    }
+};

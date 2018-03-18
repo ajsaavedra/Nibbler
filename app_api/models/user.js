@@ -18,6 +18,7 @@ const userSchema = new Schema({
     savedPosts: Object,
     likedPosts: Object,
     unlikedPosts: Object,
+    helpfulComments: Object,
     dob: { type: Date, required: false },
     coords: { type: [Number], index: '2dsphere' },
     created_at: Date,

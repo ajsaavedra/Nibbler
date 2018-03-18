@@ -149,6 +149,33 @@ const removeLikedPost = function(req, res, user) {
     saveUser(user, res);
 };
 
+const saveHelpfulCommentToUser = function(req, res, user) {
+    if (!user.helpfulComments) {
+        user.helpfulComments = {};
+    }
+    const id = req.body.post_id;
+    if (!user.helpfulComments[id]) {
+        user.helpfulComments[id] = [];
+    }
+
+    const isHelpful = req.body.isHelpful;
+    if (user.helpfulComments[id].length > 0 &&
+        user.helpfulComments[id].includes(req.body.reply_id) &&
+        !isHelpful) {
+        user.helpfulComments[id] = user.helpfulComments[id].filter(comment => {
+            return !comment === req.body.reply_id;
+        });
+        if (user.helpfulComments[id].length === 0) {
+            delete user.helpfulComments[id];
+        }
+    } else {
+        user.helpfulComments[id].push(req.body.reply_id);
+    }
+
+    user.markModified('helpfulComments');
+    saveUser(user, res);
+};
+
 module.exports.savePost = function(req, res) {
     User
         .findOne({ 'profile.username': req.body.username })
@@ -197,6 +224,18 @@ module.exports.unlikePost = function(req, res) {
         });
 };
 
+module.exports.saveHelpfulComment = function(req, res) {
+    User
+        .findOne({ 'profile.username': req.body.username })
+        .exec(function(err, user) {
+            if (err) {
+                sendJsonResponse(res, 400, err);
+            } else if (user) {
+                saveHelpfulCommentToUser(req, res, user);
+            }
+        });
+};
+
 module.exports.likedPosts = function(req, res) {
     User
         .findOne({ 'profile.username': req.params.username })
@@ -220,6 +259,42 @@ module.exports.unlikedPosts = function(req, res) {
             } else {
                 sendJsonResponse(res, 200, {
                     'posts': user.unlikedPosts
+                })
+            }
+        });
+};
+
+module.exports.questionHelpfulComments = function(req, res) {
+    User
+        .findOne({ 'profile.username': req.params.username })
+        .exec(function(err, user) {
+            if (err) {
+                sendJsonResponse(res, 400, err);
+            } else {
+                let items = {};
+                if (user.helpfulComments && user.helpfulComments[req.params.postid]) {
+                    items[req.params.postid] = user.helpfulComments[req.params.postid];
+                }
+                sendJsonResponse(res, 200, {
+                    'comments': items
+                })
+            }
+        });
+}
+
+module.exports.savedHelpfulComments = function(req, res) {
+    User
+        .findOne({ 'profile.username': req.params.username })
+        .exec(function(err, user) {
+            if (err) {
+                sendJsonResponse(res, 400, err);
+            } else {
+                let items = {};
+                if (user.helpfulComments) {
+                    items = user.helpfulComments;
+                }
+                sendJsonResponse(res, 200, {
+                    'comments': items
                 })
             }
         });

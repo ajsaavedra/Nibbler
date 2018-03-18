@@ -17,6 +17,7 @@ router.post('/questions/:questionid', ctrlComments.questionCommentsCreate);
 router.post('/comments/:commentid', ctrlComments.commentsCreate);
 router.get('/comments/:commentid', ctrlComments.commentsReadOne);
 router.put('/questions-comment/:questionid/:commentid', ctrlComments.commentsUpdateOne);
+router.put('/questions-update-comment-votes', ctrlComments.updateCommentVotes);
 router.delete('/questions-comment/:questionid/:commentid', ctrlComments.commentsDeleteOne);
 
 module.exports = router;

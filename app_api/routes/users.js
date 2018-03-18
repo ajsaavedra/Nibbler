@@ -16,6 +16,9 @@ module.exports = function(passport) {
     router.post('/unsave', ctrlUsers.removePost);
     router.post('/like', ctrlUsers.likePost);
     router.post('/unlike', ctrlUsers.unlikePost);
+    router.post('/save-helpful-comment', ctrlUsers.saveHelpfulComment);
+    router.get('/question-helpful-comments/:username/:postid', ctrlUsers.questionHelpfulComments);
+    router.get('/saved-helpful-comments/:username/', ctrlUsers.savedHelpfulComments);
     router.get('/liked-posts/:username/', ctrlUsers.likedPosts);
     router.get('/unliked-posts/:username/', ctrlUsers.unlikedPosts);
 
