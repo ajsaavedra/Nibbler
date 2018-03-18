@@ -221,6 +221,7 @@ footer img {
 
 .vote .fa-arrow-alt-circle-up:hover,
 .vote .fa-arrow-alt-circle-down:hover,
+.fa-thumbs-up:hover, .fa-thumbs-down:hover,
 .post-fav:hover {
     color:  #d32323
 }
@@ -235,7 +236,7 @@ footer img {
 }
 
 .reply {
-    margin-bottom: 10px;
+    padding-bottom: 10px;
 }
 
 .liked, .vote-like:active {
@@ -265,6 +266,18 @@ footer img {
 
 .filter-dropdown-btn {
     margin-top: 0;
+}
+
+.replyRow {
+    display: block;
+}
+
+.replyInfo {
+    float:left;
+}
+
+.voteOrEdit {
+    float: right;
 }
 
 /***** Login Page  *****/
