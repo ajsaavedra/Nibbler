@@ -75,16 +75,15 @@ const saveUser = function(user, res) {
     });
 };
 
-module.exports.savedPosts = function(req, res) {
+module.exports.savedPosts = function(req, res, next) {
     User
         .findOne({ 'profile.username': req.params.username })
         .exec(function(err, user) {
             if (err) {
                 sendJsonResponse(res, 400, err);
             } else {
-                sendJsonResponse(res, 200, {
-                    'posts': user.savedPosts
-                })
+                req.favorites = user.savedPosts;
+                next();
             }
         });
 };
@@ -236,30 +235,36 @@ module.exports.saveHelpfulComment = function(req, res) {
         });
 };
 
-module.exports.likedPosts = function(req, res) {
+module.exports.likedPosts = function(req, res, next) {
     User
         .findOne({ 'profile.username': req.params.username })
         .exec(function(err, user) {
             if (err) {
                 sendJsonResponse(res, 400, err);
             } else {
-                sendJsonResponse(res, 200, {
-                    'posts': user.likedPosts
-                })
+                req.posts = user.likedPosts;
+                if (req.posts) {
+                    next();
+                } else {
+                    sendJsonResponse(res, 200, {});
+                }
             }
         });
 };
 
-module.exports.unlikedPosts = function(req, res) {
+module.exports.unlikedPosts = function(req, res, next) {
     User
         .findOne({ 'profile.username': req.params.username })
         .exec(function(err, user) {
             if (err) {
                 sendJsonResponse(res, 400, err);
             } else {
-                sendJsonResponse(res, 200, {
-                    'posts': user.unlikedPosts
-                })
+                req.posts = user.unlikedPosts;
+                if (req.posts) {
+                    next();
+                } else {
+                    sendJsonResponse(res, 200, {});
+                }
             }
         });
 };
@@ -282,20 +287,21 @@ module.exports.questionHelpfulComments = function(req, res) {
         });
 }
 
-module.exports.savedHelpfulComments = function(req, res) {
+module.exports.savedHelpfulComments = function(req, res, next) {
     User
         .findOne({ 'profile.username': req.params.username })
         .exec(function(err, user) {
             if (err) {
                 sendJsonResponse(res, 400, err);
             } else {
-                let items = {};
                 if (user.helpfulComments) {
-                    items = user.helpfulComments;
+                    req.comments = user.helpfulComments;
+                    next();
+                } else {
+                    sendJsonResponse(res, 200, {
+                        'comments': {}
+                    });
                 }
-                sendJsonResponse(res, 200, {
-                    'comments': items
-                })
             }
         });
 };

@@ -79,6 +79,57 @@ module.exports.questionsReadOne = function(req, res) {
         });
 };
 
+module.exports.questionsGetFavorites = function(req, res, next) {
+    Question
+        .find({ _id: {
+            $in: Object.keys(req.favorites)
+        }}, function(err, docs) {
+            if (err) {
+                sendJsonResponse(res, 500, err);
+            } else {
+                sendJsonResponse(res, 200, docs);
+            }
+        });
+};
+
+module.exports.questionsGetLikedOrUnliked = function(req, res) {
+    Question
+        .find({ _id: {
+            $in: Object.keys(req.posts)
+        }}, function(err, docs) {
+            if (err) {
+                sendJsonResponse(res, 500, err);
+            } else {
+                let items = {};
+                docs.forEach(doc => {
+                    items[doc._id] = doc
+                });
+                sendJsonResponse(res, 200, {
+                    'posts': items
+                });
+            }
+        });
+};
+
+module.exports.questionsGetCommentsById = function(req, res) {
+    Question
+        .find({ _id: {
+            $in: Object.keys(req.comments)
+        }}, function(err, docs) {
+            if (err) {
+                sendJsonResponse(res, 500, err);
+            } else {
+                let items = {};
+                docs.forEach(doc => {
+                    req.comments[doc._id].forEach(reply => {
+                        items[doc.title] = doc.replies.filter(item => item._id.equals(reply))[0];
+                    });
+                });
+                sendJsonResponse(res, 200, items);
+            }
+        });
+};
+
 module.exports.questionsUpdateVotes = function(req, res) {
     Question
         .findById(req.body.id)
