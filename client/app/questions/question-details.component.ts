@@ -72,7 +72,7 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
                 this.accountsService
                     .getUserSavedPosts(localStorage.getItem('username'))
                     .subscribe(res => {
-                        this.isFavorited = res.posts && res.posts[id];
+                        this.isFavorited = res && res.filter(item => item._id === id).length > 0;
                     }, err => {
                         this.isFavorited = false;
                     });

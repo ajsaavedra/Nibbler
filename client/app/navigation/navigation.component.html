@@ -21,10 +21,11 @@
                     </a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" routerLink="/profile/{{username}}">Profile</a>
-                        <a class="dropdown-item" href="#">Recipes</a>
-                        <a class="dropdown-item" href="#">Friends</a>
-                        <a class="dropdown-item" href="#">Settings</a>
+                        <a class="dropdown-item" routerLink="/profile/{{username}}/posts/favorite">Favorite Questions</a>
+                        <a class="dropdown-item" routerLink="/profile/{{username}}/posts/helpful_answers">Helpful Answers</a>
+                        <a class="dropdown-item" routerLink="/profile/{{username}}/posts/voted">Upvotes / Downvotes</a>
                         <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Settings</a>
                         <a class="dropdown-item" (click)="logoutUser()">Logout</a>
                     </div>
                 </li> 

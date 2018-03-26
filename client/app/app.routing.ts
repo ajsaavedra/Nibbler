@@ -14,6 +14,10 @@ import { QuestionRepliesComponent } from './questions/question-replies.component
 import { LoginComponent } from './accounts/login.component';
 import { SignupComponent } from './accounts/signup.component';
 import { ProfileComponent } from './accounts/profile.component';
+import { ProfileSavedPostsComponent } from './accounts/profile.saved-posts.component';
+import { ProfileSavedCommentsComponent } from './accounts/profile.saved-comments.component';
+import { ProfileVotesCardComponent } from './accounts/profile.votes-card.component';
+import { ProfileVotedPostsComponent } from './accounts/profile.voted-posts.component';
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -34,7 +38,20 @@ const routes: Routes = [
     { path: 'questions/:id', component: QuestionDetailsComponent },
     { path: 'login', component: LoginComponent },
     { path: 'signup', component: SignupComponent },
-    { path: 'profile/:username', component: ProfileComponent }
+    { path: 'profile/:username', component: ProfileComponent },
+    { path: 'profile/:username/posts/favorite', component: ProfileSavedPostsComponent },
+    { path: 'profile/:username/posts/helpful_answers', component: ProfileSavedCommentsComponent},
+    {
+        path: 'profile/:username/posts/voted',
+        component: ProfileVotesCardComponent,
+        children: [
+            {
+                path: '',
+                component: ProfileVotedPostsComponent,
+                pathMatch: 'full'
+            }
+        ]
+    }
 ];
 
 @NgModule({
@@ -58,5 +75,9 @@ export const routingComponents = [
     QuestionRepliesComponent,
     LoginComponent,
     SignupComponent,
-    ProfileComponent
+    ProfileComponent,
+    ProfileSavedPostsComponent,
+    ProfileSavedCommentsComponent,
+    ProfileVotesCardComponent,
+    ProfileVotedPostsComponent
 ];

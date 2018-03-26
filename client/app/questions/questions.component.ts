@@ -3,11 +3,12 @@ import { ActivatedRoute } from '@angular/router';
 import { QuestionService } from '../services/questions.service';
 import { AccountsService } from '../services/accounts.service';
 import { CacheService } from '../services/cache.service';
+import { Helper } from '../services/helper.service';
 
 @Component({
     templateUrl: './app/questions/questions.component.html',
     selector: 'all-questions',
-    providers: [ QuestionService, AccountsService ]
+    providers: [ Helper ]
 })
 
 export class QuestionsComponent implements OnInit, OnDestroy {
@@ -22,7 +23,8 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     constructor(private route: ActivatedRoute,
                 private questionService: QuestionService,
                 private accountsService: AccountsService,
-                private cacheService: CacheService) {}
+                private cacheService: CacheService,
+                private helper: Helper) {}
 
     ngOnInit() {
         const sub = this.route.params.subscribe(params => {
@@ -72,29 +74,7 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     }
 
     getTimeSince(datetime) {
-        const seconds = Math.floor((new Date().getTime() / 1000) - (Date.parse(datetime) / 1000));
-        let interval = Math.floor(seconds / 31536000);
-
-        if (interval >= 1) {
-            return interval > 1 ? interval + ' years' : interval + ' year';
-        }
-        interval = Math.floor(seconds / 2592000);
-        if (interval >= 1) {
-            return interval > 1 ? interval + ' months' : interval + ' month';
-        }
-        interval = Math.floor(seconds / 86400);
-        if (interval >= 1) {
-            return interval > 1 ? interval + ' days' : interval + ' day';
-        }
-        interval = Math.floor(seconds / 3600);
-        if (interval >= 1) {
-            return interval > 1 ? interval + ' hours' : interval + ' hour';
-        }
-        interval = Math.floor(seconds / 60);
-        if (interval >= 1) {
-            return interval > 1 ? interval + ' minutes' : interval + ' minute';
-        }
-        return Math.floor(seconds) + ' seconds';
+        return this.helper.getTimeSince(datetime);
     }
 
     like(id) {
