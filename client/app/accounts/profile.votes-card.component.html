@@ -1,0 +1,13 @@
+<div class="container app-content">
+    <div class="card question-card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-5 nav nav-tabs" id="nav-tab" role="tablist">
+                    <a class="nav-item nav-link active" data-toggle="tab" role="tab" aria-selected="true" routerLink="/profile/{{username}}/posts/voted">Upvotes</a>
+                    <a class="nav-item nav-link" data-toggle="tab" role="tab" aria-selected="false" [routerLink]="['/profile/', username, 'posts', 'voted', {field: 'downvoted'}]">Downvotes</a>
+                </div>
+            </div>
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

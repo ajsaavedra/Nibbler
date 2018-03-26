@@ -1,0 +1,14 @@
+<div class="container app-content">
+    <div class="text-center"><i class="fas fa-heart"></i></div>
+    <div class="row questions-list" *ngFor='let data of savedData'>
+        <div class="col-12 main-question">
+            <div class="row helpfulAnswers">{{ data.replyText }}</div>
+            <div class="row">
+                <div class="col-12 metadata">
+                    by&nbsp;<a routerLink="/profile/{{ data.author }}">{{ data.author }}</a>
+                    {{ getTimeSince(data.createdOn) }} ago on <a [routerLink]="['/questions/', data.discussion_id]">{{ data.title }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
