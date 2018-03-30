@@ -29,9 +29,8 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     ngOnInit() {
         const sub = this.route.params.subscribe(params => {
             this.field = params['field'] ? params['field'] : 'questions';
-            if (this.field === 'questions' &&
-                !this.cacheService._data['questions']) {
-                    this.cacheService.getQuestions();
+            if (this.field === 'questions') {
+                this.cacheService.getQuestions();
             } else if (this.field === 'popularity' &&
                 !this.cacheService._data['popularity']) {
                     this.cacheService.getQuestionsByPopularity();

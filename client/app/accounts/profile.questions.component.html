@@ -1,7 +1,10 @@
 <div class="container app-content">
     <h1 class="text-center">{{username}}'s Questions</h1>
     <div class="row questions-list" *ngFor="let question of questions">
-        <div class="col-11 main-question">
+        <div class="col-12 main-question">
+            <div *ngIf="belongsToUser()" class="row offset-11">
+                <button class="tags badge badge-primary" (click)="deleteQuestion(question._id)">Delete</button>
+            </div>
             <div class="row">
                 <p class="location-name">
                     <a [routerLink]="['/questions/', question._id]">{{ question.title }}</a>

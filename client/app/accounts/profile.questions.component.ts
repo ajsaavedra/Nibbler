@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { QuestionService } from '../services/questions.service';
+import { CacheService } from '../services/cache.service';
 import { Helper } from '../services/helper.service';
 
 @Component({
@@ -14,6 +15,7 @@ export class ProfileQuestionsComponent implements OnInit, OnDestroy {
     private questions;
 
     constructor(private questionsService: QuestionService,
+                private cacheService: CacheService,
                 private helper: Helper,
                 private route: ActivatedRoute) {}
 
@@ -30,6 +32,24 @@ export class ProfileQuestionsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.subscriptions.forEach(sub => sub.unsubscribe());
+    }
+
+    deleteQuestion(question_id) {
+        const sub = this.questionsService.deleteQuestion(question_id)
+            .switchMap(res => {
+                if (!this.cacheService._data['questions']) {
+                    this.cacheService.getQuestions();
+                }
+                return this.cacheService._data['questions'];
+            })
+            .subscribe(res => {
+                this.questions = this.questions.filter(q => q._id !== question_id);
+            });
+        this.subscriptions.push(sub);
+    }
+
+    belongsToUser() {
+        return this.username === localStorage.getItem('username');
     }
 
     getTimeSince(datetime) {
