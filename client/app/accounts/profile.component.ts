@@ -18,7 +18,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
-            let username = params['username'];
+            const username = params['username'];
             this.isLocalUser = username === localStorage.getItem('username');
             this.accountsService
                 .getUserProfile(username)
@@ -28,7 +28,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
                         this.router.navigateByUrl('/login');
                     }
                 );
-        })
+        });
     }
 
     ngOnDestroy() {

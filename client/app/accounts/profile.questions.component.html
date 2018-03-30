@@ -1,0 +1,26 @@
+<div class="container app-content">
+    <h1 class="text-center">{{username}}'s Questions</h1>
+    <div class="row questions-list" *ngFor="let question of questions">
+        <div class="col-11 main-question">
+            <div class="row">
+                <p class="location-name">
+                    <a [routerLink]="['/questions/', question._id]">{{ question.title }}</a>
+                </p>
+            </div>
+            <div class="row" class="question-text">
+                <p>{{ question.questionText.split(' ').slice(0, 20).join(' ') }}...</p>
+            </div>
+            <div class="row">
+                <div class="col-6 metadata">
+                    {{ getTimeSince(question.createdOn) }} ago 
+                </div>
+                <div>
+                    <span class="tags badge badge-pill badge-primary"
+                            *ngFor='let tag of question.tags'>
+                        {{ tag }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

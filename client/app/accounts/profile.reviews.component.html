@@ -1,0 +1,24 @@
+<div class="container app-content">
+    <h1 class="text-center">{{username}}'s Reviews</h1>
+    <div class="row reviews-list" *ngFor="let review of reviews">
+        <div class="col-12 main-question">
+            <div class="row">
+                <p><span class="star-rating" [innerHTML]="starRating(review.rating)"></span></p>
+            </div>
+            <div class="row">
+                <p>{{ review.title }}</p>
+            </div>
+            <div class="row" class="question-text">
+                <p>{{ review.reviewText.split(' ').slice(0, 20).join(' ') }}...</p>
+            </div>
+            <div class="row">
+                <div class="col-10 metadata">
+                    {{ getTimeSince(review.createdOn) }} ago for <a [routerLink]="['/locations/', review.location_id]">{{review.location_name}}</a>
+                </div>
+                <div *ngIf="belongsToUser(review)">
+                    <button class="tags badge badge-primary" (click)="deleteReview(review.location_id, review._id)">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

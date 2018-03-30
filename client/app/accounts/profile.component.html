@@ -1,8 +1,11 @@
 <div class="container app-content" *ngIf="user">
     <div *ngIf="isLocalUser">
-        <h1>Hello {{user.name.first}} {{user.name.last}}</h1>
+        <h1>Hello, {{user.name.first}} {{user.name.last}}!</h1>
     </div>
     <div *ngIf="!isLocalUser">
         <h1>{{user.name.first}} {{user.name.last}}</h1>
     </div>
+    <div>Total karma: {{user.profile.karma}}</div>
+    <div><a routerLink="/profile/{{user.profile.username}}/questions">Questions Asked</a></div>
+    <div><a routerLink="/profile/{{user.profile.username}}/reviews">Location Reviews</a></div>
 </div>
