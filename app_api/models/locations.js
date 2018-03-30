@@ -13,14 +13,14 @@ const reviewSchema = new Schema({
     author: String,
     title: { type: String, required: true },
     rating: { type: Number, required: true, min: 0, max: 5 },
-    reviewText: {type: String, required: true },
-    createdOn: { type: Date, "default": Date.now }
+    reviewText: { type: String, required: true },
+    createdOn: { type: Date, 'default': new Date() }
 });
 
 const locationSchema = new Schema({
     name: { type: String, required: true },
     address: String,
-    rating: { type: Number, "default": 0, min: 0, max: 5 },
+    rating: { type: Number, 'default': 0, min: 0, max: 5 },
     options: dietSchema,
     coords: { type: [Number], index: '2dsphere', required: true },
     openingTimes: [openingTimeSchema],

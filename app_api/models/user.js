@@ -12,7 +12,8 @@ const userSchema = new Schema({
     password: { type: String, required: true },
     profile: {
         username: { type: String, required: true },
-        picture: { type: String, 'default': '' }
+        picture: { type: String, 'default': '' },
+        karma: { type: Number, default: 0 }
     },
     diet: dietSchema,
     savedPosts: Object,
