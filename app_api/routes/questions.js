@@ -5,6 +5,7 @@ const ctrlComments = require('../controllers/comments.js');
 
 router.get('/questions', ctrlQuestions.questionsGetAll);
 router.get('/questions-by-dist', ctrlQuestions.questionsListByDistance);
+router.get('/questions-by-author/:author', ctrlQuestions.questionsGetByAuthor);
 router.get('/questions-by-popularity', ctrlQuestions.questionsListByPopularity);
 router.get('/questions-resolved', ctrlQuestions.questionsListResolved);
 router.post('/questions', ctrlQuestions.questionsCreate);
