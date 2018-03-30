@@ -11,6 +11,7 @@ import { QuestionsCardComponent } from './questions/questions-card.component';
 import { QuestionsComponent } from './questions/questions.component';
 import { QuestionDetailsComponent } from './questions/question-details.component';
 import { QuestionRepliesComponent } from './questions/question-replies.component';
+import { QuestionAddComponent } from './questions/question-add.component';
 import { LoginComponent } from './accounts/login.component';
 import { SignupComponent } from './accounts/signup.component';
 import { ProfileComponent } from './accounts/profile.component';
@@ -18,6 +19,8 @@ import { ProfileSavedPostsComponent } from './accounts/profile.saved-posts.compo
 import { ProfileSavedCommentsComponent } from './accounts/profile.saved-comments.component';
 import { ProfileVotesCardComponent } from './accounts/profile.votes-card.component';
 import { ProfileVotedPostsComponent } from './accounts/profile.voted-posts.component';
+import { ProfileQuestionsComponent } from './accounts/profile.questions.component';
+import { ProfileReviewsComponent } from './accounts/profile.reviews.component';
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -36,9 +39,12 @@ const routes: Routes = [
         ]
     },
     { path: 'questions/:id', component: QuestionDetailsComponent },
+    { path: 'add-question', component: QuestionAddComponent },
     { path: 'login', component: LoginComponent },
     { path: 'signup', component: SignupComponent },
     { path: 'profile/:username', component: ProfileComponent },
+    { path: 'profile/:username/questions', component: ProfileQuestionsComponent },
+    { path: 'profile/:username/reviews', component: ProfileReviewsComponent },
     { path: 'profile/:username/posts/favorite', component: ProfileSavedPostsComponent },
     { path: 'profile/:username/posts/helpful_answers', component: ProfileSavedCommentsComponent},
     {
@@ -72,10 +78,13 @@ export const routingComponents = [
     QuestionsCardComponent,
     QuestionsComponent,
     QuestionDetailsComponent,
+    QuestionAddComponent,
     QuestionRepliesComponent,
     LoginComponent,
     SignupComponent,
     ProfileComponent,
+    ProfileQuestionsComponent,
+    ProfileReviewsComponent,
     ProfileSavedPostsComponent,
     ProfileSavedCommentsComponent,
     ProfileVotesCardComponent,

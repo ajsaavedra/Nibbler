@@ -27,6 +27,10 @@ export class QuestionService {
         return this.http.get(this.API_URL + '/' + id).map(res => res.json());
     }
 
+    getQuestionsByAuthor(uname) {
+        return this.http.get(this.API_URL + '-by-author/' + uname).map(res => res.json());
+    }
+
     postQuestionReply(id, uname, text) {
         const body = {
             questionid: id,
@@ -46,6 +50,10 @@ export class QuestionService {
 
     deleteQuestionReply(question_id, reply_id) {
         return this.http.delete(this.API_URL + '-comment/' + question_id + '/' + reply_id).map(res => res.json());
+    }
+
+    deleteQuestion(question_id) {
+        return this.http.delete(this.API_URL + '/' + question_id).map(res => res.json());
     }
 
     updateQuestionVoteCount(id, num) {

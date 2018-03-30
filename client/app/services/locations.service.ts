@@ -6,7 +6,7 @@ import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class LocationService {
-    API_URL: string = 'http://localhost:3000/api/locations';
+    API_URL = 'http://localhost:3000/api/locations';
     headers = new Headers({ 'Content-Type': 'application/json' });
     options = new RequestOptions({ headers: this.headers });
     constructor(private http: Http) {}
@@ -21,6 +21,14 @@ export class LocationService {
 
     getLocationById(id) {
         return this.http.get(this.API_URL + '/' + id).map(res => res.json());
+    }
+
+    getLocationReviewsByAuthor(uname) {
+        return this.http.get(this.API_URL + '-get-user-reviews/' + uname).map(res => res.json());
+    }
+
+    deleteUserLocationReview(id, reviewid) {
+        return this.http.delete(this.API_URL + '/' + id + '/reviews/' + reviewid).map(res => res.json());
     }
 
     addReviewToLocation(id, author, title, rating, text) {
