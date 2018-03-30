@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 
 export class QuestionsCardComponent {
     private questionsIcon = require('../../assets/images/questions.svg');
+
+    isLoggedIn() {
+        return localStorage.getItem('username') && true;
+    }
 }

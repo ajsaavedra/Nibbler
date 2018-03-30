@@ -31,6 +31,16 @@ export class QuestionService {
         return this.http.get(this.API_URL + '-by-author/' + uname).map(res => res.json());
     }
 
+    postUserQuestion(uname, title, question, tags) {
+        const body = {
+            user: uname,
+            title: title,
+            question: question,
+            tags: tags
+        };
+        return this.http.post(this.API_URL, body).map(res => res.json());
+    }
+
     postQuestionReply(id, uname, text) {
         const body = {
             questionid: id,

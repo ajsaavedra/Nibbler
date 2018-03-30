@@ -27,7 +27,7 @@ module.exports.questionsCreate = function(req, res) {
         title: req.body.title,
         questionText: req.body.question,
         answers: [],
-        coords: [parseFloat(req.body.lng), parseFloat(req.body.lat)]
+        tags: req.body.tags
     }, function(err, question) {
         if (err) {
             sendJsonResponse(res, 400, err);

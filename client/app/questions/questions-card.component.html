@@ -12,4 +12,7 @@
             <router-outlet></router-outlet>
         </div>
     </div>
+    <div class="text-center">
+        <a *ngIf="isLoggedIn()" routerLink="/add-question/">Not seeing what you need? Submit a question for other users to answer!</a>
+    </div>
 </div>

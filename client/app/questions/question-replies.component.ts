@@ -42,13 +42,15 @@ export class QuestionRepliesComponent implements OnInit, OnDestroy {
         if (uname && !this.cacheService._data['postHelpfulComments']) {
             this.cacheService.getPostHelpfulComments(uname, this.questionId);
         }
-        this.cacheService._data['postHelpfulComments'].subscribe(res => {
+        const sub = this.cacheService._data['postHelpfulComments'].subscribe(res => {
+            console.log('ZOMBIE', res);
             if (res.comments && res.comments[this.questionId]) {
                 this.helpfulCommentsMap = res.comments[this.questionId];
             } else {
                 this.helpfulCommentsMap = [];
             }
         });
+        this.subscriptions.push(sub);
     }
 
     ngOnDestroy() {
