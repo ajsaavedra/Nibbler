@@ -37,6 +37,18 @@ module.exports.questionsCreate = function(req, res) {
     });
 };
 
+module.exports.questionsGetByAuthor = function(req, res) {
+    Question
+        .find({ author: req.params.author })
+        .exec(function(err, questions) {
+            if (err) {
+                sendJsonResponse(res, 500, err);
+            } else {
+                sendJsonResponse(res, 200, questions);
+            }
+        });
+};
+
 module.exports.questionsListByPopularity = function(req, res) {
     Question
         .find({ votes: { $gt: 350 } })
@@ -154,5 +166,12 @@ module.exports.questionsUpdateOne = function(req, res) {
 };
 
 module.exports.questionsDeleteOne = function(req, res) {
-
+    const id = req.params.questionid;
+    if (!id) return sendJsonResponse(res, 400, {'message': 'QuestionID missing'});
+    Question
+        .findByIdAndRemove(id)
+        .exec(function(err, deleted) {
+            if (err) return sendJsonResponse(res, 500, err);
+            sendJsonResponse(res, 200, {'message': 'Question deleted'});
+        });
 };
