@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DragulaModule } from 'ng2-dragula';
 import { AppComponent } from './app.component';
 import { AppRoutingModule, routingComponents } from './app.routing';
 import { GlobalEventsManager } from './GlobalEventsManager';
@@ -19,7 +20,8 @@ import { AccountsService } from './services/accounts.service';
         HttpModule,
         AppRoutingModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        DragulaModule
      ],
     declarations: [
         AppComponent,
