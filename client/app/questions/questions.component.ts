@@ -77,8 +77,9 @@ export class QuestionsComponent implements OnInit, OnDestroy {
         return this.helper.getTimeSince(datetime);
     }
 
-    like(id) {
+    like(question) {
         const uname = localStorage.getItem('username');
+        const id = question._id;
         if (uname) {
             this.updateVotesMapOnUpvote(id);
             if (this.likedQuestions[id]) {
@@ -88,25 +89,33 @@ export class QuestionsComponent implements OnInit, OnDestroy {
             } else {
                 this.updateCachedVotes(id, 1);
             }
-            const sub = this.accountsService.saveLikedPostToUser(uname, id).subscribe(res => {
-                if (this.likedQuestions[id]) {
-                    delete this.likedQuestions[id];
-                    return;
-                }
-                this.likedQuestions[id] = true;
-                if (this.unlikedQuestions[id]) {
-                    delete this.unlikedQuestions[id];
-                }
-            }, err => false);
-
+            const sub = this.accountsService
+                .saveLikedPostToUser(uname, id)
+                .do(res => {
+                    if (this.likedQuestions[id]) {
+                        delete this.likedQuestions[id];
+                        return;
+                    }
+                    this.likedQuestions[id] = true;
+                    if (this.unlikedQuestions[id]) {
+                        delete this.unlikedQuestions[id];
+                    }
+                }, err => false)
+                .flatMap(res => this.cacheService._data['liked'])
+                .subscribe(res => {
+                    if (this.likedQuestions[id]) {
+                        res['posts'][id] = question;
+                    }
+                });
             this.subscriptions.push(sub);
         } else {
             alert('You must be a member to vote. Sign up today!');
         }
     }
 
-    unlike(id) {
+    unlike(question) {
         const uname = localStorage.getItem('username');
+        const id = question._id;
         if (uname) {
             this.updateVotesMapOnDownvote(id);
             if (this.likedQuestions[id]) {
@@ -116,17 +125,24 @@ export class QuestionsComponent implements OnInit, OnDestroy {
             } else {
                 this.updateCachedVotes(id, -1);
             }
-            const sub = this.accountsService.removeLikedPostFromUser(uname, id).subscribe(res => {
-                if (this.unlikedQuestions[id]) {
-                    delete this.unlikedQuestions[id];
-                    return;
-                }
-                this.unlikedQuestions[id] = true;
-                if (this.likedQuestions[id]) {
-                    delete this.likedQuestions[id];
-                }
-            }, err => false);
-
+            const sub = this.accountsService
+                .removeLikedPostFromUser(uname, id)
+                .do(res => {
+                    if (this.unlikedQuestions[id]) {
+                        delete this.unlikedQuestions[id];
+                        return;
+                    }
+                    this.unlikedQuestions[id] = true;
+                    if (this.likedQuestions[id]) {
+                        delete this.likedQuestions[id];
+                    }
+                }, err => false)
+                .flatMap(res => this.cacheService._data['unliked'])
+                .subscribe(res => {
+                    if (this.unlikedQuestions[id]) {
+                        res['posts'][id] = question;
+                    }
+                });
             this.subscriptions.push(sub);
         } else {
             alert('You must be a member to vote. Sign up today!');
@@ -180,7 +196,7 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     getLikedAndUnlikedPosts() {
         const uname = localStorage.getItem('username');
         if (uname && true) {
-            if (!this.cacheService._data['liked'] &&
+            if (!this.cacheService._data['liked'] ||
                 !this.cacheService._data['unliked']) {
                 this.cacheService.getLikedPosts(uname);
                 this.cacheService.getUnlikedPosts(uname);
@@ -195,8 +211,5 @@ export class QuestionsComponent implements OnInit, OnDestroy {
 
             this.subscriptions.push(sub1, sub2);
         }
-    }
-
-    keystrokeListener() {
     }
 }
