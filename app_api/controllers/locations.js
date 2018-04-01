@@ -36,11 +36,11 @@ module.exports.locationsListByDistance = function(req, res) {
         coordinates: [longitude, latitude]
     };
     const geoOptions = {
-        spherical: true, 
+        spherical: true,
         maxDistance: meterConversion.miToM(req.query.maxDistance),
         num: 10
     };
-    if (!longitude && longitude !== 0 || !latitude && latitude !== 0) {
+    if ((!longitude && longitude !== 0) || (!latitude && latitude !== 0)) {
         sendJsonResponse(res, 404, {
             'message': 'longitude and latitude required'
         });
@@ -58,6 +58,7 @@ module.exports.locationsListByDistance = function(req, res) {
                     address: doc.obj.address,
                     rating: doc.obj.rating,
                     options: doc.obj.options,
+                    reviews: doc.obj.reviews,
                     _id: doc.obj._id
                 });
             });
@@ -66,23 +67,25 @@ module.exports.locationsListByDistance = function(req, res) {
     });
 };
 
+const getLocationHours = function(locationHours) {
+    let hours = [];
+    locationHours.forEach(hour => {
+        hours.push({
+            day: hour.day,
+            opening: hour.opening,
+            closing: hour.closing
+        });
+    });
+    return hours;
+};
+
 module.exports.locationsCreate = function(req, res) {
     Loc.create({
         name: req.body.name,
         address: req.body.address,
-        options: req.body.options.split(","),
-        coords: [parseFloat(req.body.lng), parseFloat(req.body.lat)],
-        openingTimes: [{
-            days: req.body.days1,
-            opening: req.body.opening1,
-            closing: req.body.closing1,
-            closed: req.body.closed1
-        }, {
-            days: req.body.days2,
-            opening: req.body.opening2,
-            closing: req.body.closing2,
-            closed: req.body.closed2
-        }]
+        options: req.body.options,
+        coords: [parseFloat(req.body.lng).toFixed(4), parseFloat(req.body.lat).toFixed(4)],
+        openingTimes: getLocationHours(req.body.hours)
     }, function(err, location) {
         if (err) {
             sendJsonResponse(res, 400, err);
@@ -125,43 +128,42 @@ module.exports.locationsUpdateOne = function(req, res) {
     Loc
         .findById(req.params.locationid)
         .select('-reviews -rating')
-        .exec(
-            function(err, location) {
-                if (!location) {
-                    sendJsonResponse(res, 404, {
-                        'message': 'locationid not found'
-                    });
-                    return;
-                } else if (err) {
-                    sendJsonResponse(res, 400, err);
-                    return;
-                }
-
-                location.name = req.body.name;
-                location.address = req.body.address;
-                location.options = req.body.options.split(',');
-                location.coords = [
-                    parseFloat(req.body.lng),
-                    parseFloat(req.body.lat)];
-                location.openingTimes = [{
-                    days: req.body.days1,
-                    opening: req.body.opening1,
-                    closing: req.body.closing1,
-                    closed: req.body.closed1
-                }, {
-                    days: req.body.days2,
-                    opening: req.body.opening2,
-                    closing: req.body.closing2,
-                    closed: req.body.closed2
-                }];
-                location.save(function(err, location) {
-                    if (err) {
-                        sendJsonResponse(res, 404, err);
-                    } else {
-                        sendJsonResponse(res, 200, location);
-                    }
+        .exec(function(err, location) {
+            if (!location) {
+                sendJsonResponse(res, 404, {
+                    'message': 'locationid not found'
                 });
+                return;
+            } else if (err) {
+                sendJsonResponse(res, 400, err);
+                return;
+            }
+
+            location.name = req.body.name;
+            location.address = req.body.address;
+            location.options = req.body.options.split(',');
+            location.coords = [
+                parseFloat(req.body.lng),
+                parseFloat(req.body.lat)];
+            location.openingTimes = [{
+                days: req.body.days1,
+                opening: req.body.opening1,
+                closing: req.body.closing1,
+                closed: req.body.closed1
+            }, {
+                days: req.body.days2,
+                opening: req.body.opening2,
+                closing: req.body.closing2,
+                closed: req.body.closed2
+            }];
+            location.save(function(err, location) {
+                if (err) {
+                    sendJsonResponse(res, 404, err);
+                } else {
+                    sendJsonResponse(res, 200, location);
+                }
             });
+        });
 };
 
 module.exports.locationsDeleteOne = function(req, res) {

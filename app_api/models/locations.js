@@ -3,10 +3,9 @@ const Schema = mongoose.Schema;
 const dietSchema = require('./diets');
 
 const openingTimeSchema = new Schema({
-    days: { type: String, required: true },
+    day: { type: String, required: true },
     opening: String,
-    closing: String,
-    closed: { type: Boolean, required: true }
+    closing: String
 });
 
 const reviewSchema = new Schema({
@@ -24,7 +23,8 @@ const locationSchema = new Schema({
     options: dietSchema,
     coords: { type: [Number], index: '2dsphere', required: true },
     openingTimes: [openingTimeSchema],
-    reviews: [reviewSchema]
+    reviews: [reviewSchema],
+    closed: { type: Boolean, default: false }
 });
 
 module.exports = mongoose.model('Location', locationSchema);

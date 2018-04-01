@@ -56,7 +56,7 @@ export class LocationsComponent implements OnInit, OnDestroy {
 
     searchLocation() {
         this.geocodingService
-            .updateUserLocation(this.locationSearchItem)
+            .getGeoLocation(this.locationSearchItem)
             .then(fulfilled => {
                 const result = fulfilled.results[0];
                 const lat = result.geometry.location.lat;

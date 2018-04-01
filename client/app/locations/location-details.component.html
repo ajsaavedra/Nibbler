@@ -3,19 +3,20 @@
         <h2>{{ location.name }}</h2>
     </div>
     <div class="row location-details">
-        <span [innerHTML]="starRating(location.rating)"></span>
+        <p class="suggestion" *ngIf="location.reviews.length === 0">This location needs your review!</p>
+        <span *ngIf="location.reviews.length > 0" [innerHTML]="starRating(location.rating)"></span>
     </div>
     <div class="row location-details">
         <div class="col-md-4 col-sm-4 col-xs-12">
             <div class="row location-hours">
                 <div class="card">
                     <div class="card-header location-panel">
-                        Location Details
+                        Location Hours
                     </div>
                     <div class="card-body">
-                        <p>{{ location.openingTimes[0].days }}</p>
-                        <p>{{ location.openingTimes[0].opening }} -
-                        {{ location.openingTimes[0].closing }}</p>
+                        <div *ngFor="let times of location.openingTimes">
+                            <p>{{times.day}} {{times.opening}} - {{times.closing}}</p>
+                        </div>
                     </div>
                 </div>
             </div>
