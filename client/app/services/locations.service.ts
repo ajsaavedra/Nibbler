@@ -16,7 +16,7 @@ export class LocationService {
     }
 
     getLocationsByLatitudeAndLongitude(lat: number, lng: number) {
-        return this.http.get(this.API_URL + '?lng='+lng+'&lat='+lat+'&maxDistance=5').map(res => res.json());
+        return this.http.get(this.API_URL + '?lng=' + lng + '&lat=' + lat + '&maxDistance=5').map(res => res.json());
     }
 
     getLocationById(id) {
@@ -40,5 +40,17 @@ export class LocationService {
         };
 
         return this.http.post(this.API_URL + '/' + id + '/reviews', body).map(res => res.json());
+    }
+
+    addLocation(name, address, lat, lng, hours, options) {
+        const body = {
+            name: name,
+            address: address,
+            lng: lng,
+            lat: lat,
+            hours: hours,
+            options: options
+        };
+        return this.http.post(this.API_URL, body).map(res => res.json());
     }
 }
