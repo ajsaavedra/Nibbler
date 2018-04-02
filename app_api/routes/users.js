@@ -10,6 +10,7 @@ module.exports = function(passport) {
     const ctrlAuth = require('../controllers/authentication.js')(passport);
 
     router.post('/users/:username', ctrlAuth.authenticateUser, ctrlAuth.loginUser);
+    router.post('/logout', ctrlAuth.logoutUser);
     router.get('/users/:username', ctrlAuth.isLoggedIn, ctrlAuth.getUserProfile);
 
     router.get('/saved-favorites/:username', ctrlUsers.savedPosts, ctrlQuestions.questionsGetFavorites);

@@ -10,9 +10,9 @@ import { Router } from '@angular/router';
 })
 
 export class NavigationComponent {
-    private isLoggedIn: boolean = false;
+    private isLoggedIn = false;
     private username: string = null;
-    
+
     constructor(private globalEventsManager: GlobalEventsManager,
                 private accountsService: AccountsService,
                 private router: Router) {
@@ -29,7 +29,7 @@ export class NavigationComponent {
     }
 
     logoutUser() {
-        this.accountsService.logoutUser(localStorage.getItem('username')).subscribe(
+        this.accountsService.logoutUser(this.username).subscribe(
             res => {
                 this.globalEventsManager.showUserNavBar(false);
                 localStorage.clear();

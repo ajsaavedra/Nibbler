@@ -51,8 +51,8 @@ export class AccountsService {
                         .catch(err => Observable.throw(err) || 'Server error');
     }
 
-    logoutUser() {
-        return this.http.get(this.API_URL + '/logout')
+    logoutUser(uname) {
+        return this.http.post('http://localhost:3000/api/logout', {user: uname})
                         .map(res => res.json())
                         .catch(err => Observable.throw(err) || 'Server error');
     }

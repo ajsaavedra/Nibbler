@@ -26,7 +26,7 @@ export class AppComponent {
             this.globalEventsManager.setUserProfileTab(uname);
         }
     }
-    
+
     private butterfly: any = require('../assets/images/butterfly-center.svg');
     private date: number = new Date().getFullYear();
 }

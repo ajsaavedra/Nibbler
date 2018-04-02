@@ -24,14 +24,7 @@ module.exports = function(passport) {
     };
 
     const isLoggedIn = function(req, res, next) {
-        if (req.isAuthenticated()) {
-            if (req.params.username === 'logout') {
-                req.logout();
-                return sendJsonResponse(res, 200, null);
-            } else {
-                return next();
-            }
-        } else if (req.params.username) {
+        if (req.params.username) {
             return next();
         }
 
@@ -39,6 +32,12 @@ module.exports = function(passport) {
             'message': 'Unathenticated user. Please login.'
         });
     };
+
+    const logoutUser = function(req, res) {
+        if (!req.body.user) return sendJsonResponse(res, 400, {'message': 'Need username'});
+        req.logout();
+        return sendJsonResponse(res, 200, null);
+    }
 
     const getUserProfile = function(req, res) {
         User
@@ -62,6 +61,7 @@ module.exports = function(passport) {
     return {
         authenticateUser: authenticateUser,
         loginUser: loginUser,
+        logoutUser: logoutUser,
         isLoggedIn: isLoggedIn,
         getUserProfile: getUserProfile
     }

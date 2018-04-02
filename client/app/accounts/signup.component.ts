@@ -137,6 +137,6 @@ export class SignupComponent {
     }
 
     searchLocation(zipcode) {
-        return this.geocodingService.updateUserLocation(zipcode);
+        return this.geocodingService.getGeoLocation(zipcode);
     }
 }
