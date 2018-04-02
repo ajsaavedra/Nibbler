@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const options = require('./schemaOptions');
 
 const commentSchema = new Schema({
     discussion_id: { type: String },
@@ -8,6 +9,6 @@ const commentSchema = new Schema({
     votes: { type: Number, 'default': 1 },
     createdOn: { type: Date, 'default': new Date() },
     replies: []
-});
+}, options);
 
 module.exports = commentSchema;

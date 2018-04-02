@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
 const Schema = mongoose.Schema;
 const dietSchema = require('./diets');
+const options = require('./schemaOptions');
 
 const userSchema = new Schema({
     name: {
@@ -24,7 +25,7 @@ const userSchema = new Schema({
     coords: { type: [Number], index: '2dsphere' },
     created_at: Date,
     verified: { type: Boolean, default: false }
-});
+}, options);
 
 userSchema.pre('save', function(next) {
     var user = this;
@@ -41,6 +42,6 @@ userSchema.pre('save', function(next) {
 
 userSchema.methods.validPassword = function(password) {
     return bcrypt.compareSync(password, this.password);
-}
+};
 
 module.exports = mongoose.model('User', userSchema);

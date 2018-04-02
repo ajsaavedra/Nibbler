@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const commentSchema = require('./comments');
+const options = require('./schemaOptions');
 
 const questionSchema = new Schema({
     author: String,
@@ -11,6 +12,6 @@ const questionSchema = new Schema({
     tags: [],
     resolved: { type: Boolean, 'default': false },
     createdOn: { type: Date, 'default': new Date() }
-})
+}, options);
 
 module.exports = questionSchema;

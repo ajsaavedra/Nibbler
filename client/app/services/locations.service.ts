@@ -8,27 +8,27 @@ import 'rxjs/add/operator/catch';
 export class LocationService {
     API_URL = 'http://localhost:3000/api/locations';
     headers = new Headers({ 'Content-Type': 'application/json' });
-    options = new RequestOptions({ headers: this.headers });
+    options = new RequestOptions({ headers: this.headers, withCredentials: true });
     constructor(private http: Http) {}
 
     getNearbyLocations() {
-        return this.http.get(this.API_URL + '?lng=-122.2903&lat=37.8687&maxDistance=5').map(res => res.json());
+        return this.http.get(this.API_URL + '?lng=-122.2903&lat=37.8687&maxDistance=5', this.options).map(res => res.json());
     }
 
     getLocationsByLatitudeAndLongitude(lat: number, lng: number) {
-        return this.http.get(this.API_URL + '?lng=' + lng + '&lat=' + lat + '&maxDistance=5').map(res => res.json());
+        return this.http.get(this.API_URL + '?lng=' + lng + '&lat=' + lat + '&maxDistance=5', this.options).map(res => res.json());
     }
 
     getLocationById(id) {
-        return this.http.get(this.API_URL + '/' + id).map(res => res.json());
+        return this.http.get(this.API_URL + '/' + id, this.options).map(res => res.json());
     }
 
     getLocationReviewsByAuthor(uname) {
-        return this.http.get(this.API_URL + '-get-user-reviews/' + uname).map(res => res.json());
+        return this.http.get(this.API_URL + '-get-user-reviews/' + uname, this.options).map(res => res.json());
     }
 
     deleteUserLocationReview(id, reviewid) {
-        return this.http.delete(this.API_URL + '/' + id + '/reviews/' + reviewid).map(res => res.json());
+        return this.http.delete(this.API_URL + '/' + id + '/reviews/' + reviewid, this.options).map(res => res.json());
     }
 
     addReviewToLocation(id, author, title, rating, text) {
@@ -39,7 +39,7 @@ export class LocationService {
             reviewText: text
         };
 
-        return this.http.post(this.API_URL + '/' + id + '/reviews', body).map(res => res.json());
+        return this.http.post(this.API_URL + '/' + id + '/reviews', body, this.options).map(res => res.json());
     }
 
     addLocation(name, address, lat, lng, hours, options) {
@@ -51,6 +51,6 @@ export class LocationService {
             hours: hours,
             options: options
         };
-        return this.http.post(this.API_URL, body).map(res => res.json());
+        return this.http.post(this.API_URL, body, this.options).map(res => res.json());
     }
 }

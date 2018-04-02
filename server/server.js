@@ -6,10 +6,11 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const app = express();
 const path = require('path');
-const config = require('./config/secret');
-require('./app_api/models/locations');
-require('./app_api/models/user');
-require('./config/passport')(passport);
+const config = require('../config/secret');
+const cors = require('cors');
+require('./models/locations');
+require('./models/user');
+require('../config/passport')(passport);
 
 // Middleware
 app.use(express.static(path.join(__dirname, '/client/dist')));
@@ -24,9 +25,21 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-const userRoutes = require('./app_api/routes/users')(passport);
-const locationRoutes = require('./app_api/routes/locations');
-const questionRoutes = require('./app_api/routes/questions');
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../client', 'dist')))
+}
+
+const userRoutes = require('./routes/users')(passport);
+const locationRoutes = require('./routes/locations')(passport);
+const questionRoutes = require('./routes/questions')(passport);
+
+// CORS Middleware for testing purposes
+app.use(cors({credentials: true, origin: ['http://localhost:3000', 'http://localhost:3100']}));
+
+app.use('*', (req, res, next) => {
+    res.removeHeader('content-security-policy');
+    next();
+});
 
 app.use('/api', [userRoutes, locationRoutes, questionRoutes]);
 
