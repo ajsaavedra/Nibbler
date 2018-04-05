@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { QuestionService } from '../services/questions.service';
+import { GlobalEventsManager } from '../GlobalEventsManager';
 import { CacheService } from '../services/cache.service';
 import { AccountsService } from '../services/accounts.service';
 import { Observable } from 'rxjs/Observable';
@@ -20,11 +21,14 @@ export class QuestionRepliesComponent implements OnInit, OnDestroy {
     private replies;
     private helpfulCommentsMap = [];
     private votesMap = {};
+    private uname;
+
     @Input() question: any;
 
    constructor(private accountsService: AccountsService,
                private questionService: QuestionService,
                private cacheService: CacheService,
+               private globalEventsManager: GlobalEventsManager,
                private fb: FormBuilder) {
         this.replyForm = fb.group({
             'replyText': [null, Validators.required]
@@ -35,15 +39,14 @@ export class QuestionRepliesComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.uname = this.globalEventsManager.getUserProfiletab();
         this.questionId = this.question._id;
         this.getReplies();
 
-        const uname = localStorage.getItem('username');
-        if (uname && !this.cacheService._data['postHelpfulComments']) {
-            this.cacheService.getPostHelpfulComments(uname, this.questionId);
+        if (!this.cacheService._data['postHelpfulComments']) {
+            this.cacheService.getPostHelpfulComments(this.questionId);
         }
         const sub = this.cacheService._data['postHelpfulComments'].subscribe(res => {
-            console.log('ZOMBIE', res);
             if (res.comments && res.comments[this.questionId]) {
                 this.helpfulCommentsMap = res.comments[this.questionId];
             } else {
@@ -67,12 +70,11 @@ export class QuestionRepliesComponent implements OnInit, OnDestroy {
     }
 
     submitReply() {
-        const uname = localStorage.getItem('username');
-        if (uname && true) {
+        if (this.uname && true) {
             const text = this.replyForm.get('replyText').value;
 
             let reply = [];
-            const sub = this.questionService.postQuestionReply(this.questionId, uname, text)
+            const sub = this.questionService.postQuestionReply(this.questionId, this.uname, text)
                 .do(res => reply = res)
                 .flatMap(res => {
                     return this.cacheService._data['question'][this.questionId];
@@ -88,7 +90,7 @@ export class QuestionRepliesComponent implements OnInit, OnDestroy {
     }
 
     replyBelongsToUser(reply) {
-        return reply.author === localStorage.getItem('username');
+        return reply.author === this.uname;
     }
 
     deleteReply(reply) {
@@ -97,7 +99,9 @@ export class QuestionRepliesComponent implements OnInit, OnDestroy {
     }
 
     isHelpful(reply_id) {
-        return this.helpfulCommentsMap && this.helpfulCommentsMap.includes(reply_id);
+        if (this.uname) {
+            return this.helpfulCommentsMap && this.helpfulCommentsMap.includes(reply_id);
+        }
     }
 
     submitEdit(reply) {
@@ -126,12 +130,11 @@ export class QuestionRepliesComponent implements OnInit, OnDestroy {
     }
 
     saveHelpfulComment(reply_id, isHelpful) {
-        const uname = localStorage.getItem('username');
-        if (uname && true) {
+        if (this.uname && true) {
             this.updateReplyVotes(reply_id, isHelpful);
-            this.updateSavedReplies(uname, reply_id, isHelpful);
+            this.updateSavedReplies(this.uname, reply_id, isHelpful);
         } else {
-            alert('Log in to vote');
+            alert('Log in to kudos helpful comments!');
         }
     }
 
@@ -149,7 +152,7 @@ export class QuestionRepliesComponent implements OnInit, OnDestroy {
 
     updateSavedReplies(uname, reply_id, isHelpful) {
         const sub = this.accountsService
-            .saveHelpfulComment(uname, this.questionId, reply_id, isHelpful)
+            .saveHelpfulComment(this.questionId, reply_id, isHelpful)
             .switchMap(result => this.cacheService._data['postHelpfulComments'])
             .subscribe(subResult => {
                 if (subResult['comments'][this.questionId] !== null) {

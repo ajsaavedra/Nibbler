@@ -59,16 +59,20 @@ footer img {
 }
 
 /****** Home Page ******/
-#banner{
-    max-height: 600px;
-    max-width: 100%;
-    position: relative;
-    background-color: #cfe8fc;
+#homepage {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: white;
 }
 
 .welcome-page {
     text-align: center;
-    height: 300px;
+    height: auto;
+    background-color: #EFF0F1;
+    margin-top: 40px;
+    padding-bottom: 40px;
+    border-radius: 5px;
 }
 
 .welcome-page > img {
@@ -76,6 +80,17 @@ footer img {
     padding: 40px 0;
 }
 
+#home-title {
+    color: black;
+    font-weight: lighter;
+    font-size: 45px;
+}
+
+.home-btn {
+    width: 150px;
+    // background-color: white;
+    // color: cornflowerblue;
+}
 /****** Locations List ******/
 .shop img {
     width: 70px;

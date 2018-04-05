@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class GlobalEventsManager {
-    
     private _showUserNavBar: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
     public showUserNavBarEmitter: Observable<boolean> = this._showUserNavBar.asObservable();
 
@@ -16,12 +15,16 @@ export class GlobalEventsManager {
     showUserNavBar(show: boolean) {
         this._showUserNavBar.next(show);
     }
-    
+
     getShowValue() {
         return this._showUserNavBar.getValue();
     }
 
     setUserProfileTab(uname: string) {
         this._showUserProfileTab.next(uname);
+    }
+
+    getUserProfiletab() {
+        return this._showUserProfileTab.getValue();
     }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AccountsService } from '../services/accounts.service';
+import { GlobalEventsManager } from '../GlobalEventsManager';
 
 @Component({
     templateUrl: './app/accounts/profile.component.html',
@@ -14,12 +15,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     constructor(private accountsService: AccountsService,
                 private route: ActivatedRoute,
-                private router: Router) {}
+                private router: Router,
+                private globalEventsManager: GlobalEventsManager) {}
 
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             const username = params['username'];
-            this.isLocalUser = username === localStorage.getItem('username');
+            this.isLocalUser = username === this.globalEventsManager.getUserProfiletab();
             this.accountsService
                 .getUserProfile(username)
                 .subscribe(

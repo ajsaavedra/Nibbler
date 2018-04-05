@@ -4,6 +4,7 @@ import { QuestionService } from '../services/questions.service';
 import { AccountsService } from '../services/accounts.service';
 import { CacheService } from '../services/cache.service';
 import { Helper } from '../services/helper.service';
+import { GlobalEventsManager } from '../GlobalEventsManager';
 
 @Component({
     templateUrl: './app/questions/questions.component.html',
@@ -19,15 +20,18 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     private unlikedQuestions: any;
     private votesMap = new Map<string, number>();
     private field: string;
+    private uname;
 
     constructor(private route: ActivatedRoute,
                 private questionService: QuestionService,
                 private accountsService: AccountsService,
                 private cacheService: CacheService,
+                private globalEventsManager: GlobalEventsManager,
                 private helper: Helper) {}
 
     ngOnInit() {
         const sub = this.route.params.subscribe(params => {
+            this.uname = this.globalEventsManager.getUserProfiletab();
             this.field = params['field'] ? params['field'] : 'questions';
             if (this.field === 'questions') {
                 this.cacheService.getQuestions();
@@ -77,9 +81,8 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     }
 
     like(question) {
-        const uname = localStorage.getItem('username');
         const id = question._id;
-        if (uname) {
+        if (this.uname) {
             this.updateVotesMapOnUpvote(id);
             if (this.likedQuestions[id]) {
                 this.updateCachedVotes(id, -1);
@@ -89,7 +92,7 @@ export class QuestionsComponent implements OnInit, OnDestroy {
                 this.updateCachedVotes(id, 1);
             }
             const sub = this.accountsService
-                .saveLikedPostToUser(uname, id)
+                .saveLikedPostToUser(this.uname, id)
                 .do(res => {
                     if (this.likedQuestions[id]) {
                         delete this.likedQuestions[id];
@@ -113,9 +116,8 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     }
 
     unlike(question) {
-        const uname = localStorage.getItem('username');
         const id = question._id;
-        if (uname) {
+        if (this.uname) {
             this.updateVotesMapOnDownvote(id);
             if (this.likedQuestions[id]) {
                 this.updateCachedVotes(id, -2);
@@ -125,7 +127,7 @@ export class QuestionsComponent implements OnInit, OnDestroy {
                 this.updateCachedVotes(id, -1);
             }
             const sub = this.accountsService
-                .removeLikedPostFromUser(uname, id)
+                .removeLikedPostFromUser(this.uname, id)
                 .do(res => {
                     if (this.unlikedQuestions[id]) {
                         delete this.unlikedQuestions[id];
@@ -193,12 +195,11 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     }
 
     getLikedAndUnlikedPosts() {
-        const uname = localStorage.getItem('username');
-        if (uname && true) {
+        if (this.uname) {
             if (!this.cacheService._data['liked'] ||
                 !this.cacheService._data['unliked']) {
-                this.cacheService.getLikedPosts(uname);
-                this.cacheService.getUnlikedPosts(uname);
+                this.cacheService.getLikedPosts();
+                this.cacheService.getUnlikedPosts();
             }
 
             const sub1 = this.cacheService._data['liked'].subscribe(res => {

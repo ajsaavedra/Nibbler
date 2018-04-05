@@ -32,20 +32,20 @@ export class CacheService {
         this._data['resolved'] = this.questionService.getResolvedQuestions().shareReplay();
     }
 
-    getLikedPosts(uname) {
-        this._data['liked'] = this.accountsService.getLikedPosts(uname).shareReplay();
+    getLikedPosts() {
+        this._data['liked'] = this.accountsService.getLikedPosts().shareReplay();
     }
 
-    getUnlikedPosts(uname) {
-        this._data['unliked'] = this.accountsService.getUnlikedPosts(uname).shareReplay();
+    getUnlikedPosts() {
+        this._data['unliked'] = this.accountsService.getUnlikedPosts().shareReplay();
     }
 
-    getPostHelpfulComments(uname, post) {
-        this._data['postHelpfulComments'] = this.accountsService.getSavedHelpfulCommentsForPost(uname, post).shareReplay();
+    getPostHelpfulComments(post) {
+        this._data['postHelpfulComments'] = this.accountsService.getSavedHelpfulCommentsForPost(post).shareReplay();
     }
 
-    getHelpfulComments(uname) {
-        this._data['helpfulComments'] = this.accountsService.getSavedHelpfulComments(uname).shareReplay();
+    getHelpfulComments() {
+        this._data['helpfulComments'] = this.accountsService.getSavedHelpfulComments().shareReplay();
     }
 
     getLocations() {

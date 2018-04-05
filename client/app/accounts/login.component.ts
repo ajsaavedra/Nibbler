@@ -24,8 +24,9 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (localStorage.getItem('username') && true) {
-            this.router.navigateByUrl('/');
+        const name = this.globalEventsManager.getUserProfiletab();
+        if (name) {
+            this.router.navigateByUrl('/profile/' + name);
         }
     }
 
@@ -36,7 +37,6 @@ export class LoginComponent implements OnInit {
             .loginUser(username, password)
             .subscribe(
                 res => {
-                    localStorage.setItem('username', username);
                     this.onLoginSuccessful(username);
                     this.router.navigateByUrl('/profile/' + username);
                 },

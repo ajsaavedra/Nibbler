@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { GlobalEventsManager } from '../GlobalEventsManager';
 import { AccountsService } from '../services/accounts.service';
 import { Router } from '@angular/router';
@@ -9,9 +9,10 @@ import { Router } from '@angular/router';
     providers: [ AccountsService ]
 })
 
-export class NavigationComponent {
+export class NavigationComponent implements OnDestroy {
     private isLoggedIn = false;
     private username: string = null;
+    private sub;
 
     constructor(private globalEventsManager: GlobalEventsManager,
                 private accountsService: AccountsService,
@@ -29,12 +30,15 @@ export class NavigationComponent {
     }
 
     logoutUser() {
-        this.accountsService.logoutUser(this.username).subscribe(
-            res => {
+        this.sub = this.accountsService.logoutUser(this.username).subscribe(res => {
                 this.globalEventsManager.showUserNavBar(false);
-                localStorage.clear();
+                this.globalEventsManager.setUserProfileTab('');
                 this.router.navigateByUrl('/login');
             }
         );
+    }
+
+    ngOnDestroy() {
+        this.sub.unsubscribe();
     }
 }

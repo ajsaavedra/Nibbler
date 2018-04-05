@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { QuestionService } from '../services/questions.service';
 import { CacheService } from '../services/cache.service';
 import { Helper } from '../services/helper.service';
+import { GlobalEventsManager } from '../GlobalEventsManager';
 
 @Component({
     templateUrl: './app/accounts/profile.questions.component.html',
@@ -13,11 +14,13 @@ export class ProfileQuestionsComponent implements OnInit, OnDestroy {
     private username;
     private subscriptions = [];
     private questions;
+    private uname;
 
     constructor(private questionsService: QuestionService,
                 private cacheService: CacheService,
                 private helper: Helper,
-                private route: ActivatedRoute) {}
+                private route: ActivatedRoute,
+                private globalEventsManager: GlobalEventsManager) {}
 
     ngOnInit() {
         const sub = this.route.params
@@ -49,7 +52,7 @@ export class ProfileQuestionsComponent implements OnInit, OnDestroy {
     }
 
     belongsToUser() {
-        return this.username === localStorage.getItem('username');
+        return this.username === this.globalEventsManager.getUserProfiletab();
     }
 
     getTimeSince(datetime) {

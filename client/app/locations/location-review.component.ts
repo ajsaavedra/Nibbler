@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LocationService } from '../services/locations.service';
+import { GlobalEventsManager } from '../GlobalEventsManager';
 
 @Component({
     selector: 'location-review-form',
@@ -13,12 +14,14 @@ export class LocationReviewComponent {
 
     reviewForm: FormGroup;
 
-    constructor(private locationService: LocationService, private fb: FormBuilder) {
+    constructor(private locationService: LocationService,
+                private fb: FormBuilder,
+                private globalEventsManager: GlobalEventsManager) {
         this.reviewForm = fb.group({
             'title': [null, Validators.required],
             'rating': [5, Validators.required],
             'review': [null, Validators.required]
-        })
+        });
     }
 
     addReview(id) {
@@ -26,7 +29,7 @@ export class LocationReviewComponent {
             const call = this.locationService
                 .addReviewToLocation(
                     id,
-                    localStorage.getItem('username'),
+                    this.globalEventsManager.getUserProfiletab(),
                     this.reviewForm.get('title').value,
                     this.reviewForm.get('rating').value,
                     this.reviewForm.get('review').value)
@@ -37,6 +40,6 @@ export class LocationReviewComponent {
     submitReview() {
         this.addReview(this.location._id)
         .then(result => window.location.reload())
-        .catch(err => console.log('Error: ' + err))
+        .catch(err => console.log('Error: ' + err));
     }
 }

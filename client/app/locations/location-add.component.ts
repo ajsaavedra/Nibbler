@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Helper } from '../services/helper.service';
 import { GeocodingService } from '../services/geocoding.service';
 import { LocationService } from '../services/locations.service';
+import { GlobalEventsManager } from '../GlobalEventsManager';
 
 @Component({
     templateUrl: './app/locations/location-add.component.html',
@@ -29,7 +30,8 @@ export class LocationAddComponent implements OnInit {
                 private helper: Helper,
                 private router: Router,
                 private locationService: LocationService,
-                private geocodingService: GeocodingService) {
+                private geocodingService: GeocodingService,
+                private globalEventsManager: GlobalEventsManager) {
         this.addLocationForm = fb.group({
             'name': [null, Validators.required],
             'address': [null, Validators.required],
@@ -45,7 +47,7 @@ export class LocationAddComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.isLoggedIn = localStorage.getItem('username') && true;
+        this.isLoggedIn = this.globalEventsManager.getUserProfiletab() && true;
         if (!this.isLoggedIn) {
             this.router.navigateByUrl('/');
         }

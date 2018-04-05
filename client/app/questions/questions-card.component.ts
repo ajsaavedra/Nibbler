@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { GlobalEventsManager } from '../GlobalEventsManager';
 
 @Component({
     selector: 'questions-card',
@@ -8,7 +9,9 @@ import { Component } from '@angular/core';
 export class QuestionsCardComponent {
     private questionsIcon = require('../../assets/images/questions.svg');
 
+    constructor(private globalEventsManager: GlobalEventsManager) {}
+
     isLoggedIn() {
-        return localStorage.getItem('username') && true;
+        return this.globalEventsManager.getUserProfiletab();
     }
 }

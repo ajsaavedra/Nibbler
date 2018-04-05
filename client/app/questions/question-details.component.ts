@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { QuestionService } from '../services/questions.service';
 import { AccountsService } from '../services/accounts.service';
 import { CacheService } from '../services/cache.service';
-
+import { GlobalEventsManager } from '../GlobalEventsManager';
 @Component({
     templateUrl: './app/questions/question-details.component.html'
 })
@@ -17,14 +17,17 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
     private liked = false;
     private disliked = false;
     private votes = 0;
+    private uname;
 
     constructor(
         private route: ActivatedRoute,
         private questionService: QuestionService,
         private accountsService: AccountsService,
-        private cacheService: CacheService) {}
+        private cacheService: CacheService,
+        private globalEventsManager: GlobalEventsManager) {}
 
     ngOnInit() {
+        this.uname = this.globalEventsManager.getUserProfiletab();
         const sub = this.route.params
             .map(params => params['id'])
             .switchMap(id => {
@@ -67,10 +70,10 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
     }
 
     getIsFavorited(id) {
-        if (localStorage.getItem('username')) {
+        if (this.uname) {
             const accountSub =
                 this.accountsService
-                    .getUserSavedPosts(localStorage.getItem('username'))
+                    .getUserSavedPosts()
                     .subscribe(res => {
                         this.isFavorited = res && res.filter(item => item._id === id).length > 0;
                     }, err => {
@@ -81,11 +84,11 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
     }
 
     toggleFavorite() {
-        if (localStorage.getItem('username') && !this.isFavorited) {
-            this.accountsService.savePostToUser(localStorage.getItem('username'), this.questionId)
+        if (this.uname && !this.isFavorited) {
+            this.accountsService.savePostToUser(this.uname, this.questionId)
                 .subscribe(res => this.isFavorited = true, err => this.isFavorited = false);
-        } else if (localStorage.getItem('username') && this.isFavorited) {
-            this.accountsService.removePostFromUser(localStorage.getItem('username'), this.questionId)
+        } else if (this.uname && this.isFavorited) {
+            this.accountsService.removePostFromUser(this.uname, this.questionId)
                 .subscribe(res => this.isFavorited = false);
         } else {
             alert('You must be logged in to save a post.');
@@ -93,9 +96,8 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
     }
 
     like(question_id) {
-        const uname = localStorage.getItem('username');
         let sub;
-        if (uname) {
+        if (this.uname) {
             if (this.liked) {
                 this.updateCachedVotes(question_id, -1);
                 sub = this.questionService.updateQuestionVoteCount(question_id, -1).subscribe(res => this.votes -= 1);
@@ -107,7 +109,7 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
                 sub = this.questionService.updateQuestionVoteCount(question_id, 1).subscribe(res => this.votes += 1);
             }
 
-            const sub2 = this.accountsService.saveLikedPostToUser(uname, question_id).subscribe(res => {
+            const sub2 = this.accountsService.saveLikedPostToUser(this.uname, question_id).subscribe(res => {
                 this.liked = !this.liked;
                 this.disliked = false;
             });
@@ -119,9 +121,8 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
     }
 
     unlike(question_id) {
-        const uname = localStorage.getItem('username');
         let sub;
-        if (uname) {
+        if (this.uname) {
             if (this.disliked) {
                 this.updateCachedVotes(question_id, 1);
                 sub = this.questionService.updateQuestionVoteCount(question_id, 1).subscribe(res => this.votes += 1);
@@ -133,7 +134,7 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
                 sub = this.questionService.updateQuestionVoteCount(question_id, -1).subscribe(res => this.votes -= 1);
             }
 
-            const sub2 = this.accountsService.removeLikedPostFromUser(uname, question_id).subscribe(res => {
+            const sub2 = this.accountsService.removeLikedPostFromUser(this.uname, question_id).subscribe(res => {
                 this.disliked = !this.disliked;
                 this.liked = false;
             });
@@ -145,12 +146,11 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
     }
 
     getLikedAndUnlikedPosts(id) {
-        const uname = localStorage.getItem('username');
-        if (uname && true) {
-            const sub1 = this.accountsService.getLikedPosts(uname).subscribe(res => {
+        if (this.uname && true) {
+            const sub1 = this.accountsService.getLikedPosts().subscribe(res => {
                 this.liked = res.posts && res.posts[id] && true;
             });
-            const sub2 = this.accountsService.getUnlikedPosts(uname).subscribe(res => {
+            const sub2 = this.accountsService.getUnlikedPosts().subscribe(res => {
                 this.disliked = res.posts && res.posts[id] && true;
             });
 

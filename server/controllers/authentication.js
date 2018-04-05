@@ -22,14 +22,17 @@ module.exports = function(passport) {
         if (req.isAuthenticated()) {
             return next();
         }
-        console.log('Bad credentials');
+
         sendJsonResponse(res, 403, {
             'message': 'Unathenticated user. Please login.'
         });
     };
 
+    const getUsername = function(req, res) {
+        sendJsonResponse(res, 200, {'username': req.user.profile.username});
+    }
+
     const logoutUser = function(req, res) {
-        if (!req.body.user) return sendJsonResponse(res, 400, {'message': 'Need username'});
         req.logout();
         return sendJsonResponse(res, 200, null);
     }
@@ -55,6 +58,7 @@ module.exports = function(passport) {
 
     return {
         isAuth,
+        getUsername,
         loginUser,
         logoutUser,
         getUserProfile

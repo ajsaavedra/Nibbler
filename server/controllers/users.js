@@ -77,7 +77,7 @@ const saveUser = function(user, res) {
 
 module.exports.savedPosts = function(req, res, next) {
     User
-        .findOne({ 'profile.username': req.params.username })
+        .findOne({ 'profile.username': req.user.profile.username })
         .exec(function(err, user) {
             if (err) {
                 sendJsonResponse(res, 400, err);
@@ -177,7 +177,7 @@ const saveHelpfulCommentToUser = function(req, res, user) {
 
 module.exports.savePost = function(req, res) {
     User
-        .findOne({ 'profile.username': req.body.username })
+        .findOne({ 'profile.username': req.user.profile.username })
         .exec(function(err, user) {
             if (err) {
                 sendJsonResponse(res, 400, err);
@@ -189,7 +189,7 @@ module.exports.savePost = function(req, res) {
 
 module.exports.removePost = function(req, res) {
     User
-        .findOne({ 'profile.username': req.body.username })
+        .findOne({ 'profile.username': req.user.profile.username })
         .exec(function(err, user) {
             if (err) {
                 sendJsonResponse(res, 400, err);
@@ -201,7 +201,7 @@ module.exports.removePost = function(req, res) {
 
 module.exports.likePost = function(req, res) {
     User
-        .findOne({ 'profile.username': req.body.username })
+        .findOne({ 'profile.username': req.user.profile.username })
         .exec(function(err, user) {
             if (err) {
                 sendJsonResponse(res, 400, err);
@@ -213,7 +213,7 @@ module.exports.likePost = function(req, res) {
 
 module.exports.unlikePost = function(req, res) {
     User
-        .findOne({ 'profile.username': req.body.username })
+        .findOne({ 'profile.username': req.user.profile.username })
         .exec(function(err, user) {
             if (err) {
                 sendJsonResponse(res, 400, err);
@@ -225,7 +225,7 @@ module.exports.unlikePost = function(req, res) {
 
 module.exports.saveHelpfulComment = function(req, res) {
     User
-        .findOne({ 'profile.username': req.body.username })
+        .findOne({ 'profile.username': req.user.profile.username })
         .exec(function(err, user) {
             if (err) {
                 sendJsonResponse(res, 400, err);
@@ -236,42 +236,26 @@ module.exports.saveHelpfulComment = function(req, res) {
 };
 
 module.exports.likedPosts = function(req, res, next) {
-    User
-        .findOne({ 'profile.username': req.params.username })
-        .exec(function(err, user) {
-            if (err) {
-                sendJsonResponse(res, 400, err);
-            } else {
-                req.posts = user.likedPosts;
-                if (req.posts) {
-                    next();
-                } else {
-                    sendJsonResponse(res, 200, {});
-                }
-            }
-        });
+    req.posts = req.user.likedPosts;
+    if (req.posts) {
+        next();
+    } else {
+        sendJsonResponse(res, 200, {});
+    }
 };
 
 module.exports.unlikedPosts = function(req, res, next) {
-    User
-        .findOne({ 'profile.username': req.params.username })
-        .exec(function(err, user) {
-            if (err) {
-                sendJsonResponse(res, 400, err);
-            } else {
-                req.posts = user.unlikedPosts;
-                if (req.posts) {
-                    next();
-                } else {
-                    sendJsonResponse(res, 200, {});
-                }
-            }
-        });
+    req.posts = req.user.unlikedPosts;
+    if (req.posts) {
+        next();
+    } else {
+        sendJsonResponse(res, 200, {});
+    }
 };
 
 module.exports.questionHelpfulComments = function(req, res) {
     User
-        .findOne({ 'profile.username': req.params.username })
+        .findOne({ 'profile.username': req.user.profile.username })
         .exec(function(err, user) {
             if (err) {
                 sendJsonResponse(res, 400, err);
@@ -289,7 +273,7 @@ module.exports.questionHelpfulComments = function(req, res) {
 
 module.exports.savedHelpfulComments = function(req, res, next) {
     User
-        .findOne({ 'profile.username': req.params.username })
+        .findOne({ 'profile.username': req.user.profile.username })
         .exec(function(err, user) {
             if (err) {
                 sendJsonResponse(res, 400, err);

@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { LocationService } from '../services/locations.service';
 import { Helper } from '../services/helper.service';
 import { CacheService } from '../services/cache.service';
+import { GlobalEventsManager } from '../GlobalEventsManager';
 
 @Component({
     templateUrl: './app/locations/location-details.component.html',
@@ -17,7 +18,8 @@ export class LocationDetailsComponent implements OnInit, OnDestroy {
     constructor(private locationService: LocationService,
                 private cacheService: CacheService,
                 private helper: Helper,
-                private route: ActivatedRoute) {}
+                private route: ActivatedRoute,
+                private globalEventsManager: GlobalEventsManager) {}
 
     ngOnInit() {
         this.sub = this.route.params
@@ -35,7 +37,7 @@ export class LocationDetailsComponent implements OnInit, OnDestroy {
                 this.location = data;
             });
 
-        this.isLoggedIn = localStorage.getItem('username') && true;
+        this.isLoggedIn = this.globalEventsManager.getUserProfiletab() && true;
     }
 
     ngOnDestroy() {

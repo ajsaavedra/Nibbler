@@ -10,7 +10,6 @@ import { Helper } from '../services/helper.service';
 
 export class ProfileSavedPostsComponent implements OnInit, OnDestroy {
     private subscriptions = [];
-    private username;
     private savedData;
 
     constructor(private accountsService: AccountsService,
@@ -18,9 +17,7 @@ export class ProfileSavedPostsComponent implements OnInit, OnDestroy {
                 private helper: Helper) {}
 
     ngOnInit() {
-        this.username = localStorage.getItem('username');
-        const sub = this.accountsService.getUserSavedPosts(this.username)
-                .subscribe(res => this.savedData = res);
+        const sub = this.accountsService.getUserSavedPosts().subscribe(res => this.savedData = res);
         this.subscriptions.push(sub);
     }
 

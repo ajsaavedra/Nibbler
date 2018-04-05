@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AccountsService } from '../services/accounts.service';
 import { GeocodingService } from '../services/geocoding.service';
 import { PasswordValidation } from './password.validation';
+import { GlobalEventsManager } from '../GlobalEventsManager';
 import {
     trigger,
     state,
@@ -28,7 +29,7 @@ import {
     ]
 })
 
-export class SignupComponent {
+export class SignupComponent implements OnInit {
 
     private formState = 'inactive';
     private signupFormPageOne: FormGroup;
@@ -44,7 +45,8 @@ export class SignupComponent {
     constructor(private router: Router,
                 private fb: FormBuilder,
                 private accountsService: AccountsService,
-                private geocodingService: GeocodingService) {
+                private geocodingService: GeocodingService,
+                private globalEventsManager: GlobalEventsManager) {
         this.signupFormPageOne = fb.group({
             'fname': [null, Validators.compose([
                 Validators.required,
@@ -73,6 +75,13 @@ export class SignupComponent {
             'soy-free': false,
             'nut-free': false
         }, { validator: PasswordValidation.passwordsMatch });
+    }
+
+    ngOnInit() {
+        const name = this.globalEventsManager.getUserProfiletab();
+        if (name) {
+            this.router.navigateByUrl('/profile/' + name);
+        }
     }
 
     checkUserInfo() {

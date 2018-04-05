@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { LocationService } from '../services/locations.service';
 import { CacheService } from '../services/cache.service';
 import { Helper } from '../services/helper.service';
+import { GlobalEventsManager } from '../GlobalEventsManager';
 
 @Component({
     templateUrl: './app/accounts/profile.reviews.component.html',
@@ -13,11 +14,13 @@ export class ProfileReviewsComponent implements OnInit, OnDestroy {
     private username;
     private subscriptions = [];
     private reviews = [];
+    private uname;
 
     constructor(private locationService: LocationService,
                 private cacheService: CacheService,
                 private helper: Helper,
-                private route: ActivatedRoute) {}
+                private route: ActivatedRoute,
+                private globalEventsManager: GlobalEventsManager) {}
 
     ngOnInit() {
         const sub = this.route.params
@@ -49,10 +52,7 @@ export class ProfileReviewsComponent implements OnInit, OnDestroy {
     };
 
     belongsToUser(review) {
-        const uname = localStorage.getItem('username');
-        if (uname) {
-            return review.author === uname;
-        }
+        return review.author === this.globalEventsManager.getUserProfiletab();
     }
 
     deleteReview(location_id, review_id) {

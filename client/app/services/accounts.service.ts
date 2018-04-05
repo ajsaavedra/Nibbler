@@ -46,13 +46,17 @@ export class AccountsService {
             password: pw
         };
 
-        return this.http.post(this.API_URL + '/' + uname, body, this.options)
+        return this.http.post('http://localhost:3000/api/login', body, this.options)
                         .map(res => res.json())
                         .catch(err => Observable.throw(err) || 'Server error');
     }
 
+    isAuth() {
+        return this.http.get('http://localhost:3000/api/auth', this.options).map(res => res.json());
+    }
+
     logoutUser(uname) {
-        return this.http.post('http://localhost:3000/api/logout', {user: uname})
+        return this.http.post('http://localhost:3000/api/logout', {username: uname}, this.options)
                         .map(res => res.json())
                         .catch(err => Observable.throw(err) || 'Server error');
     }
@@ -63,8 +67,8 @@ export class AccountsService {
                         .catch(err => Observable.throw(err) || 'Server error');
     }
 
-    getUserSavedPosts(uname) {
-        return this.http.get('http://localhost:3000/api/saved-favorites/' + uname, this.options)
+    getUserSavedPosts() {
+        return this.http.get('http://localhost:3000/api/saved-favorites/', this.options)
                         .map(res => res.json());
     }
 
@@ -108,9 +112,8 @@ export class AccountsService {
                         .map(res => res ? res.json() : {});
     }
 
-    saveHelpfulComment(uname, post_id, reply_id, helpful) {
+    saveHelpfulComment(post_id, reply_id, helpful) {
         const body = {
-            username: uname,
             post_id: post_id,
             reply_id: reply_id,
             isHelpful: helpful
@@ -120,24 +123,23 @@ export class AccountsService {
                         .map(res => res ? res.json() : {});
     }
 
-    getSavedHelpfulCommentsForPost(uname, post) {
-        return this.http.get('http://localhost:3000/api/question-helpful-comments/' +
-                            uname + '/' + post, this.options)
+    getSavedHelpfulCommentsForPost(post) {
+        return this.http.get('http://localhost:3000/api/question-helpful-comments/' + post, this.options)
                         .map(res => res.json());
     }
 
-    getSavedHelpfulComments(uname) {
-        return this.http.get('http://localhost:3000/api/saved-helpful-comments/' + uname, this.options)
+    getSavedHelpfulComments() {
+        return this.http.get('http://localhost:3000/api/saved-helpful-comments/', this.options)
                         .map(res => res.json());
     }
 
-    getLikedPosts(uname) {
-        return this.http.get('http://localhost:3000/api/liked-posts/' + uname, this.options)
+    getLikedPosts() {
+        return this.http.get('http://localhost:3000/api/liked-posts/', this.options)
                         .map(res => res.json());
     }
 
-    getUnlikedPosts(uname) {
-        return this.http.get('http://localhost:3000/api/unliked-posts/' + uname, this.options)
+    getUnlikedPosts() {
+        return this.http.get('http://localhost:3000/api/unliked-posts/', this.options)
                         .map(res => res.json());
     }
 }

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { GlobalEventsManager } from '../GlobalEventsManager';
+
 @Component({
     templateUrl: './app/accounts/profile.votes-card.component.html'
 })
@@ -6,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 export class ProfileVotesCardComponent implements OnInit {
     private username;
 
+    constructor(private globalEventsManager: GlobalEventsManager) {}
+
     ngOnInit() {
-        this.username = localStorage.getItem('username');
+        this.username = this.globalEventsManager.getUserProfiletab();
     }
 }

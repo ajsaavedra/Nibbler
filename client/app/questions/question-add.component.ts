@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DragulaService } from 'ng2-dragula';
 import { QuestionService } from '../services/questions.service';
 import { CacheService } from '../services/cache.service';
+import { GlobalEventsManager } from '../GlobalEventsManager';
 
 @Component({
     templateUrl: './app/questions/question-add.component.html'
@@ -20,7 +21,8 @@ export class QuestionAddComponent implements OnInit {
                 private router: Router,
                 private dragula: DragulaService,
                 private cacheService: CacheService,
-                private questionService: QuestionService) {
+                private questionService: QuestionService,
+                private globalEventsManager: GlobalEventsManager) {
         this.addQuestionForm = fb.group({
             'title': [null, Validators.required],
             'question': [null, Validators.required]
@@ -37,7 +39,7 @@ export class QuestionAddComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.uname = localStorage.getItem('username');
+        this.uname = this.globalEventsManager.getUserProfiletab();
         if (!this.uname) {
             this.router.navigateByUrl('/login');
         }

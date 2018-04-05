@@ -3,6 +3,7 @@ import { LocationService } from '../services/locations.service';
 import { GeocodingService } from '../services/geocoding.service';
 import { Helper } from '../services/helper.service';
 import { CacheService } from '../services/cache.service';
+import { GlobalEventsManager } from '../GlobalEventsManager';
 
 @Component({
     templateUrl: './app/locations/locations.component.html',
@@ -20,6 +21,7 @@ export class LocationsComponent implements OnInit, OnDestroy {
 
     constructor(private locationService: LocationService,
                 private geocodingService: GeocodingService,
+                private globalEventsManager: GlobalEventsManager,
                 private cacheService: CacheService,
                 private helper: Helper) {
 
@@ -47,7 +49,7 @@ export class LocationsComponent implements OnInit, OnDestroy {
         this.sub = this.cacheService._data['locations'].subscribe(res => {
             this.locations = res;
         });
-        this.isLoggedIn = localStorage.getItem('username') && true;
+        this.isLoggedIn = this.globalEventsManager.getUserProfiletab() && true;
     }
 
     ngOnDestroy() {
