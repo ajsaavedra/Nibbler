@@ -82,8 +82,11 @@ module.exports.savedPosts = function(req, res, next) {
             if (err) {
                 sendJsonResponse(res, 400, err);
             } else {
-                req.favorites = user.savedPosts;
-                next();
+                if (user.savedPosts) {
+                    req.favorites = user.savedPosts;
+                    return next();
+                }
+                sendJsonResponse(res, 200, {});
             }
         });
 };
@@ -287,5 +290,16 @@ module.exports.savedHelpfulComments = function(req, res, next) {
                     });
                 }
             }
+        });
+};
+
+module.exports.updateAuthorKarma = function(req, res) {
+    User
+        .findOne({ 'profile.username': req.body.author })
+        .select('profile')
+        .exec(function(err, user) {
+            if (err) return res.status(500).json(err);
+            user.profile.karma += req.body.vote
+            saveUser(user, res);
         });
 };

@@ -35,31 +35,39 @@ module.exports.locationsListByDistance = function(req, res) {
         type: 'Point',
         coordinates: [longitude, latitude]
     };
-    const geoOptions = {
-        spherical: true,
-        maxDistance: meterConversion.miToM(req.query.maxDistance),
-        num: 10
-    };
     if ((!longitude && longitude !== 0) || (!latitude && latitude !== 0)) {
         sendJsonResponse(res, 404, {
             'message': 'longitude and latitude required'
         });
         return;
     }
-    Loc.geoNear(point, geoOptions, function(err, results, stats) {
+    Loc.aggregate([
+        {
+            $geoNear: {
+                near: point,
+                distanceField: 'dist.calculated',
+                spherical: true,
+                maxDistance: meterConversion.miToM(req.query.maxDistance),
+                num: 50
+            }
+        },
+        {
+            $skip: parseInt(req.query.offset || 15)
+        }
+    ]).exec((err, results) => {
         var locations = [];
         if (err) {
             sendJsonResponse(res, 404, err);
         } else {
             results.forEach(function(doc) {
                 locations.push({
-                    distance: meterConversion.mToMi(doc.dis),
-                    name: doc.obj.name,
-                    address: doc.obj.address,
-                    rating: doc.obj.rating,
-                    options: doc.obj.options,
-                    reviews: doc.obj.reviews,
-                    _id: doc.obj._id
+                    distance: meterConversion.mToMi(doc.dist.calculated),
+                    name: doc.name,
+                    address: doc.address,
+                    rating: doc.rating,
+                    options: doc.options,
+                    reviews: doc.reviews,
+                    _id: doc._id
                 });
             });
             sendJsonResponse(res, 200, locations);

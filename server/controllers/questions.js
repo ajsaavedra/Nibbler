@@ -8,6 +8,8 @@ module.exports.questionsGetAll = function(req, res) {
     Question
         .find({ resolved: { $ne: true } })
         .sort({ 'createdOn': -1 })
+        .limit(parseInt(req.params.limit))
+        .skip(parseInt(req.params.offset))
         .exec(function(err, questions) {
             if (err) {
                 sendJsonResponse(res, 400, err);
@@ -15,10 +17,6 @@ module.exports.questionsGetAll = function(req, res) {
                 sendJsonResponse(res, 200, questions);
             }
         });
-};
-
-module.exports.questionsListByDistance = function(req, res) {
-
 };
 
 module.exports.questionsCreate = function(req, res) {
@@ -91,7 +89,7 @@ module.exports.questionsReadOne = function(req, res) {
         });
 };
 
-module.exports.questionsGetFavorites = function(req, res, next) {
+module.exports.questionsGetFavorites = function(req, res) {
     Question
         .find({ _id: {
             $in: Object.keys(req.favorites)
@@ -142,7 +140,7 @@ module.exports.questionsGetCommentsById = function(req, res) {
         });
 };
 
-module.exports.questionsUpdateVotes = function(req, res) {
+module.exports.questionsUpdateVotes = function(req, res, next) {
     Question
         .findById(req.body.id)
         .exec(function(err, question) {
@@ -154,7 +152,7 @@ module.exports.questionsUpdateVotes = function(req, res) {
                     if (err) {
                         sendJsonResponse(res, 400, err);
                     } else {
-                        sendJsonResponse(res, 204, null);
+                        next();
                     }
                 });
             }
