@@ -10,7 +10,7 @@ import { Helper } from '../services/helper.service';
 
 export class ProfileSavedPostsComponent implements OnInit, OnDestroy {
     private subscriptions = [];
-    private savedData;
+    private savedData = {};
 
     constructor(private accountsService: AccountsService,
                 private cacheService: CacheService,

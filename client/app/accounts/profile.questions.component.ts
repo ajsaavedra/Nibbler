@@ -41,7 +41,7 @@ export class ProfileQuestionsComponent implements OnInit, OnDestroy {
         const sub = this.questionsService.deleteQuestion(question_id)
             .switchMap(res => {
                 if (!this.cacheService._data['questions']) {
-                    this.cacheService.getQuestions();
+                    this.cacheService.setCacheForQuestionType('questions', 10);
                 }
                 return this.cacheService._data['questions'];
             })

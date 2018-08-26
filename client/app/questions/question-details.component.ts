@@ -95,50 +95,44 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
         }
     }
 
-    like(question_id) {
-        let sub;
+    like(question_id, question_author) {
         if (this.uname) {
+            let vote = 1;
             if (this.liked) {
-                this.updateCachedVotes(question_id, -1);
-                sub = this.questionService.updateQuestionVoteCount(question_id, -1).subscribe(res => this.votes -= 1);
+                vote = -1;
             } else if (this.disliked) {
-                this.updateCachedVotes(question_id, 2);
-                sub = this.questionService.updateQuestionVoteCount(question_id, 2).subscribe(res => this.votes += 2);
-            } else {
-                this.updateCachedVotes(question_id, 1);
-                sub = this.questionService.updateQuestionVoteCount(question_id, 1).subscribe(res => this.votes += 1);
+                vote = 2;
             }
-
+            this.updateCachedVotes(question_id, vote);
+            const sub = this.questionService
+                            .updateQuestionVoteCount(question_id, question_author, vote)
+                            .subscribe(res => this.votes += vote);
             const sub2 = this.accountsService.saveLikedPostToUser(this.uname, question_id).subscribe(res => {
                 this.liked = !this.liked;
                 this.disliked = false;
             });
-
             this.subscriptions.push(sub, sub2);
         } else {
             alert('You must be a member to vote. Sign up today!');
         }
     }
 
-    unlike(question_id) {
-        let sub;
+    unlike(question_id, question_author) {
         if (this.uname) {
+            let vote = -1;
             if (this.disliked) {
-                this.updateCachedVotes(question_id, 1);
-                sub = this.questionService.updateQuestionVoteCount(question_id, 1).subscribe(res => this.votes += 1);
+                vote = 1;
             } else if (this.liked) {
-                this.updateCachedVotes(question_id, -2);
-                sub = this.questionService.updateQuestionVoteCount(question_id, -2).subscribe(res => this.votes -= 2);
-            } else {
-                this.updateCachedVotes(question_id, -1);
-                sub = this.questionService.updateQuestionVoteCount(question_id, -1).subscribe(res => this.votes -= 1);
+                vote = -2;
             }
-
+            this.updateCachedVotes(question_id, vote);
+            const sub = this.questionService
+                            .updateQuestionVoteCount(question_id, question_author, vote)
+                            .subscribe(res => this.votes += vote);
             const sub2 = this.accountsService.removeLikedPostFromUser(this.uname, question_id).subscribe(res => {
                 this.disliked = !this.disliked;
                 this.liked = false;
             });
-
             this.subscriptions.push(sub, sub2);
         } else {
             alert('You must be a member to vote. Sign up today!');

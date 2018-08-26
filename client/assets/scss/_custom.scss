@@ -91,6 +91,16 @@ footer img {
     // background-color: white;
     // color: cornflowerblue;
 }
+
+/* PAGINATOR */
+.pagination-btns {
+    float: left;
+}
+
+.per-page-btns {
+    float: right;
+}
+
 /****** Locations List ******/
 .shop img {
     width: 70px;
@@ -112,6 +122,12 @@ footer img {
     border-bottom: 1px solid #DDD;
 }
 
+.locations-card-body {
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+}
+
 .errorMessage {
     font-size: 30px;
     text-align: center;
@@ -124,17 +140,16 @@ footer img {
     background-color: grey;
 }
 
-.locations-search-bar {
-    line-height: 30px;
-    margin-bottom: 20px;
-    font-size: 16px;
+.filters-container {
+    border: 1px solid #ddd;
+    padding: 20px 0;
+    max-width: 920px;
 }
 
-#locations-map {
-    background-color: grey;
-    height: 300px;
-    width: 100%;
+.locations-search-bar {
+    line-height: 30px;
     margin: 20px 0;
+    font-size: 16px;
 }
 
 #add-business-btn {
@@ -152,7 +167,11 @@ footer img {
 }
 
 .filter-label {
-    padding-left: 20px;
+    margin: 0 20px;
+}
+
+.filter-options {
+    margin: 0
 }
 
 .suggestion {

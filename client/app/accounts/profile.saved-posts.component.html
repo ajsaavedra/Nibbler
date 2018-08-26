@@ -1,25 +1,27 @@
 <div class="container app-content">
     <div class="text-center"><i class="fas fa-heart"></i></div>
-    <div class="row questions-list" *ngFor='let data of savedData'>
-        <div class="col-11 main-question">
-            <div class="row">
-                <p class="location-name">
-                    <a [routerLink]="['/questions/', data._id]">{{ data.title }}</a>
-                </p>
-            </div>
-            <div class="row" class="question-text">
-                <p>{{ data.questionText.split(' ').slice(0, 20).join(' ') }}...</p>
-            </div>
-            <div class="row">
-                <div class="col-6 metadata">
-                    by&nbsp;<a routerLink="/profile/{{ data.author }}">{{ data.author }}</a>
-                    {{ getTimeSince(data.createdOn) }} ago 
+    <div *ngIf="savedData.length > 0">
+        <div class="row questions-list" *ngFor='let data of savedData'>
+            <div class="col-11 main-question">
+                <div class="row">
+                    <p class="location-name">
+                        <a [routerLink]="['/questions/', data._id]">{{ data.title }}</a>
+                    </p>
                 </div>
-                <div>
-                    <span class="tags badge badge-pill badge-primary"
-                            *ngFor='let tag of data.tags'>
-                        {{ tag }}
-                    </span>
+                <div class="row" class="question-text">
+                    <p>{{ data.questionText.split(' ').slice(0, 20).join(' ') }}...</p>
+                </div>
+                <div class="row">
+                    <div class="col-6 metadata">
+                        by&nbsp;<a routerLink="/profile/{{ data.author }}">{{ data.author }}</a>
+                        {{ getTimeSince(data.createdOn) }} ago 
+                    </div>
+                    <div>
+                        <span class="tags badge badge-pill badge-primary"
+                                *ngFor='let tag of data.tags'>
+                            {{ tag }}
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
