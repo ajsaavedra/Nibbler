@@ -21,6 +21,7 @@ import { ProfileVotesCardComponent } from './accounts/profile.votes-card.compone
 import { ProfileVotedPostsComponent } from './accounts/profile.voted-posts.component';
 import { ProfileQuestionsComponent } from './accounts/profile.questions.component';
 import { ProfileReviewsComponent } from './accounts/profile.reviews.component';
+import { PaginationComponent } from './common/pagination.component';
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -88,5 +89,6 @@ export const routingComponents = [
     ProfileSavedPostsComponent,
     ProfileSavedCommentsComponent,
     ProfileVotesCardComponent,
-    ProfileVotedPostsComponent
+    ProfileVotedPostsComponent,
+    PaginationComponent
 ];

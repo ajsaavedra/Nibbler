@@ -1,15 +1,13 @@
 <div class="container app-content">
     <div class="text-center shop"><img src="{{ homeIcon }}"></div>
-    <div>
+    <div class="locations-search-bar">
         <input class="locations-search-bar form-control" 
         type="text" placeholder="Search by city, address, or zipcode"
         [(ngModel)]="locationSearchItem" (keyup.enter)="keystrokeListener()"/>
     </div>
-    <div class="text-center">&mdash; or &mdash;</div>
-    <div id="locations-map"></div>
-    <div *ngIf="locations?.length > 0" class="clearfix">
+    <div *ngIf="locations?.length > 0" class="clearfix container filters-container">
         <div class="row float-left filter-label">Filter by:</div>
-        <div class="row float-right">
+        <div class="row float-right filter-options">
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" id="glutenFreeCheckbox" value="gluten_free" (change)="onFilterChange($event)">
                 <label class="badge badge-pill badge-warning" for="glutenFreeCheckbox">Gluten Free</label>
@@ -33,25 +31,27 @@
         </div>
     </div>
     <div *ngIf="locations?.length > 0" class="card">
-        <div class="card-body">
-            <div class="row locations-list" *ngFor='let location of locations | locationsFilter: currentFilter'>
-                <div class="col-sm-6 col-md-6">
-                    <p class="location-name">
-                        <a [routerLink]="['/locations/', location._id]">{{ location.name }}</a>
-                    </p>
-                    <p>{{ location.address }}</p>
-                    <p class="suggestion" *ngIf="location.reviews.length === 0">This location needs your review!</p>
-                    <span *ngIf="location.reviews.length > 0" [innerHTML]="starRating(location.rating)"></span>
-                </div>
-                <div class="col-sm-6 col-md-6">
-                    <span class="badge badge-pill badge-warning" *ngIf="location.options.gluten_free">Gluten-free</span>
-                    <span class="badge badge-pill badge-primary" *ngIf="location.options.vegan">Vegan</span>
-                    <span class="badge badge-pill badge-success" *ngIf="location.options.vegetarian">Vegetarian</span>
-                    <span class="badge badge-pill badge-danger" *ngIf="location.options.soy_free">Soy-free</span>
-                    <span class="badge badge-pill badge-info" *ngIf="location.options.nut_free">Nut-free</span>
+        <paginator (page)="onPageReset($event)" (limit)="onLimitReset($event)">
+            <div class="card-body locations-card-body">
+                <div class="row locations-list" *ngFor='let location of locations | locationsFilter: currentFilter'>
+                    <div class="col-sm-6 col-md-6">
+                        <p class="location-name">
+                            <a [routerLink]="['/locations/', location._id]">{{ location.name }}</a>
+                        </p>
+                        <p>{{ location.address }}</p>
+                        <p class="suggestion" *ngIf="!location.reviews || location.reviews.length === 0">This location needs your review!</p>
+                        <span *ngIf="location.reviews && location.reviews.length > 0" [innerHTML]="starRating(location.rating)"></span>
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+                        <span class="badge badge-pill badge-warning" *ngIf="location.options.gluten_free">Gluten-free</span>
+                        <span class="badge badge-pill badge-primary" *ngIf="location.options.vegan">Vegan</span>
+                        <span class="badge badge-pill badge-success" *ngIf="location.options.vegetarian">Vegetarian</span>
+                        <span class="badge badge-pill badge-danger" *ngIf="location.options.soy_free">Soy-free</span>
+                        <span class="badge badge-pill badge-info" *ngIf="location.options.nut_free">Nut-free</span>
+                    </div>
                 </div>
             </div>
-        </div>
+        </paginator>
     </div>
     <div class="errorMessage" *ngIf="!locations || locations.length === 0">Looks like no locations were found. Try adding one today!</div>
     <div *ngIf="isLoggedIn" class="text-center" id="add-business-btn"><a routerLink="/add-location/">Not seeing what you want? Try adding a business for others to rate.</a></div>

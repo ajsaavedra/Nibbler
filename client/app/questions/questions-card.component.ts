@@ -14,4 +14,12 @@ export class QuestionsCardComponent {
     isLoggedIn() {
         return this.globalEventsManager.getUserProfiletab();
     }
+
+    onPageReset(pageNumber: number) {
+        this.globalEventsManager.setPageNumber(pageNumber);
+    }
+
+    onLimitReset(limit: number) {
+        this.globalEventsManager.setLimitNumber(limit);
+    }
 }

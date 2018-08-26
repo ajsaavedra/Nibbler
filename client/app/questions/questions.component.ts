@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { QuestionService } from '../services/questions.service';
 import { AccountsService } from '../services/accounts.service';
@@ -30,29 +30,29 @@ export class QuestionsComponent implements OnInit, OnDestroy {
                 private helper: Helper) {}
 
     ngOnInit() {
-        const sub = this.route.params.subscribe(params => {
-            this.uname = this.globalEventsManager.getUserProfiletab();
-            this.field = params['field'] ? params['field'] : 'questions';
-            if (this.field === 'questions') {
-                this.cacheService.getQuestions();
-            } else if (this.field === 'popularity' &&
-                !this.cacheService._data['popularity']) {
-                    this.cacheService.getQuestionsByPopularity();
-            } else if (!this.cacheService._data['resolved']) {
-                this.cacheService.getResolvedQuestions();
-            }
-            this.getCacheSubscription();
-            this.getLikedAndUnlikedPosts();
-        });
+        const sub = this.route.params.map(params => params['field'])
+            .switchMap(field => {
+                this.field = field ? field : 'questions';
+                return this.globalEventsManager.pageResetEmitter;
+            }).subscribe(pg => {
+                this.uname = this.globalEventsManager.getUserProfiletab();
+                const limit = this.globalEventsManager.getLimitNumber();
+                this.cacheService.setCacheForQuestionType(this.field, limit, pg * limit);
+                this.getCacheSubscription();
+                this.getLikedAndUnlikedPosts();
+            });
         this.subscriptions.push(sub);
     }
 
     ngOnDestroy() {
         this.subscriptions.forEach(sub => sub.unsubscribe());
+        this.globalEventsManager.setLimitNumber(10);
+        this.globalEventsManager.setPageNumber(0);
     }
 
     getCacheSubscription() {
         const questionSub = this.cacheService._data[this.field].subscribe(results => {
+            if (results.length === 0) { return this.globalEventsManager.setPageNumber(0); }
             this.questions = results;
             this.questions.forEach(q => this.votesMap.set(q._id, q.votes));
         });
@@ -82,15 +82,12 @@ export class QuestionsComponent implements OnInit, OnDestroy {
 
     like(question) {
         const id = question._id;
+        const author = question.author;
+        let vote = 1;
         if (this.uname) {
-            this.updateVotesMapOnUpvote(id);
-            if (this.likedQuestions[id]) {
-                this.updateCachedVotes(id, -1);
-            } else if (this.unlikedQuestions[id]) {
-                this.updateCachedVotes(id, 2);
-            } else {
-                this.updateCachedVotes(id, 1);
-            }
+            this.updateVotesMapOnUpvote(id, author);
+            if (this.likedQuestions[id]) { vote = -1; } else if (this.unlikedQuestions[id]) { vote = 2; }
+            this.updateCachedVotes(id, vote);
             const sub = this.accountsService
                 .saveLikedPostToUser(this.uname, id)
                 .do(res => {
@@ -99,15 +96,11 @@ export class QuestionsComponent implements OnInit, OnDestroy {
                         return;
                     }
                     this.likedQuestions[id] = true;
-                    if (this.unlikedQuestions[id]) {
-                        delete this.unlikedQuestions[id];
-                    }
+                    if (this.unlikedQuestions[id]) { delete this.unlikedQuestions[id]; }
                 }, err => false)
                 .flatMap(res => this.cacheService._data['liked'])
                 .subscribe(res => {
-                    if (this.likedQuestions[id]) {
-                        res['posts'][id] = question;
-                    }
+                    if (this.likedQuestions[id]) { res['posts'][id] = question; }
                 });
             this.subscriptions.push(sub);
         } else {
@@ -117,15 +110,12 @@ export class QuestionsComponent implements OnInit, OnDestroy {
 
     unlike(question) {
         const id = question._id;
+        const author = question.author;
+        let vote = -1;
         if (this.uname) {
-            this.updateVotesMapOnDownvote(id);
-            if (this.likedQuestions[id]) {
-                this.updateCachedVotes(id, -2);
-            } else if (this.unlikedQuestions[id]) {
-                this.updateCachedVotes(id, 1);
-            } else {
-                this.updateCachedVotes(id, -1);
-            }
+            this.updateVotesMapOnDownvote(id, author);
+            if (this.likedQuestions[id]) { vote = -2; } else if (this.unlikedQuestions[id]) { vote = 1; }
+            this.updateCachedVotes(id, vote);
             const sub = this.accountsService
                 .removeLikedPostFromUser(this.uname, id)
                 .do(res => {
@@ -134,15 +124,11 @@ export class QuestionsComponent implements OnInit, OnDestroy {
                         return;
                     }
                     this.unlikedQuestions[id] = true;
-                    if (this.likedQuestions[id]) {
-                        delete this.likedQuestions[id];
-                    }
+                    if (this.likedQuestions[id]) { delete this.likedQuestions[id]; }
                 }, err => false)
                 .flatMap(res => this.cacheService._data['unliked'])
                 .subscribe(res => {
-                    if (this.unlikedQuestions[id]) {
-                        res['posts'][id] = question;
-                    }
+                    if (this.unlikedQuestions[id]) { res['posts'][id] = question; }
                 });
             this.subscriptions.push(sub);
         } else {
@@ -150,39 +136,23 @@ export class QuestionsComponent implements OnInit, OnDestroy {
         }
     }
 
-    updateVotesMapOnDownvote(id) {
+    updateVotesMapOnDownvote(id, author) {
         const disliked = this.isUnliked(id);
         const liked = this.isLiked(id);
-        let sub;
-        if (disliked) {
-            sub = this.questionService.updateQuestionVoteCount(id, 1)
-                .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) + 1));
-        } else if (liked) {
-            sub = this.questionService.updateQuestionVoteCount(id, -2)
-                .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) - 2));
-        } else {
-            sub = this.questionService.updateQuestionVoteCount(id, -1)
-                .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) - 1));
-        }
-
+        let vote = -1;
+        if (disliked) { vote = 1; } else if (liked) { vote = -2; }
+        const sub = this.questionService.updateQuestionVoteCount(id, author, vote)
+                .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) + vote));
         this.subscriptions.push(sub);
     }
 
-    updateVotesMapOnUpvote(id) {
+    updateVotesMapOnUpvote(id, author) {
         const disliked = this.isUnliked(id);
         const liked = this.isLiked(id);
-        let sub;
-        if (liked) {
-            sub = this.questionService.updateQuestionVoteCount(id, -1)
-                .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) - 1));
-        } else if (disliked) {
-            sub = this.questionService.updateQuestionVoteCount(id, 2)
-                .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) + 2));
-        } else {
-            sub = this.questionService.updateQuestionVoteCount(id, 1)
-                .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) + 1));
-        }
-
+        let vote = 1;
+        if (liked) { vote = -1; } else if (disliked) { vote = 2; }
+        const sub = this.questionService.updateQuestionVoteCount(id, author, vote)
+                .subscribe(res => this.votesMap.set(id, this.votesMap.get(id) + vote));
         this.subscriptions.push(sub);
     }
 

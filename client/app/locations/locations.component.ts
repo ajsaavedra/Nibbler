@@ -11,7 +11,7 @@ import { GlobalEventsManager } from '../GlobalEventsManager';
 })
 
 export class LocationsComponent implements OnInit, OnDestroy {
-    private sub: any;
+    private subscriptions = [];
     private locations: any;
     private locationSearchItem: string;
     private isLoggedIn: boolean;
@@ -23,12 +23,7 @@ export class LocationsComponent implements OnInit, OnDestroy {
                 private geocodingService: GeocodingService,
                 private globalEventsManager: GlobalEventsManager,
                 private cacheService: CacheService,
-                private helper: Helper) {
-
-        if (!this.cacheService._data['locations']) {
-            this.cacheService.getLocations();
-        }
-    }
+                private helper: Helper) {}
 
     onFilterChange(event) {
         const newFilter = event.target.value;
@@ -46,14 +41,25 @@ export class LocationsComponent implements OnInit, OnDestroy {
     };
 
     ngOnInit() {
-        this.sub = this.cacheService._data['locations'].subscribe(res => {
-            this.locations = res;
-        });
+        this.subscriptions.push(this.globalEventsManager.pageResetEmitter.subscribe(pg => {
+            const limit = this.globalEventsManager.getLimitNumber();
+            this.cacheService.getLocations(limit, pg);
+            this.getCachedLocations();
+        }));
         this.isLoggedIn = this.globalEventsManager.getUserProfiletab() && true;
     }
 
     ngOnDestroy() {
-        this.sub.unsubscribe();
+        this.subscriptions.forEach(sub => sub.unsubscribe());
+        this.globalEventsManager.setLimitNumber(10);
+        this.globalEventsManager.setPageNumber(0);
+    }
+
+    getCachedLocations() {
+        this.subscriptions.push(this.cacheService._data['locations'].subscribe(res => {
+            if (res.length === 0) { return this.globalEventsManager.setPageNumber(0); }
+            this.locations = res;
+        }));
     }
 
     searchLocation() {
@@ -76,5 +82,13 @@ export class LocationsComponent implements OnInit, OnDestroy {
         if (this.locationSearchItem && this.locationSearchItem.length > 0) {
             this.searchLocation();
         }
+    }
+
+    onPageReset(page: number) {
+        this.globalEventsManager.setPageNumber(page);
+    }
+
+    onLimitReset(limit: number) {
+        this.globalEventsManager.setLimitNumber(limit);
     }
 }

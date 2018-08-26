@@ -13,12 +13,19 @@ export class CacheService {
         this._data = {};
     }
 
-    getQuestions() {
-        this._data['questions'] = this.questionService.getAllQuestions().shareReplay();
+    setCacheForQuestionType(field: string, limit: number, offset: number = 0) {
+        this._data[field] = this.getQuestions(field, limit, offset);
     }
 
-    getQuestionsByPopularity() {
-        this._data['popularity'] = this.questionService.getAllPopularQuestions().shareReplay();
+    getQuestions(field: string, limit: number, offset: number = 0) {
+        switch (field) {
+            case 'popularity':
+                return this.questionService.getAllPopularQuestions().shareReplay();
+            case 'resolved':
+                return this.questionService.getResolvedQuestions().shareReplay();
+            default:
+                return this.questionService.getAllQuestions(limit, offset).shareReplay();
+        }
     }
 
     getQuestionById(id) {
@@ -26,10 +33,6 @@ export class CacheService {
             this._data['question'] = {};
         }
         this._data['question'][id] = this.questionService.getQuestionById(id).shareReplay();
-    }
-
-    getResolvedQuestions() {
-        this._data['resolved'] = this.questionService.getResolvedQuestions().shareReplay();
     }
 
     getLikedPosts() {
@@ -48,8 +51,8 @@ export class CacheService {
         this._data['helpfulComments'] = this.accountsService.getSavedHelpfulComments().shareReplay();
     }
 
-    getLocations() {
-        this._data['locations'] = this.locationService.getNearbyLocations().shareReplay();
+    getLocations(limit: number, offset: number = 0) {
+        this._data['locations'] = this.locationService.getNearbyLocations(limit, limit * offset).shareReplay();
     }
 
     getLocationById(id) {

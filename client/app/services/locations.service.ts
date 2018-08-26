@@ -11,8 +11,9 @@ export class LocationService {
     options = new RequestOptions({ headers: this.headers, withCredentials: true });
     constructor(private http: Http) {}
 
-    getNearbyLocations() {
-        return this.http.get(this.API_URL + '?lng=-122.2903&lat=37.8687&maxDistance=5', this.options).map(res => res.json());
+    getNearbyLocations(limit: number, offset: number = 0) {
+        return this.http.get(this.API_URL + '?lng=-122.2903&lat=37.8687&maxDistance=5&limit=' +
+            limit + '&offset=' + offset, this.options).map(res => res.json());
     }
 
     getLocationsByLatitudeAndLongitude(lat: number, lng: number) {

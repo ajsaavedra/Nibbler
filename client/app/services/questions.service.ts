@@ -11,8 +11,8 @@ export class QuestionService {
     options = new RequestOptions({ headers: this.headers });
     constructor(private http: Http) {}
 
-    getAllQuestions() {
-        return this.http.get(this.API_URL).map(res => res.json());
+    getAllQuestions(limit: number, offset: number = 0) {
+        return this.http.get(this.API_URL + '/' + limit + '/' + offset).map(res => res.json());
     }
 
     getAllPopularQuestions() {
@@ -66,10 +66,11 @@ export class QuestionService {
         return this.http.delete(this.API_URL + '/' + question_id).map(res => res.json());
     }
 
-    updateQuestionVoteCount(id, num) {
+    updateQuestionVoteCount(id, author, num) {
         const body = {
             id: id,
-            vote: num
+            vote: num,
+            author
         };
         return this.http.put(this.API_URL + '-update-vote', body).map(res => res ? res.json() : {});
     }

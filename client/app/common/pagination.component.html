@@ -1,0 +1,11 @@
+<ng-content select=".card-body"></ng-content>
+<div class="pagination-btns">
+    <button class="btn btn-primary" *ngIf="currentPage > 0" (click)="fetchPrevPage()">prev</button>
+    <button class="btn btn-primary" (click)="fetchNextPage()">next</button>
+</div>
+<div class="per-page-btns">
+    <button class="btn btn-outline-secondary" (click)="fetchMoreResults(15)">15</button>
+    <button class="btn btn-outline-secondary" (click)="fetchMoreResults(30)">30</button>
+    <button class="btn btn-outline-secondary" (click)="fetchMoreResults(50)">50</button>
+    <span>per page</span>
+</div>
