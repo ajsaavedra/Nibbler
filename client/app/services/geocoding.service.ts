@@ -7,7 +7,7 @@ import config = require('../../../config/secret');
 
 @Injectable()
 export class GeocodingService {
-    private API_URL = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
+    private API_URL = 'https://api.tomtom.com/search/2/geocode/';
     private API_KEY = '&key=' + config.geocodingKey;
     private headers = new Headers({ 'Content-Type': 'application/json' });
     private options = new RequestOptions({ headers: this.headers });
@@ -15,10 +15,16 @@ export class GeocodingService {
     constructor(private http: Http) {}
 
     public getGeoLocation(address: string) {
-        const request = this.API_URL + address.split(' ').join('+') + this.API_KEY;
+        const request = `${this.API_URL}${address}.json?${this.API_KEY}`;
         return this.http.get(request)
                         .map(res => res.json())
                         .catch(err => Observable.throw(err) || 'Server error')
                         .toPromise();
+    }
+
+    public getMapForLocation(lat: number, lon: number) {
+        const url = 'https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/' +
+            `pin-s+EA2A3C(${lon},${lat})/${lon},${lat},16,0,0auto/400x300@2x?access_token=${config.mapbox}`;
+        return this.http.get(url).toPromise();
     }
 }

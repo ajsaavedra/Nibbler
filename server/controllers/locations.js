@@ -52,7 +52,7 @@ module.exports.locationsListByDistance = function(req, res) {
             }
         },
         {
-            $skip: parseInt(req.query.offset || 15)
+            $skip: parseInt(req.query.offset || 0)
         }
     ]).exec((err, results) => {
         var locations = [];

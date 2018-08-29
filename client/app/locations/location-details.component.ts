@@ -1,21 +1,22 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { LocationService } from '../services/locations.service';
+import { GeocodingService } from '../services/geocoding.service';
 import { Helper } from '../services/helper.service';
 import { CacheService } from '../services/cache.service';
 import { GlobalEventsManager } from '../GlobalEventsManager';
 
 @Component({
     templateUrl: './app/locations/location-details.component.html',
-    providers: [ LocationService, Helper ]
+    providers: [ GeocodingService, Helper ]
 })
 
 export class LocationDetailsComponent implements OnInit, OnDestroy {
     private sub: any;
     private location: any;
     private isLoggedIn: boolean;
+    private map;
 
-    constructor(private locationService: LocationService,
+    constructor(private geocodingService: GeocodingService,
                 private cacheService: CacheService,
                 private helper: Helper,
                 private route: ActivatedRoute,
@@ -35,6 +36,8 @@ export class LocationDetailsComponent implements OnInit, OnDestroy {
             })
             .subscribe(data => {
                 this.location = data;
+                this.geocodingService.getMapForLocation(this.location.coords[1], this.location.coords[0])
+                    .then(img => { this.map = img['url']; });
             });
 
         this.isLoggedIn = this.globalEventsManager.getUserProfiletab() && true;

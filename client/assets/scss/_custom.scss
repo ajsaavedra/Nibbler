@@ -136,7 +136,7 @@ footer img {
 
 #map {
     width: 100%;
-    height: 400px;
+    height: auto;
     background-color: grey;
 }
 
@@ -146,7 +146,7 @@ footer img {
     max-width: 920px;
 }
 
-.locations-search-bar {
+.search-bar {
     line-height: 30px;
     margin: 20px 0;
     font-size: 16px;

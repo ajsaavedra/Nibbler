@@ -12,12 +12,12 @@ export class LocationService {
     constructor(private http: Http) {}
 
     getNearbyLocations(limit: number, offset: number = 0) {
-        return this.http.get(this.API_URL + '?lng=-122.2903&lat=37.8687&maxDistance=5&limit=' +
-            limit + '&offset=' + offset, this.options).map(res => res.json());
+        return this.http.get(`${this.API_URL}?lng=-122.2903&lat=37.8687&maxDistance=5&limit=
+            ${limit}&offset=${offset}`, this.options).map(res => res.json());
     }
 
     getLocationsByLatitudeAndLongitude(lat: number, lng: number) {
-        return this.http.get(this.API_URL + '?lng=' + lng + '&lat=' + lat + '&maxDistance=5', this.options).map(res => res.json());
+        return this.http.get(`${this.API_URL}?lng=${lng}&lat=${lat}&maxDistance=5`, this.options).map(res => res.json());
     }
 
     getLocationById(id) {

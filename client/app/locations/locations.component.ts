@@ -67,10 +67,10 @@ export class LocationsComponent implements OnInit, OnDestroy {
             .getGeoLocation(this.locationSearchItem)
             .then(fulfilled => {
                 const result = fulfilled.results[0];
-                const lat = result.geometry.location.lat;
-                const lng = result.geometry.location.lng;
+                const lat = result.position.lat;
+                const lon = result.position.lon;
                 this.locationService
-                    .getLocationsByLatitudeAndLongitude(lat, lng)
+                    .getLocationsByLatitudeAndLongitude(lat, lon)
                     .subscribe(results => this.locations = results);
             })
             .catch(err => {
