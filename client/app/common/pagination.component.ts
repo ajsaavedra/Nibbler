@@ -15,7 +15,7 @@ export class PaginationComponent implements OnDestroy {
 
     constructor(private globalEventsManager: GlobalEventsManager) {
         this.subscription = this.globalEventsManager.pageResetEmitter
-            .subscribe(pg => { console.log(pg); this.currentPage = pg; });
+            .subscribe(pg => this.currentPage = pg);
     }
 
     ngOnDestroy() {

@@ -1,8 +1,8 @@
 <div class="container app-content" *ngIf="user">
-    <div *ngIf="isLocalUser">
+    <div *ngIf="token">
         <h1>Hello, {{user.name.first}} {{user.name.last}}!</h1>
     </div>
-    <div *ngIf="!isLocalUser">
+    <div *ngIf="!token">
         <h1>{{user.name.first}} {{user.name.last}}</h1>
     </div>
     <div>Total karma: {{user.profile.karma}}</div>

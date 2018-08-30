@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AccountsService } from '../services/accounts.service';
 import { GlobalEventsManager } from '../GlobalEventsManager';
 
 @Component({
-    templateUrl: './app/accounts/login.component.html',
+    templateUrl: './app/auth/login.component.html',
     providers: [ AccountsService ]
 })
 
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
-    loginForm: FormGroup;
+    private loginForm: FormGroup;
+    private loginSubscription;
 
     constructor(private fb: FormBuilder,
                 private router: Router,
@@ -30,31 +31,29 @@ export class LoginComponent implements OnInit {
         }
     }
 
+    ngOnDestroy() {
+        if (this.loginSubscription) { this.loginSubscription.unsubscribe(); }
+    }
+
     loginUser() {
         const username = this.loginForm.get('username').value;
         const password  = this.loginForm.get('password').value;
-        this.accountsService
+        this.loginSubscription = this.accountsService
             .loginUser(username, password)
             .subscribe(
                 res => {
-                    this.onLoginSuccessful(username);
+                    localStorage.setItem('token', res.token);
+                    this.globalEventsManager.showUserNavBar(true);
                     this.router.navigateByUrl('/profile/' + username);
                 },
                 err => {
-                    if (err.status === 403) {
-                        alert('Invalid password. Please try again.');
-                    } else if (err.status === 404) {
-                        alert('User not found. Create an account today!');
+                    if (err.status === 401) {
+                        alert('Invalid login information. Please try again.');
                     } else {
                         alert('Oops. Something went wrong on our server. Please try again.');
                     }
                 }
             );
-    }
-
-    onLoginSuccessful(uname: string) {
-        this.globalEventsManager.showUserNavBar(true);
-        this.globalEventsManager.setUserProfileTab(uname);
     }
 
     rerouteGuest() {

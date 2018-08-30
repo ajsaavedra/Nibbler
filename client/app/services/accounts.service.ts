@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { Subject } from 'rxjs/Subject';
+import { Http, Headers, RequestOptions } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
@@ -40,23 +39,10 @@ export class AccountsService {
                         .catch(err => Observable.throw(err) || 'Server error');
     }
 
-    loginUser(uname, pw) {
-        const body = {
-            username: uname,
-            password: pw
-        };
+    loginUser(username, password) {
+        const body = { username, password };
 
         return this.http.post('http://localhost:3000/api/login', body, this.options)
-                        .map(res => res.json())
-                        .catch(err => Observable.throw(err) || 'Server error');
-    }
-
-    isAuth() {
-        return this.http.get('http://localhost:3000/api/auth', this.options).map(res => res.json());
-    }
-
-    logoutUser(uname) {
-        return this.http.post('http://localhost:3000/api/logout', {username: uname}, this.options)
                         .map(res => res.json())
                         .catch(err => Observable.throw(err) || 'Server error');
     }

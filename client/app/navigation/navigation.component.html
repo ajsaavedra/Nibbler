@@ -12,10 +12,10 @@
                 <li class="nav-item">
                     <a class="nav-link" routerLink="/questions">Questions</a>
                 </li>
-                <li class="nav-item" *ngIf="!isLoggedIn">
+                <li class="nav-item" *ngIf="!token">
                     <a class="nav-link" routerLink="/login">Log In</a>
                 </li>
-                <li class="nav-item dropdown" *ngIf="isLoggedIn">
+                <li class="nav-item dropdown" *ngIf="token">
                     <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">
                         {{username}}
                     </a>

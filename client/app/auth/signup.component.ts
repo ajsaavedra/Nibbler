@@ -14,7 +14,7 @@ import {
   } from '@angular/animations';
 
 @Component({
-    templateUrl: './app/accounts/signup.component.html',
+    templateUrl: './app/auth/signup.component.html',
     providers: [ AccountsService, GeocodingService ],
     animations: [
         trigger('firstState', [
