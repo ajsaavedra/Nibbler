@@ -1,66 +1,54 @@
 const sendJsonResponse = require('../../config/tools').sendJsonResponse;
+const jwt = require('jwt-simple');
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
+const config = require('../../config/secret');
 
-module.exports = function(passport) {
-    const loginUser = function(req, res, next) {
-        passport.authenticate('local', function(err, user, info) {
+const tokenForUser = (user) => {
+    const timeStamp = new Date().getTime();
+    return jwt.encode({ user, iat: timeStamp }, config.secretKey);
+}
+
+const loginUser = function(req, res) {
+    res.send({ token: tokenForUser(req.user) });
+};
+
+const isAuth = function(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+
+    sendJsonResponse(res, 403, {
+        'message': 'Unathenticated user. Please login.'
+    });
+};
+
+const getUsername = function(req, res) {
+    sendJsonResponse(res, 200, {'username': req.user.profile.username});
+}
+
+const getUserProfile = function(req, res) {
+    User
+        .findOne({
+            'profile.username': req.params.username
+        }, function(err, user) {
             if (err) {
-                sendJsonResponse(res, 500, info);
-            } else if (!user) {
-                sendJsonResponse(res, info.message, null);
-            } else {
-                req.login(user, function(err) {
-                    if (err) sendJsonResponse(res, 400, {'Error': 'Something went wrong'});
-                    sendJsonResponse(res, 200, {message: 'success'});
+                sendJsonResponse(res, 400, {
+                    'Error': 'Something went wrong with our lookup'
                 });
+            } else if (!user) {
+                sendJsonResponse(res, 404, {
+                    'Error': 'Looks like that user does not exist!'
+                })
+            } else {
+                sendJsonResponse(res, 200, user);
             }
-        })(req, res, next);
-    };
-
-    const isAuth = function(req, res, next) {
-        if (req.isAuthenticated()) {
-            return next();
-        }
-
-        sendJsonResponse(res, 403, {
-            'message': 'Unathenticated user. Please login.'
         });
-    };
+};
 
-    const getUsername = function(req, res) {
-        sendJsonResponse(res, 200, {'username': req.user.profile.username});
-    }
-
-    const logoutUser = function(req, res) {
-        req.logout();
-        return sendJsonResponse(res, 200, null);
-    }
-
-    const getUserProfile = function(req, res) {
-        User
-            .findOne({
-                'profile.username': req.params.username
-            }, function(err, user) {
-                if (err) {
-                    sendJsonResponse(res, 400, {
-                        'Error': 'Something went wrong with our lookup'
-                    });
-                } else if (!user) {
-                    sendJsonResponse(res, 404, {
-                        'Error': 'Looks like that user does not exist!'
-                    })
-                } else {
-                    sendJsonResponse(res, 200, user);
-                }
-            });
-    };
-
-    return {
-        isAuth,
-        getUsername,
-        loginUser,
-        logoutUser,
-        getUserProfile
-    }
+module.exports = {
+    isAuth,
+    getUsername,
+    loginUser,
+    getUserProfile
 };

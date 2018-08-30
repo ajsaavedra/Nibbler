@@ -10,7 +10,6 @@ const config = require('../config/secret');
 const cors = require('cors');
 require('./models/locations');
 require('./models/user');
-require('../config/passport')(passport);
 
 // Middleware
 app.use(express.static(path.join(__dirname, '/client/dist')));
@@ -29,9 +28,9 @@ if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../client', 'dist')))
 }
 
-const userRoutes = require('./routes/users')(passport);
-const locationRoutes = require('./routes/locations')(passport);
-const questionRoutes = require('./routes/questions')(passport);
+const userRoutes = require('./routes/users');
+const locationRoutes = require('./routes/locations');
+const questionRoutes = require('./routes/questions');
 
 // CORS Middleware for testing purposes
 app.use(cors({credentials: true, origin: ['http://localhost:3000', 'http://localhost:3100']}));
