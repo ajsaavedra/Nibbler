@@ -7,9 +7,6 @@ export class GlobalEventsManager {
     private _showUserNavBar: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
     public showUserNavBarEmitter: Observable<boolean> = this._showUserNavBar.asObservable();
 
-    private _showUserProfileTab: BehaviorSubject<string> = new BehaviorSubject<string>(null);
-    public showUserProfileTabEmitter: Observable<string> = this._showUserProfileTab.asObservable();
-
     private page: BehaviorSubject<number> = new BehaviorSubject<number>(0);
     public pageResetEmitter: Observable<number> = this.page.asObservable();
 
@@ -24,14 +21,6 @@ export class GlobalEventsManager {
 
     getShowValue() {
         return this._showUserNavBar.getValue();
-    }
-
-    setUserProfileTab(uname: string) {
-        this._showUserProfileTab.next(uname);
-    }
-
-    getUserProfiletab() {
-        return this._showUserProfileTab.getValue();
     }
 
     setPageNumber(page: number) {

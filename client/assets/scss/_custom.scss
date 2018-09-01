@@ -19,6 +19,14 @@ $submitBtnColor: #ec6f74;
     color: white;
 }
 
+#time-btns {
+    margin-top: -10px;
+}
+
+nibbler-select-control-component {
+    margin: 10px;
+}
+
 /****** Navigation Bar ******/
 .navbar {
     background-color: #ed2636;
@@ -88,8 +96,6 @@ footer img {
 
 .home-btn {
     width: 150px;
-    // background-color: white;
-    // color: cornflowerblue;
 }
 
 /* PAGINATOR */
@@ -113,6 +119,10 @@ footer img {
 
 .location-name {
     font-size: 20px;
+}
+
+.add-time-row {
+    margin-left: -10px;
 }
 
 .locations-list:not(:last-child),

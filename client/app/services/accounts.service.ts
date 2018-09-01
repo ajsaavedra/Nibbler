@@ -18,20 +18,11 @@ export class AccountsService {
                         .catch(err => Observable.throw(err) || 'Server error');
     }
 
-    registerUser(fname, lname, uname, email, pw, lat, lng, gf, vg, veg, nf, sf) {
+    registerUser(firstname, lastname, username, email, password, latitude, longitude,
+                gluten_free, vegan, vegetarian, nut_free, soy_free) {
         const body = {
-            firstname: fname,
-            lastname: lname,
-            username: uname,
-            email: email,
-            password: pw,
-            latitude: lat,
-            longitude: lng,
-            gluten_free: gf,
-            vegan: vg,
-            vegetarian: veg,
-            nut_free: nf,
-            soy_free: sf
+            firstname, lastname, username, email, password, latitude, longitude,
+            gluten_free, vegan, vegetarian, nut_free, soy_free
         };
 
         return this.http.post(this.API_URL + '/new', body)
@@ -47,8 +38,9 @@ export class AccountsService {
                         .catch(err => Observable.throw(err) || 'Server error');
     }
 
-    getUserProfile(uname) {
-        return this.http.get(this.API_URL + '/' + uname, this.options)
+    getUserProfile(uname, token) {
+        const headers = new Headers({ 'Content-Type': 'application/json', 'authorization': token });
+        return this.http.get(this.API_URL + '/' + uname, new RequestOptions({ headers: headers, withCredentials: true }))
                         .map(res => res.json())
                         .catch(err => Observable.throw(err) || 'Server error');
     }

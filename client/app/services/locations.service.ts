@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+import { Http, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
@@ -11,8 +10,8 @@ export class LocationService {
     options = new RequestOptions({ headers: this.headers, withCredentials: true });
     constructor(private http: Http) {}
 
-    getNearbyLocations(limit: number, offset: number = 0) {
-        return this.http.get(`${this.API_URL}?lng=-122.2903&lat=37.8687&maxDistance=5&limit=
+    getNearbyLocations(limit: number, offset: number = 0, lon: number = -122.2903, lat: number = 37.8687) {
+        return this.http.get(`${this.API_URL}?lng=${lon}&lat=${lat}&maxDistance=5&limit=
             ${limit}&offset=${offset}`, this.options).map(res => res.json());
     }
 

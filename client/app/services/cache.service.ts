@@ -51,8 +51,8 @@ export class CacheService {
         this._data['helpfulComments'] = this.accountsService.getSavedHelpfulComments().shareReplay();
     }
 
-    getLocations(limit: number, offset: number = 0) {
-        this._data['locations'] = this.locationService.getNearbyLocations(limit, limit * offset).shareReplay();
+    getLocations(limit: number, offset: number = 0, lon: number = -122.2903, lat: number = 37.8687) {
+        this._data['locations'] = this.locationService.getNearbyLocations(limit, limit * offset, lon, lat).shareReplay();
     }
 
     getLocationById(id) {
