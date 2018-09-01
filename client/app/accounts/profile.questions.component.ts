@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { QuestionService } from '../services/questions.service';
 import { CacheService } from '../services/cache.service';
 import { Helper } from '../services/helper.service';
-import { GlobalEventsManager } from '../GlobalEventsManager';
+import { TokenService } from '../services/token.service';
 
 @Component({
     templateUrl: './app/accounts/profile.questions.component.html',
@@ -20,7 +20,7 @@ export class ProfileQuestionsComponent implements OnInit, OnDestroy {
                 private cacheService: CacheService,
                 private helper: Helper,
                 private route: ActivatedRoute,
-                private globalEventsManager: GlobalEventsManager) {}
+                private tokenService: TokenService) {}
 
     ngOnInit() {
         const sub = this.route.params
@@ -52,7 +52,7 @@ export class ProfileQuestionsComponent implements OnInit, OnDestroy {
     }
 
     belongsToUser() {
-        return this.username === this.globalEventsManager.getUserProfiletab();
+        return this.username === this.tokenService.getUsername();
     }
 
     getTimeSince(datetime) {

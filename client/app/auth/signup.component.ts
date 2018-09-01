@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { AccountsService } from '../services/accounts.service';
 import { GeocodingService } from '../services/geocoding.service';
 import { PasswordValidation } from './password.validation';
-import { GlobalEventsManager } from '../GlobalEventsManager';
+import { TokenService } from '../services/token.service';
 import {
     trigger,
     state,
@@ -46,7 +46,7 @@ export class SignupComponent implements OnInit {
                 private fb: FormBuilder,
                 private accountsService: AccountsService,
                 private geocodingService: GeocodingService,
-                private globalEventsManager: GlobalEventsManager) {
+                private tokenService: TokenService) {
         this.signupFormPageOne = fb.group({
             'fname': [null, Validators.compose([
                 Validators.required,
@@ -78,9 +78,8 @@ export class SignupComponent implements OnInit {
     }
 
     ngOnInit() {
-        const name = this.globalEventsManager.getUserProfiletab();
-        if (name) {
-            this.router.navigateByUrl('/profile/' + name);
+        if (this.tokenService.tokenExists()) {
+            this.router.navigateByUrl('/profile/' + this.tokenService.getUsername());
         }
     }
 
@@ -119,8 +118,8 @@ export class SignupComponent implements OnInit {
         this.searchLocation(zip)
             .then(fulfilled => {
                 const result = fulfilled.results[0];
-                const lat = result.geometry.location.lat;
-                const lng = result.geometry.location.lng;
+                const lat = result.position.lat;
+                const lng = result.position.lon;
                 this.registerUser(fname, lname, uname, email,
                     pw, lat, lng, gf, vg, veg, nf, sf);
             })

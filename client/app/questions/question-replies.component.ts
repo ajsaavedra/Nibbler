@@ -1,13 +1,13 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { QuestionService } from '../services/questions.service';
-import { GlobalEventsManager } from '../GlobalEventsManager';
+import { TokenService } from '../services/token.service';
 import { CacheService } from '../services/cache.service';
 import { AccountsService } from '../services/accounts.service';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
-    selector: 'question-replies',
+    selector: 'nibbler-question-replies',
     templateUrl: './app/questions/question-replies.component.html'
 })
 
@@ -28,7 +28,7 @@ export class QuestionRepliesComponent implements OnInit, OnDestroy {
    constructor(private accountsService: AccountsService,
                private questionService: QuestionService,
                private cacheService: CacheService,
-               private globalEventsManager: GlobalEventsManager,
+               private tokenService: TokenService,
                private fb: FormBuilder) {
         this.replyForm = fb.group({
             'replyText': [null, Validators.required]
@@ -39,7 +39,7 @@ export class QuestionRepliesComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.uname = this.globalEventsManager.getUserProfiletab();
+        this.uname = this.tokenService.getUsername();
         this.questionId = this.question._id;
         this.getReplies();
 

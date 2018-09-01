@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AccountsService } from '../services/accounts.service';
 import { CacheService } from '../services/cache.service';
 import { Helper } from '../services/helper.service';
-import { GlobalEventsManager } from '../GlobalEventsManager';
+import { TokenService } from '../services/token.service';
 
 @Component({
     templateUrl: './app/accounts/profile.saved-comments.component.html',
@@ -16,11 +16,11 @@ export class ProfileSavedCommentsComponent implements OnInit, OnDestroy {
 
     constructor(private accountsService: AccountsService,
                 private cacheService: CacheService,
-                private globalEventsManager: GlobalEventsManager,
+                private tokenService: TokenService,
                 private helper: Helper) {}
 
     ngOnInit() {
-        if (this.globalEventsManager.getUserProfiletab()) {
+        if (this.tokenService.getUsername()) {
             if (!this.cacheService._data['helpfulComments']) {
                 this.cacheService.getHelpfulComments();
             }

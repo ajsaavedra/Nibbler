@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AccountsService } from '../services/accounts.service';
 import { GlobalEventsManager } from '../GlobalEventsManager';
+import { TokenService } from '../services/token.service';
 
 @Component({
     templateUrl: './app/auth/login.component.html',
@@ -17,7 +18,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     constructor(private fb: FormBuilder,
                 private router: Router,
                 private accountsService: AccountsService,
-                private globalEventsManager: GlobalEventsManager) {
+                private globalEventsManager: GlobalEventsManager,
+                private tokenService: TokenService) {
         this.loginForm = fb.group({
             'username': [null, Validators.required],
             'password': [null, Validators.required]
@@ -25,8 +27,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        const name = this.globalEventsManager.getUserProfiletab();
-        if (name) {
+        if (this.tokenService.tokenExists()) {
+            const name = this.tokenService.getUsername();
             this.router.navigateByUrl('/profile/' + name);
         }
     }
@@ -42,7 +44,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             .loginUser(username, password)
             .subscribe(
                 res => {
-                    localStorage.setItem('token', res.token);
+                    this.tokenService.setToken(res.token);
                     this.globalEventsManager.showUserNavBar(true);
                     this.router.navigateByUrl('/profile/' + username);
                 },

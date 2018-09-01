@@ -7,6 +7,7 @@ require('../services/passport');
 const passport = require('passport');
 
 const requireLogin = passport.authenticate('local', { session: false });
+const requireAuth = passport.authenticate('jwt', { session: false });
 
 router.post('/users/new', ctrlUsers.createUser);
 router.get('/users/:email/:username', ctrlUsers.findUserByEmail, ctrlUsers.findUserByName);
@@ -16,7 +17,7 @@ const ctrlAuth = require('../controllers/authentication.js');
 router.post('/login', requireLogin, ctrlAuth.loginUser);
 
 router.get('/auth', ctrlAuth.isAuth, ctrlAuth.getUsername);
-router.get('/users/:username', ctrlAuth.isAuth, ctrlAuth.getUserProfile);
+router.get('/users/:username', requireAuth, ctrlAuth.getUserProfile);
 router.get('/saved-favorites', ctrlAuth.isAuth, ctrlUsers.savedPosts, ctrlQuestions.questionsGetFavorites);
 router.post('/save', ctrlAuth.isAuth, ctrlUsers.savePost);
 router.post('/unsave', ctrlAuth.isAuth, ctrlUsers.removePost);

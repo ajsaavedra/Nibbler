@@ -5,10 +5,11 @@ import { AccountsService } from '../services/accounts.service';
 import { CacheService } from '../services/cache.service';
 import { Helper } from '../services/helper.service';
 import { GlobalEventsManager } from '../GlobalEventsManager';
+import { TokenService } from '../services/token.service';
 
 @Component({
     templateUrl: './app/questions/questions.component.html',
-    selector: 'all-questions',
+    selector: 'nibbler-questions',
     providers: [ Helper ]
 })
 
@@ -27,6 +28,7 @@ export class QuestionsComponent implements OnInit, OnDestroy {
                 private accountsService: AccountsService,
                 private cacheService: CacheService,
                 private globalEventsManager: GlobalEventsManager,
+                private tokenService: TokenService,
                 private helper: Helper) {}
 
     ngOnInit() {
@@ -35,7 +37,7 @@ export class QuestionsComponent implements OnInit, OnDestroy {
                 this.field = field ? field : 'questions';
                 return this.globalEventsManager.pageResetEmitter;
             }).subscribe(pg => {
-                this.uname = this.globalEventsManager.getUserProfiletab();
+                this.uname = this.tokenService.getUsername();
                 const limit = this.globalEventsManager.getLimitNumber();
                 this.cacheService.setCacheForQuestionType(this.field, limit, pg * limit);
                 this.getCacheSubscription();

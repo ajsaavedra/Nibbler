@@ -3,7 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { QuestionService } from '../services/questions.service';
 import { AccountsService } from '../services/accounts.service';
 import { CacheService } from '../services/cache.service';
-import { GlobalEventsManager } from '../GlobalEventsManager';
+import { TokenService } from '../services/token.service';
+
 @Component({
     templateUrl: './app/questions/question-details.component.html'
 })
@@ -24,10 +25,10 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
         private questionService: QuestionService,
         private accountsService: AccountsService,
         private cacheService: CacheService,
-        private globalEventsManager: GlobalEventsManager) {}
+        private tokenService: TokenService) {}
 
     ngOnInit() {
-        this.uname = this.globalEventsManager.getUserProfiletab();
+        this.uname = this.tokenService.getUsername();
         const sub = this.route.params
             .map(params => params['id'])
             .switchMap(id => {

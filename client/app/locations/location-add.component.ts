@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Helper } from '../services/helper.service';
 import { GeocodingService } from '../services/geocoding.service';
 import { LocationService } from '../services/locations.service';
-import { GlobalEventsManager } from '../GlobalEventsManager';
+import { TokenService } from '../services/token.service';
 
 @Component({
     templateUrl: './app/locations/location-add.component.html',
@@ -31,7 +31,7 @@ export class LocationAddComponent implements OnInit {
                 private router: Router,
                 private locationService: LocationService,
                 private geocodingService: GeocodingService,
-                private globalEventsManager: GlobalEventsManager) {
+                private tokenService: TokenService) {
         this.addLocationForm = fb.group({
             'name': [null, Validators.required],
             'address': [null, Validators.required],
@@ -47,7 +47,7 @@ export class LocationAddComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.isLoggedIn = this.globalEventsManager.getUserProfiletab() && true;
+        this.isLoggedIn = this.tokenService.tokenExists();
         if (!this.isLoggedIn) {
             this.router.navigateByUrl('/');
         }
@@ -96,7 +96,7 @@ export class LocationAddComponent implements OnInit {
 
     formatOptions() {
         return {
-           'gluten_free': this.addLocationForm.get('gluten-free').value,
+            'gluten_free': this.addLocationForm.get('gluten-free').value,
             'vegan': this.addLocationForm.get('vegan').value,
             'vegetarian': this.addLocationForm.get('vegetarian').value,
             'soy_free': this.addLocationForm.get('soy-free').value,

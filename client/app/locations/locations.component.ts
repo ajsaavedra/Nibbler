@@ -4,6 +4,7 @@ import { GeocodingService } from '../services/geocoding.service';
 import { Helper } from '../services/helper.service';
 import { CacheService } from '../services/cache.service';
 import { GlobalEventsManager } from '../GlobalEventsManager';
+import { TokenService } from '../services/token.service';
 
 @Component({
     templateUrl: './app/locations/locations.component.html',
@@ -23,6 +24,7 @@ export class LocationsComponent implements OnInit, OnDestroy {
                 private geocodingService: GeocodingService,
                 private globalEventsManager: GlobalEventsManager,
                 private cacheService: CacheService,
+                private tokenService: TokenService,
                 private helper: Helper) {}
 
     onFilterChange(event) {
@@ -43,10 +45,15 @@ export class LocationsComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.subscriptions.push(this.globalEventsManager.pageResetEmitter.subscribe(pg => {
             const limit = this.globalEventsManager.getLimitNumber();
-            this.cacheService.getLocations(limit, pg);
+            if (this.tokenService.tokenExists()) {
+                const location = this.tokenService.decodeToken()['coords'];
+                this.cacheService.getLocations(limit, pg, location[0], location[1]);
+            } else {
+                this.cacheService.getLocations(limit, pg);
+            }
             this.getCachedLocations();
         }));
-        this.isLoggedIn = this.globalEventsManager.getUserProfiletab() && true;
+        this.isLoggedIn = this.tokenService.tokenExists();
     }
 
     ngOnDestroy() {

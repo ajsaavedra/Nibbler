@@ -12,6 +12,7 @@ import { QuestionService } from './services/questions.service';
 import { LocationService } from './services/locations.service';
 import { LocationsFilterPipe } from './locations/locations-filter.pipe';
 import { AccountsService } from './services/accounts.service';
+import { TokenService } from './services/token.service';
 
 @NgModule({
     imports: [
@@ -33,7 +34,8 @@ import { AccountsService } from './services/accounts.service';
         CacheService,
         QuestionService,
         LocationService,
-        AccountsService
+        AccountsService,
+        TokenService
     ],
     bootstrap: [ AppComponent ]
 })

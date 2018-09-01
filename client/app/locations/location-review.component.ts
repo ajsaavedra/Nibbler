@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LocationService } from '../services/locations.service';
-import { GlobalEventsManager } from '../GlobalEventsManager';
+import { TokenService } from '../services/token.service';
 
 @Component({
-    selector: 'location-review-form',
+    selector: 'nibbler-location-review-form',
     templateUrl: './app/locations/location-review.component.html',
     providers: [ LocationService ]
 })
@@ -16,7 +16,7 @@ export class LocationReviewComponent {
 
     constructor(private locationService: LocationService,
                 private fb: FormBuilder,
-                private globalEventsManager: GlobalEventsManager) {
+                private tokenService: TokenService) {
         this.reviewForm = fb.group({
             'title': [null, Validators.required],
             'rating': [5, Validators.required],
@@ -29,7 +29,7 @@ export class LocationReviewComponent {
             const call = this.locationService
                 .addReviewToLocation(
                     id,
-                    this.globalEventsManager.getUserProfiletab(),
+                    this.tokenService.getUsername(),
                     this.reviewForm.get('title').value,
                     this.reviewForm.get('rating').value,
                     this.reviewForm.get('review').value)

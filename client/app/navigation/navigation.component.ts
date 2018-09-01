@@ -1,51 +1,42 @@
 import { Component, OnDestroy } from '@angular/core';
-import { decode } from 'jwt-simple';
-import { GlobalEventsManager } from '../GlobalEventsManager';
 import { Router } from '@angular/router';
-import { secretKey } from '../../../config/secret';
+import { GlobalEventsManager } from '../GlobalEventsManager';
+import { TokenService } from '../services/token.service';
 
 @Component({
-    selector: 'navigator',
+    selector: 'nibbler-navigator',
     templateUrl: './app/navigation/navigation.component.html'
 })
 
 export class NavigationComponent implements OnDestroy {
-    private token;
     private username: string = null;
     private subscriptions = [];
 
     constructor(private globalEventsManager: GlobalEventsManager,
-                private router: Router) {
+                private router: Router, private tokenService: TokenService) {
         this.subscriptions.push(
             this.globalEventsManager.showUserNavBarEmitter
             .subscribe(mode => {
                 if (mode !== null) {
-                    mode ? this.getTokenAndSetUsername() : this.resetUserVariables();
+                    mode ? this.getUsername() : this.username = null;
                 }
             }));
-        this.getTokenAndSetUsername();
+        this.getUsername();
     }
 
     logoutUser() {
         this.globalEventsManager.showUserNavBar(false);
-        localStorage.removeItem('token');
+        this.tokenService.deleteToken();
         this.router.navigateByUrl('/login');
-    }
-
-    resetUserVariables() {
-        this.username = null;
-        this.token = null;
     }
 
     ngOnDestroy() {
         this.subscriptions.forEach(sub => sub.unsubscribe());
     }
 
-    getTokenAndSetUsername() {
-        this.token = localStorage.getItem('token');
-        if (this.token) {
-            const decoded = decode(this.token, secretKey);
-            this.username = decoded.user.profile.username;
+    getUsername() {
+        if (this.tokenService.tokenExists()) {
+            this.username = this.tokenService.decodeToken()['profile'].username;
         }
     }
 }

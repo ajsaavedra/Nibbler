@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GlobalEventsManager } from '../GlobalEventsManager';
+import { TokenService } from '../services/token.service';
 
 @Component({
     templateUrl: './app/accounts/profile.votes-card.component.html'
@@ -8,9 +8,9 @@ import { GlobalEventsManager } from '../GlobalEventsManager';
 export class ProfileVotesCardComponent implements OnInit {
     private username;
 
-    constructor(private globalEventsManager: GlobalEventsManager) {}
+    constructor(private tokenService: TokenService) {}
 
     ngOnInit() {
-        this.username = this.globalEventsManager.getUserProfiletab();
+        this.username = this.tokenService.getUsername();
     }
 }

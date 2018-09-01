@@ -1,7 +1,7 @@
 <div class="container app-content">
     <div class="text-center shop"><img src="{{ questionsIcon }}"></div>
     <div class="card question-card">
-        <paginator (page)="onPageReset($event)" (limit)="onLimitReset($event)">
+        <nibbler-paginator (page)="onPageReset($event)" (limit)="onLimitReset($event)">
             <div class="card-body">
                 <div class="row">
                     <div class="col-5 nav nav-tabs" id="nav-tab" role="tablist">
@@ -12,7 +12,7 @@
                 </div>
                 <router-outlet></router-outlet>
             </div>
-        </paginator>
+        </nibbler-paginator>
     </div>
     <div class="text-center">
         <a *ngIf="isLoggedIn()" routerLink="/add-question/">Not seeing what you need? Submit a question for other users to answer!</a>

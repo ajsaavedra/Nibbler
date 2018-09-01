@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { GeocodingService } from '../services/geocoding.service';
 import { Helper } from '../services/helper.service';
 import { CacheService } from '../services/cache.service';
-import { GlobalEventsManager } from '../GlobalEventsManager';
+import { TokenService } from '../services/token.service';
 
 @Component({
     templateUrl: './app/locations/location-details.component.html',
@@ -20,7 +20,7 @@ export class LocationDetailsComponent implements OnInit, OnDestroy {
                 private cacheService: CacheService,
                 private helper: Helper,
                 private route: ActivatedRoute,
-                private globalEventsManager: GlobalEventsManager) {}
+                private tokenService: TokenService) {}
 
     ngOnInit() {
         this.sub = this.route.params
@@ -40,7 +40,7 @@ export class LocationDetailsComponent implements OnInit, OnDestroy {
                     .then(img => { this.map = img['url']; });
             });
 
-        this.isLoggedIn = this.globalEventsManager.getUserProfiletab() && true;
+        this.isLoggedIn = this.tokenService.tokenExists();
     }
 
     ngOnDestroy() {

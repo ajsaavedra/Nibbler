@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { LocationService } from '../services/locations.service';
 import { CacheService } from '../services/cache.service';
 import { Helper } from '../services/helper.service';
-import { GlobalEventsManager } from '../GlobalEventsManager';
+import { TokenService } from '../services/token.service';
 
 @Component({
     templateUrl: './app/accounts/profile.reviews.component.html',
@@ -20,7 +20,7 @@ export class ProfileReviewsComponent implements OnInit, OnDestroy {
                 private cacheService: CacheService,
                 private helper: Helper,
                 private route: ActivatedRoute,
-                private globalEventsManager: GlobalEventsManager) {}
+                private tokenService: TokenService) {}
 
     ngOnInit() {
         const sub = this.route.params
@@ -52,7 +52,7 @@ export class ProfileReviewsComponent implements OnInit, OnDestroy {
     };
 
     belongsToUser(review) {
-        return review.author === this.globalEventsManager.getUserProfiletab();
+        return review.author === this.tokenService.getUsername();
     }
 
     deleteReview(location_id, review_id) {
