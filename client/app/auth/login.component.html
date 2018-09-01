@@ -6,20 +6,14 @@
                 <div class="text-center user-icon">
                     <i class="fa fa-user-circle fa-5x" aria-hidden="true"></i>
                 </div>
-                <div class="form-group">
-                    <input type="username" class="form-control" name="username"
-                        [formControl]="loginForm.controls['username']" placeholder="Username"/>
-                    <div *ngIf="loginForm.controls['username'].hasError('required')
-                        && loginForm.controls['username'].touched"
-                        class="alert alert-danger">Username required</div>
-                </div>
-                <div class="form-group">
-                    <input type="password" class="form-control" name="password"
-                        [formControl]="loginForm.controls['password']" placeholder="Password"/>
-                    <div *ngIf="loginForm.controls['password'].hasError('required')
-                        && loginForm.controls['password'].touched"
-                        class="alert alert-danger">Password required</div>
-                </div>
+                <nibbler-field-control-component
+                    [control]="loginForm.controls['username']"
+                    placeholder="Username" name="username">
+                </nibbler-field-control-component>
+                <nibbler-field-control-component
+                    [control]="loginForm.controls['password']"
+                    placeholder="Password" name="password" type="password">
+                </nibbler-field-control-component>
                 <button type="submit" class="btn submit-btn col-xs-12 col-sm-12"
                 [disabled]="!loginForm.valid" (click)="loginUser()">Login</button>
             </form>

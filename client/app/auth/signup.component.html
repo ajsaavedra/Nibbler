@@ -7,33 +7,18 @@
                     <div class="text-center user-icon">
                         <i class="fa fa-user-plus fa-5x" aria-hidden="true"></i>
                     </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="firstname"
-                            [formControl]="signupFormPageOne.controls['fname']" placeholder="First name"/>
-                        <div *ngIf="signupFormPageOne.controls['fname'].hasError('pattern')
-                            || signupFormPageOne.controls['fname'].touched && signupFormPageOne.controls['fname'].hasError('required')"
-                            class="alert alert-danger">Please enter a valid first name</div>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="lastname"
-                            [formControl]="signupFormPageOne.controls['lname']" placeholder="Last name"/>
-                        <div *ngIf="signupFormPageOne.controls['lname'].hasError('pattern')
-                            || signupFormPageOne.controls['lname'].touched && signupFormPageOne.controls['lname'].hasError('required')"
-                            class="alert alert-danger">Please enter a valid last name</div>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="username"
-                            [formControl]="signupFormPageOne.controls['uname']" placeholder="Username"/>
-                        <div *ngIf="signupFormPageOne.controls['uname'].touched && signupFormPageOne.controls['uname'].hasError('required')"
-                            class="alert alert-danger">Please enter a username</div>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" class="form-control" name="email"
-                            [formControl]="signupFormPageOne.controls['email']" placeholder="Email"/>
-                        <div *ngIf="signupFormPageOne.controls['email'].hasError('pattern')
-                            || signupFormPageOne.controls['email'].touched && signupFormPageOne.controls['email'].hasError('required')"
-                            class="alert alert-danger">Please enter a valid email</div>
-                    </div>
+                    <nibbler-field-control-component
+                        [control]="signupFormPageOne.controls['fname']" placeholder="First Name" name="firstname" hasRegex="true">
+                    </nibbler-field-control-component>
+                    <nibbler-field-control-component
+                        [control]="signupFormPageOne.controls['lname']" placeholder="Last Name" name="lastname" hasRegex="true">
+                    </nibbler-field-control-component>
+                    <nibbler-field-control-component
+                        [control]="signupFormPageOne.controls['uname']" placeholder="Username" name="username">
+                    </nibbler-field-control-component>
+                    <nibbler-field-control-component
+                        [control]="signupFormPageOne.controls['email']" placeholder="Email" name="email" hasRegex="true">
+                    </nibbler-field-control-component>
                     <button class="col-12 btn submit-btn" (click)="checkUserInfo()"
                     [disabled]="!signupFormPageOne.valid"><i class="fas fa-arrow-right" aria-hidden="true"></i></button>
                 </form>
@@ -42,38 +27,19 @@
                 <button class="col-2 btn submit-btn" (click)="toggleState()">
                     <i class="fa fa-arrow-left" aria-hidden="true"></i></button>
                 <form [formGroup]="signupFormPageTwo">
-                    <div class="form-group">
-                        <input type="password" class="form-control" name="password"
-                            [formControl]="signupFormPageTwo.controls['password']" placeholder="Password"/>
-                        <div *ngIf="signupFormPageTwo.controls['password'].hasError('pattern')
-                            || signupFormPageTwo.controls['password'].touched && signupFormPageTwo.controls['password'].hasError('required')"
-                            class="alert alert-danger">Password must contain 8 characters, 
-                            at least one uppercase and lowercase letter, 
-                            one number and one special character</div>
-                    </div>
-                    <div class="form-group">
-                        <input type="password" class="form-control" name="confirmation"
-                            [formControl]="signupFormPageTwo.controls['confirmation']" placeholder="Confirm password"/>
-                        <div *ngIf="signupFormPageTwo.controls['confirmation'].touched && 
-                        signupFormPageTwo.controls.confirmation.errors?.PasswordMatch"
-                            class="alert alert-danger">Passwords do not match</div>             
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" 
-                        [formControl]="signupFormPageTwo.controls['zipcode']" name="zipcode"
-                            placeholder="Zipcode"/>
-                        <div *ngIf="signupFormPageTwo.controls['zipcode'].hasError('pattern')
-                            || signupFormPageTwo.controls['zipcode'].touched && signupFormPageTwo.controls['zipcode'].hasError('required')"
-                            class="alert alert-danger">Please enter a valid zipcode</div>
-                    </div>
-                    <div class="form-group">
-                        <h2>I am...</h2>
-                        <label class="checkbox-inline"><input type="checkbox" value="" [formControl]="signupFormPageTwo.controls['gluten-free']">Gluten Free</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="" [formControl]="signupFormPageTwo.controls['vegetarian']">Vegetarian</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="" [formControl]="signupFormPageTwo.controls['vegan']">Vegan</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="" [formControl]="signupFormPageTwo.controls['soy-free']">Soy Free</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="" [formControl]="signupFormPageTwo.controls['nut-free']">Nut Free</label>
-                    </div>
+                    <nibbler-field-control-component
+                        [control]="signupFormPageTwo.controls['password']" placeholder="Password" name="password" type="password" hasRegex="true"
+                        error="Password must contain 8 characters, one uppercase and lowercase letter, one number and one special character">
+                    </nibbler-field-control-component>
+                    <nibbler-field-control-component
+                        [control]="signupFormPageTwo.controls['confirmation']" placeholder="Confirm Password" type="password"
+                        name="confirmation" error="Passwords do not match">
+                    </nibbler-field-control-component>
+                    <nibbler-field-control-component
+                        [control]="signupFormPageTwo.controls['zipcode']" placeholder="Zipcode" name="zipcode" hasRegex="true">
+                    </nibbler-field-control-component>
+                    <h2>I am...</h2>
+                    <nibbler-diet-options-component [controls]="signupFormPageTwo.controls"></nibbler-diet-options-component>
                     <button class="col btn submit-btn"
                         [disabled]="!signupFormPageTwo.valid" (click)="collectUserData()">Signup</button>
                 </form>

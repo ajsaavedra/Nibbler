@@ -2,22 +2,12 @@
     <div class="text-center shop"><img src="{{ formIcon }}"></div>
     <div class="col-12 review-form">
         <form [formGroup]="addQuestionForm" id="addQuestionForm" action="">
-            <div class="row form-row">
-                <input id="questionTitle" type="text" name="questionTitle" class="form-element" 
-                        placeholder="Title" [formControl]="addQuestionForm.controls['title']">
-            </div>
-            <div *ngIf="addQuestionForm.controls['title'].hasError('required') 
-                            && addQuestionForm.controls['title'].touched"
-                    class="row form-row alert alert-danger">You must include a title.
-            </div>
-            <div class="form-row">
-                <textarea class="form-element" type="text" id="questionText" placeholder="Question..."
-                name="questionText" [formControl]="addQuestionForm.controls['question']"></textarea>
-            </div>
-            <div class="row form-row alert alert-danger" 
-                *ngIf="addQuestionForm.controls['question'].hasError('required') 
-                && addQuestionForm.controls['question'].touched">You must include a question.
-            </div>
+            <nibbler-field-control-component
+                [control]="addQuestionForm.controls['title']" placeholder="Title" name="questionTitle" type="text">
+            </nibbler-field-control-component>
+            <nibbler-field-control-component
+                [control]="addQuestionForm.controls['question']" placeholder="Question" textarea="true" name="question">
+            </nibbler-field-control-component>
             <div class="text-center">
                 Optional: select tags to help users find your question. Simply click and drag to the box below.
             </div>

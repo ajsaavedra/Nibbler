@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'my-app',
+    selector: 'nibbler-app',
     template: `
-        <navigator></navigator>
+        <nibbler-navigator></nibbler-navigator>
         <router-outlet></router-outlet>
         <footer class="container">
             <div class="text-center">

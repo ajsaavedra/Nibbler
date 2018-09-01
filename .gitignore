@@ -6,3 +6,4 @@ npm-debug.log
 client/node_modules/
 client/typings/
 client/dist/
+config.zip

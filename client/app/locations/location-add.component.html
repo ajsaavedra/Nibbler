@@ -1,72 +1,32 @@
 <div class="container app-content">
     <div class="text-center shop"><img src="{{ formIcon }}"></div>
     <form [formGroup]="addLocationForm">
-        <input class="col-xs-6 col-sm-12" type="text"
-            placeholder="Location Name" [formControl]="addLocationForm.controls['name']"/>
-        <div *ngIf="addLocationForm.controls['name'].touched && 
-                    addLocationForm.controls['name'].hasError('required')"
-            class="alert alert-danger">Location name required</div>   
-        <input class="col-xs-6 col-sm-12" type="text"
-            placeholder="Location Address" [formControl]="addLocationForm.controls['address']"/>
-        <div *ngIf="addLocationForm.controls['address'].touched && 
-                    addLocationForm.controls['address'].hasError('required')"
-            class="alert alert-danger">Location address required</div>
+        <nibbler-field-control-component [control]="addLocationForm.controls['name']" placeholder="Location Name" name="locationName">
+        </nibbler-field-control-component>
+        <nibbler-field-control-component [control]="addLocationForm.controls['address']" placeholder="Address" name="address">
+        </nibbler-field-control-component>
         <div class="col">{{ this.timesArray.join('\n') }}</div>
-        <div class="row">
-            <select class="form-control col-1" (change)="updateOpeningDay($event.target.value)">
-                <option selected>Day</option>
-                <option *ngFor='let day of days' value="{{day}}">{{day}}</option>
-            </select>
-            <select class="form-control col-1" (change)="updateOpeningHour($event.target.value)">
-                <option selected>Open</option>
-                <option *ngFor='let hour of hours' value="{{hour}}">{{hour}}</option>
-            </select>
-            <select class="form-control col-1" (change)="updateOpeningMeridian($event.target.value)">
-                <option selected>AM/PM</option>
-                <option value="am">am</option>
-                <option value="pm">pm</option>
-            </select>
-            <select class="form-control col-1" (change)="updateClosingHour($event.target.value)">
-                <option selected>Close</option>
-                <option *ngFor='let hour of hours' value="{{hour}}">{{hour}}</option>
-            </select>
-            <select class="form-control col-1" (change)="updateClosingMeridian($event.target.value)">
-                <option selected>AM/PM</option>
-                <option value="am">am</option>
-                <option value="pm">pm</option>
-            </select>
-            <button class="btn time-btn" (click)="addTime()">
-                <i class="fa fa-plus"></i>
-            </button>
-            <button class="btn submit-btn" (click)="removeHours()">
-                <i class="fa fa-minus"></i>
-            </button>
+        <div class="row add-time-row">
+            <nibbler-select-control-component [onChange]="updateOpeningDay.bind(this)" label="Day" [list]="days">
+            </nibbler-select-control-component>
+            <nibbler-select-control-component [onChange]="updateOpeningHour.bind(this)" label="Open" [list]="hours">
+            </nibbler-select-control-component>
+            <nibbler-select-control-component [onChange]="updateOpeningMeridian.bind(this)" label="AM/PM" [list]="['am','pm']">
+            </nibbler-select-control-component>
+            <nibbler-select-control-component [onChange]="updateClosingHour.bind(this)" label="Close" [list]="hours">
+            </nibbler-select-control-component>
+            <nibbler-select-control-component [onChange]="updateClosingMeridian.bind(this)" label="AM/PM" [list]="['am','pm']">
+            </nibbler-select-control-component>
+            <div id="time-btns">
+                <button class="btn time-btn" (click)="addTime()">
+                    <i class="fa fa-plus"></i>
+                </button>
+                <button class="btn submit-btn" (click)="removeHours()">
+                    <i class="fa fa-minus"></i>
+                </button>
+            </div>
         </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="glutenFreeCheckbox"
-                    value="GlutenFree" [formControl]="addLocationForm.controls['gluten-free']">
-            <label class="form-check-label" for="glutenFreeCheckbox">Gluten Free</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="vegetarianCheckbox"
-                    value="Vegetarian" [formControl]="addLocationForm.controls['vegetarian']">
-            <label class="form-check-label" for="vegetarianCheckbox">Vegetarian</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="veganCheckbox"
-                    value="Vegan" [formControl]="addLocationForm.controls['vegan']">
-            <label class="form-check-label" for="veganCheckbox">Vegan</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="soyFreeCheckbox"
-                    value="SoyFree" [formControl]="addLocationForm.controls['soy-free']">
-            <label class="form-check-label" for="soyFreeCheckbox">Soy Free</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="nutFreeCheckbox"
-                    value="NutFree" [formControl]="addLocationForm.controls['nut-free']">
-            <label class="form-check-label" for="nutFreeCheckbox">Nut Free</label>
-        </div>
+        <nibbler-diet-options-component [controls]="addLocationForm.controls"></nibbler-diet-options-component>
         <button class="col btn submit-btn" [disabled]="!addLocationForm.valid" (click)="getAddressCoordinates()">Submit</button>
     </form>
 </div>

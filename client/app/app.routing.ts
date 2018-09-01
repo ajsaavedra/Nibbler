@@ -22,6 +22,10 @@ import { ProfileVotedPostsComponent } from './accounts/profile.voted-posts.compo
 import { ProfileQuestionsComponent } from './accounts/profile.questions.component';
 import { ProfileReviewsComponent } from './accounts/profile.reviews.component';
 import { PaginationComponent } from './common/pagination.component';
+import { FieldControlComponent } from './common/field.control.component';
+import { CheckboxControlComponent } from './common/checkbox.control.component';
+import { SelectControlComponent } from './common/select.contol.component';
+import { DietOptionsComponent } from './common/diet-options.component';
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -90,5 +94,9 @@ export const routingComponents = [
     ProfileSavedCommentsComponent,
     ProfileVotesCardComponent,
     ProfileVotedPostsComponent,
-    PaginationComponent
+    PaginationComponent,
+    FieldControlComponent,
+    CheckboxControlComponent,
+    SelectControlComponent,
+    DietOptionsComponent
 ];

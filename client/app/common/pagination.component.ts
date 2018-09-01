@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { GlobalEventsManager } from '../GlobalEventsManager';
 
 @Component({
-    selector: 'paginator',
+    selector: 'nibbler-paginator',
     templateUrl: './app/common/pagination.component.html'
 })
 
