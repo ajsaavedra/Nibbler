@@ -26,7 +26,6 @@ export class ProfileSavedCommentsComponent implements OnInit, OnDestroy {
                 this.cacheService.getHelpfulComments();
             }
             this.subscription = this.cacheService._data['helpfulComments'].subscribe(res => {
-                console.log(res);
                 if (res || res.length > 0) {
                     Object.keys(res).forEach(postTitle => {
                         res[postTitle]['title'] = postTitle;

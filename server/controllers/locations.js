@@ -196,17 +196,15 @@ module.exports.locationsDeleteOne = function(req, res) {
 module.exports.locationsGetReviewsByAuthor = function(req, res) {
     if (req.err) return sendJsonResponse(res, 500, req.err);
     if (!req.existingUser) return sendJsonResponse(res, 404, req.err);
-    const uname = req.params.uname;
-    if (!uname) return sendJsonResponse(res, 400, {'message': 'username required'});
     Loc
-        .find({ 'reviews.author': uname })
+        .find({ 'reviews.author': req.existingUser.profile.username })
         .exec(function(err, docs) {
             if (err) return sendJsonResponse(res, 500, err);
             let userReviews = {};
             docs.forEach(doc => {
                 const name = doc.name;
                 doc.reviews.forEach(review => {
-                    if (review.author === uname) userReviews[doc._id + ':' + name] = review;
+                    if (review.author === req.existingUser.profile.username) userReviews[doc._id + ':' + name] = review;
                 });
             });
             sendJsonResponse(res, 200, userReviews);

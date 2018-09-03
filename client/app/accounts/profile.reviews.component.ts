@@ -14,7 +14,6 @@ export class ProfileReviewsComponent implements OnInit, OnDestroy {
     private username;
     private subscriptions = [];
     private reviews = [];
-    private uname;
 
     constructor(
         private locationService: LocationService,
@@ -39,7 +38,6 @@ export class ProfileReviewsComponent implements OnInit, OnDestroy {
                     this.reviews.push(res[review]);
                 });
             }, err => {
-                console.log('OOPS');
                 this.router.navigateByUrl('/');
             });
         this.subscriptions.push(sub);
