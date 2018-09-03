@@ -36,8 +36,10 @@ module.exports.questionsCreate = function(req, res) {
 };
 
 module.exports.questionsGetByAuthor = function(req, res) {
+    if (req.err) return sendJsonResponse(res, 500, req.err);
+    if (!req.existingUser) return sendJsonResponse(res, 404, null);
     Question
-        .find({ author: req.params.author })
+        .find({ author: req.params.username })
         .exec(function(err, questions) {
             if (err) {
                 sendJsonResponse(res, 500, err);

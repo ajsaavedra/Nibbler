@@ -194,6 +194,8 @@ module.exports.locationsDeleteOne = function(req, res) {
 };
 
 module.exports.locationsGetReviewsByAuthor = function(req, res) {
+    if (req.err) return sendJsonResponse(res, 500, req.err);
+    if (!req.existingUser) return sendJsonResponse(res, 404, req.err);
     const uname = req.params.uname;
     if (!uname) return sendJsonResponse(res, 400, {'message': 'username required'});
     Loc

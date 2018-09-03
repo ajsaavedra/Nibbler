@@ -51,18 +51,24 @@ module.exports.findUserByName = function(req, res, next) {
     User
         .findOne({ 'profile.username': req.params.username })
         .exec(function(err, existingUser) {
-            if (err) {
-                sendJsonResponse(res, 400, err);
-            } else if (existingUser) {
-                sendJsonResponse(res, 401, {
-                    'message': 'Oops. A user with this username already exists. Please login to continue.'
-                });
-            } else {
-                sendJsonResponse(res, 200, {
-                    'message': 'No user exists. Proceed to register'
-                });
-            }
+            req.err = err;
+            req.existingUser = existingUser;
+            next();
         });
+};
+
+module.exports.lookupUserByNameResponse = function(req, res) {
+    if (req.err) {
+        sendJsonResponse(res, 400, req.err);
+    } else if (req.existingUser) {
+        sendJsonResponse(res, 401, {
+            'message': 'Oops. A user with this username already exists. Please login to continue.'
+        });
+    } else {
+        sendJsonResponse(res, 200, {
+            'message': 'No user exists. Proceed to register'
+        });
+    }
 };
 
 const saveUser = function(user, res) {
