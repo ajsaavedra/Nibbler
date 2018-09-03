@@ -126,7 +126,7 @@ footer img {
 }
 
 .locations-list:not(:last-child),
-.questions-list:not(:last-child),
+nibbler-voting-component:not(:last-child) > .voting-component,
 .reviews-list:not(:last-child),
 .answers-list:not(:last-child) {
     border-bottom: 1px solid #DDD;

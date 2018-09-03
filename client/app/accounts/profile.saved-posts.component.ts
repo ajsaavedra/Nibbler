@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { AccountsService } from '../services/accounts.service';
-import { CacheService } from '../services/cache.service';
+import { TokenService } from '../services/token.service';
 import { Helper } from '../services/helper.service';
 
 @Component({
@@ -12,11 +13,18 @@ export class ProfileSavedPostsComponent implements OnInit, OnDestroy {
     private subscriptions = [];
     private savedData = {};
 
-    constructor(private accountsService: AccountsService,
-                private cacheService: CacheService,
-                private helper: Helper) {}
+    constructor(
+        private router: Router,
+        private tokenService: TokenService,
+        private accountsService: AccountsService,
+        private helper: Helper
+    ) {}
 
     ngOnInit() {
+        if (!this.tokenService.tokenExists()) {
+            this.router.navigateByUrl('/login');
+            return;
+        }
         const sub = this.accountsService.getUserSavedPosts().subscribe(res => this.savedData = res);
         this.subscriptions.push(sub);
     }

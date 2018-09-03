@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { TokenService } from './token.service';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
@@ -9,7 +9,7 @@ export class QuestionService {
     API_URL = 'http://localhost:3000/api/questions';
     headers = new Headers({ 'Content-Type': 'application/json' });
     options = new RequestOptions({ headers: this.headers });
-    constructor(private http: Http) {}
+    constructor(private http: Http, private tokenService: TokenService) {}
 
     getAllQuestions(limit: number, offset: number = 0) {
         return this.http.get(this.API_URL + '/' + limit + '/' + offset).map(res => res.json());
@@ -31,14 +31,14 @@ export class QuestionService {
         return this.http.get(this.API_URL + '-by-author/' + uname).map(res => res.json());
     }
 
-    postUserQuestion(uname, title, question, tags) {
+    postUserQuestion(uname: string, title: string, question: string, tags: string[]) {
         const body = {
             user: uname,
             title: title,
             question: question,
             tags: tags
         };
-        return this.http.post(this.API_URL, body).map(res => res.json());
+        return this.http.post(this.API_URL, body, this.tokenService.getAuthorizedHeaderOptions()).map(res => res.json());
     }
 
     postQuestionReply(id, uname, text) {
@@ -48,22 +48,25 @@ export class QuestionService {
             replyText: text
         };
 
-        return this.http.post(this.API_URL + '/' + id, body).map(res => res.json());
+        return this.http.post(`${this.API_URL}/${id}`, body, this.tokenService.getAuthorizedHeaderOptions()).map(res => res.json());
     }
 
     editQuestionReply(question_id, reply_id, text) {
         const body = {
             text: text
         };
-        return this.http.put(this.API_URL + '-comment/' + question_id + '/' + reply_id, body, this.options).map(res => res.json());
+        return this.http.put(`${this.API_URL}-comment/${question_id}/${reply_id}`, body, this.tokenService.getAuthorizedHeaderOptions())
+                        .map(res => res.json());
     }
 
     deleteQuestionReply(question_id, reply_id) {
-        return this.http.delete(this.API_URL + '-comment/' + question_id + '/' + reply_id).map(res => res.json());
+        return this.http.delete(`${this.API_URL}-comment/${question_id}/${reply_id}`, this.tokenService.getAuthorizedHeaderOptions())
+                        .map(res => res.json());
     }
 
     deleteQuestion(question_id) {
-        return this.http.delete(this.API_URL + '/' + question_id).map(res => res.json());
+        return this.http.delete(`${this.API_URL}/${question_id}`, this.tokenService.getAuthorizedHeaderOptions())
+                        .map(res => res.json());
     }
 
     updateQuestionVoteCount(id, author, num) {
@@ -83,6 +86,7 @@ export class QuestionService {
             replyid: reply_id,
             vote: num
         };
-        return this.http.put(this.API_URL + '-update-comment-votes', body).map(res => res.json());
+        return this.http.put(`${this.API_URL}-update-comment-votes`, body, this.tokenService.getAuthorizedHeaderOptions())
+                        .map(res => res.json());
     }
 }

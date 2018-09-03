@@ -42,8 +42,7 @@ export class QuestionAddComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.uname = this.tokenService.getUsername();
-        if (!this.uname) {
+        if (!this.tokenService.tokenExists()) {
             this.router.navigateByUrl('/login');
         }
     }
@@ -72,11 +71,12 @@ export class QuestionAddComponent implements OnInit, OnDestroy {
     submitQuestion() {
         const title = this.addQuestionForm.get('title').value;
         const text = this.addQuestionForm.get('question').value;
+        const uname = this.tokenService.getUsername();
         this.subscriptions.push(
             this.questionService
-                .postUserQuestion(this.uname, title, text, this.userDefinedTags)
+                .postUserQuestion(uname, title, text, this.userDefinedTags)
                 .subscribe(res => {
-                    this.router.navigateByUrl('/profile/' + this.uname + '/questions');
+                    this.router.navigateByUrl(`/profile/${uname}/questions`);
             })
         );
     }

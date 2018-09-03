@@ -5,27 +5,9 @@
         <div *ngIf="!isFavorited" class="row post-fav" (click)="toggleFavorite()"><i class="far fa-heart"></i></div>
     </div>
     <div class="post-body">
-        <div class="row">
-            <div class="col-1">
-                <div *ngIf="!liked" class="row vote vote-like" (click)="like(question._id, question.author)">
-                    <i class="far fa-arrow-alt-circle-up"></i>
-                </div>
-                <div *ngIf="liked" class="row vote" (click)="like(question._id, question.author)">
-                    <i class="fas fa-arrow-alt-circle-up liked"></i>
-                </div>
-                <div *ngIf="liked" class="post-votes liked">{{ votes }}</div>
-                <div *ngIf="disliked" class="post-votes disliked">{{ votes }}</div>
-                <div *ngIf="!liked && !disliked" class="post-votes">{{ votes }}</div>
-                <div *ngIf="!disliked" class="row vote vote-dislike" (click)="unlike(question._id, question.author)">
-                    <i class="far fa-arrow-alt-circle-down"></i>
-                </div>
-                <div *ngIf="disliked" class="row vote" (click)="unlike(question._id, question.author)">
-                    <i class="fas fa-arrow-alt-circle-down disliked"></i>
-                </div>
-            </div>
-            <div class="col-10">{{ question.questionText }}</div>
-        </div>
-        <div class="row post-metadata">
+        <nibbler-voting-component [question]="question" isDetailsPage="true">
+        </nibbler-voting-component>
+        <div class="row post-metadata question-content">
             <div class="col-8">asked by <a routerLink="/profile/{{ question.author }}">{{ question.author }}</a></div>
             <div>
                 <span class="tags badge badge-pill badge-primary"

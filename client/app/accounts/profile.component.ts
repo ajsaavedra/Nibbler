@@ -42,13 +42,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     getUserProfile(username) {
-        this.subscriptions.push(this.accountsService.getUserProfile(username, this.token)
-            .subscribe(
-                res => this.user = res,
-                err => {
-                    this.router.navigateByUrl('/login');
-                }
-            )
+        this.subscriptions.push(this.accountsService.getUserProfile(username)
+            .subscribe(res => this.user = res, err => this.router.navigateByUrl('/'))
         );
     }
 }

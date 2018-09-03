@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { QuestionService } from '../services/questions.service';
 import { CacheService } from '../services/cache.service';
 import { Helper } from '../services/helper.service';
@@ -20,6 +20,7 @@ export class ProfileQuestionsComponent implements OnInit, OnDestroy {
                 private cacheService: CacheService,
                 private helper: Helper,
                 private route: ActivatedRoute,
+                private router: Router,
                 private tokenService: TokenService) {}
 
     ngOnInit() {
@@ -29,7 +30,7 @@ export class ProfileQuestionsComponent implements OnInit, OnDestroy {
                 this.username = uname;
                 return this.questionsService.getQuestionsByAuthor(this.username);
             })
-            .subscribe(res => this.questions = res);
+            .subscribe(res => this.questions = res, err => this.router.navigateByUrl('/'));
         this.subscriptions.push(sub);
     }
 

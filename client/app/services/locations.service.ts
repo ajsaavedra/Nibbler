@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
+import { TokenService } from './token.service';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
@@ -8,7 +9,7 @@ export class LocationService {
     API_URL = 'http://localhost:3000/api/locations';
     headers = new Headers({ 'Content-Type': 'application/json' });
     options = new RequestOptions({ headers: this.headers, withCredentials: true });
-    constructor(private http: Http) {}
+    constructor(private http: Http, private tokenService: TokenService) {}
 
     getNearbyLocations(limit: number, offset: number = 0, lon: number = -122.2903, lat: number = 37.8687) {
         return this.http.get(`${this.API_URL}?lng=${lon}&lat=${lat}&maxDistance=5&limit=
@@ -28,7 +29,8 @@ export class LocationService {
     }
 
     deleteUserLocationReview(id, reviewid) {
-        return this.http.delete(this.API_URL + '/' + id + '/reviews/' + reviewid, this.options).map(res => res.json());
+        return this.http.delete(`${this.API_URL}/${id}/reviews/${reviewid}`, this.tokenService.getAuthorizedHeaderOptions())
+                        .map(res => res.json());
     }
 
     addReviewToLocation(id, author, title, rating, text) {
@@ -39,7 +41,8 @@ export class LocationService {
             reviewText: text
         };
 
-        return this.http.post(this.API_URL + '/' + id + '/reviews', body, this.options).map(res => res.json());
+        return this.http.post(`${this.API_URL}/${id}/reviews`, body, this.tokenService.getAuthorizedHeaderOptions())
+                        .map(res => res.json());
     }
 
     addLocation(name, address, lat, lng, hours, options) {

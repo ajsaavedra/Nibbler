@@ -15,11 +15,13 @@ export class LoginComponent implements OnInit, OnDestroy {
     private loginForm: FormGroup;
     private loginSubscription;
 
-    constructor(private fb: FormBuilder,
-                private router: Router,
-                private accountsService: AccountsService,
-                private globalEventsManager: GlobalEventsManager,
-                private tokenService: TokenService) {
+    constructor(
+        private fb: FormBuilder,
+        private router: Router,
+        private accountsService: AccountsService,
+        private globalEventsManager: GlobalEventsManager,
+        private tokenService: TokenService
+    ) {
         this.loginForm = fb.group({
             'username': [null, Validators.required],
             'password': [null, Validators.required]

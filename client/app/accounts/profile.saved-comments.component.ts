@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AccountsService } from '../services/accounts.service';
+import { Router } from '@angular/router';
 import { CacheService } from '../services/cache.service';
 import { Helper } from '../services/helper.service';
 import { TokenService } from '../services/token.service';
@@ -10,32 +10,37 @@ import { TokenService } from '../services/token.service';
 })
 
 export class ProfileSavedCommentsComponent implements OnInit, OnDestroy {
-    private subscriptions = [];
-    private username;
+    private subscription;
     private savedData = [];
 
-    constructor(private accountsService: AccountsService,
-                private cacheService: CacheService,
-                private tokenService: TokenService,
-                private helper: Helper) {}
+    constructor(
+        private router: Router,
+        private cacheService: CacheService,
+        private tokenService: TokenService,
+        private helper: Helper
+    ) {}
 
     ngOnInit() {
-        if (this.tokenService.getUsername()) {
+        if (this.tokenService.tokenExists()) {
             if (!this.cacheService._data['helpfulComments']) {
                 this.cacheService.getHelpfulComments();
             }
-            const sub = this.cacheService._data['helpfulComments'].subscribe(res => {
-                Object.keys(res).forEach(postTitle => {
-                    res[postTitle]['title'] = postTitle;
-                    this.savedData.push(res[postTitle]);
-                });
+            this.subscription = this.cacheService._data['helpfulComments'].subscribe(res => {
+                console.log(res);
+                if (res || res.length > 0) {
+                    Object.keys(res).forEach(postTitle => {
+                        res[postTitle]['title'] = postTitle;
+                        this.savedData.push(res[postTitle]);
+                    });
+                }
             });
-            this.subscriptions.push(sub);
+        } else {
+            this.router.navigateByUrl('/login');
         }
     }
 
     ngOnDestroy() {
-        this.subscriptions.forEach(sub => sub.unsubscribe());
+        this.subscription.unsubscribe();
     }
 
     getTimeSince(datetime) {

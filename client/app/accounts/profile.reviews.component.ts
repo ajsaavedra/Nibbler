@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LocationService } from '../services/locations.service';
 import { CacheService } from '../services/cache.service';
 import { Helper } from '../services/helper.service';
@@ -16,11 +16,14 @@ export class ProfileReviewsComponent implements OnInit, OnDestroy {
     private reviews = [];
     private uname;
 
-    constructor(private locationService: LocationService,
-                private cacheService: CacheService,
-                private helper: Helper,
-                private route: ActivatedRoute,
-                private tokenService: TokenService) {}
+    constructor(
+        private locationService: LocationService,
+        private cacheService: CacheService,
+        private helper: Helper,
+        private route: ActivatedRoute,
+        private router: Router,
+        private tokenService: TokenService
+    ) {}
 
     ngOnInit() {
         const sub = this.route.params
@@ -35,6 +38,9 @@ export class ProfileReviewsComponent implements OnInit, OnDestroy {
                     res[review]['location_name'] = review.split(':')[1];
                     this.reviews.push(res[review]);
                 });
+            }, err => {
+                console.log('OOPS');
+                this.router.navigateByUrl('/');
             });
         this.subscriptions.push(sub);
     }

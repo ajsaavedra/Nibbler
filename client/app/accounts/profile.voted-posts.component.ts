@@ -1,9 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { AccountsService } from '../services/accounts.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TokenService } from '../services/token.service';
 import { CacheService } from '../services/cache.service';
 import { Helper } from '../services/helper.service';
-import { GlobalEventsManager } from '../GlobalEventsManager';
 
 @Component({
     templateUrl: './app/accounts/profile.voted-posts.component.html',
@@ -15,13 +14,19 @@ export class ProfileVotedPostsComponent implements OnInit, OnDestroy {
     private savedData;
     private field: string;
 
-    constructor(private route: ActivatedRoute,
-                private accountsService: AccountsService,
-                private cacheService: CacheService,
-                private globalEventsManager: GlobalEventsManager,
-                private helper: Helper) {}
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router,
+        private tokenService: TokenService,
+        private cacheService: CacheService,
+        private helper: Helper
+    ) {}
 
     ngOnInit() {
+        if (!this.tokenService.tokenExists()) {
+            this.router.navigateByUrl('/login');
+            return;
+        }
         const sub = this.route.params.subscribe(params => {
             this.field = params['field'] ? params['field'] : 'upvoted';
             this.field === 'upvoted' ? this.getLikedPosts() : this.getDislikedPosts();
