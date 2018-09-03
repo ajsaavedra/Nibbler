@@ -1,0 +1,78 @@
+<div *ngIf="!isDetailsPage" class="row voting-component">
+    <div class="col-1 karma-btns">
+        <div *ngIf="!isLiked(question._id) || !likedQuestions[question._id]">
+            <div class="row vote vote-like" (click)="vote(question, true)">
+                <i class="far fa-arrow-alt-circle-up"></i>
+            </div>
+        </div>
+        <div *ngIf="isLiked(question._id)">
+            <div class="row vote" (click)="vote(question, true)">
+                <i class="fas fa-arrow-alt-circle-up liked"></i>
+            </div>
+        </div>
+        <div *ngIf="!isDisliked(question._id) || !dislikedQuestions[question._id]">
+            <div class="row vote vote-dislike" (click)="vote(question, false)">
+                <i class="far fa-arrow-alt-circle-down"></i>
+            </div>
+        </div>
+        <div *ngIf="isDisliked(question._id)">
+            <div class="row vote" (click)="vote(question, false)">
+                <i class="fas fa-arrow-alt-circle-down disliked"></i>
+            </div>
+        </div>
+    </div>
+    <div class="question-content questions-list col-11 main-question">
+        <div class="row">
+            <p class="location-name">
+                <a [routerLink]="['/questions/', question._id]">{{ question.title }}</a>
+            </p>
+        </div>
+        <div class="row" class="question-text">
+            <p>{{ question.questionText.split(' ').slice(0, 20).join(' ') }}...</p>
+        </div>
+        <div class="row">
+            <div class="col-6 metadata">
+                <span *ngIf="isLiked(question._id)" class="liked">
+                    {{ votesMap.get(question._id) }} {{ votesMap.get(question._id) == 1 ? 'vote' : 'votes' }}
+                </span>
+                <span *ngIf="isDisliked(question._id)" class="disliked">
+                    {{ votesMap.get(question._id) }} {{ votesMap.get(question._id) == 1 ? 'vote' : 'votes' }}
+                </span>
+                <span *ngIf="!isLiked(question._id) && !isDisliked(question._id)">
+                    {{ votesMap.get(question._id) }} {{ votesMap.get(question._id) == 1 ? 'vote' : 'votes' }}
+                </span>
+                by&nbsp;<a routerLink="/profile/{{ question.author }}">{{ question.author }}</a>
+                {{ getTimeSince(question.createdOn) }} ago
+            </div>
+            <div>
+                <span class="tags badge badge-pill badge-primary"
+                        *ngFor='let tag of question.tags'>
+                    {{ tag }}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="isDetailsPage">
+    <div class="row">
+        <div class="col-1">
+            <div *ngIf="!isLiked(question._id)" class="row vote vote-like" (click)="vote(question, true)">
+                <i class="far fa-arrow-alt-circle-up"></i>
+            </div>
+            <div *ngIf="isLiked(question._id)" class="row vote" (click)="vote(question, true)">
+                <i class="fas fa-arrow-alt-circle-up liked"></i>
+            </div>
+            <div *ngIf="isLiked(question._id)" class="post-votes liked">{{ question.votes }}</div>
+            <div *ngIf="isDisliked(question._id)" class="post-votes disliked">{{ question.votes }}</div>
+            <div *ngIf="!isLiked(question._id) && !isDisliked(question._id)" class="post-votes">{{ question.votes }}</div>
+            <div *ngIf="!isDisliked(question._id)" class="row vote vote-dislike" (click)="vote(question, false)">
+                <i class="far fa-arrow-alt-circle-down"></i>
+            </div>
+            <div *ngIf="isDisliked(question._id)" class="row vote" (click)="vote(question, false)">
+                <i class="fas fa-arrow-alt-circle-down disliked"></i>
+            </div>
+        </div>
+        <div class="col-10">{{ question.questionText }}</div>
+    </div>
+    <ng-content select=".question-content"></ng-content>
+</div>
