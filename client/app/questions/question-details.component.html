@@ -5,7 +5,8 @@
         <div *ngIf="!isFavorited" class="row post-fav" (click)="toggleFavorite()"><i class="far fa-heart"></i></div>
     </div>
     <div class="post-body">
-        <nibbler-voting-component [question]="question" isDetailsPage="true">
+        <nibbler-voting-component [question]="question" isDetailsPage="true"
+            (dialogIsActivated)="toggleDialog($event)" (dialogMessage)="setDialogMessage($event)">
         </nibbler-voting-component>
         <div class="row post-metadata question-content">
             <div class="col-8">asked by <a routerLink="/profile/{{ question.author }}">{{ question.author }}</a></div>
@@ -18,4 +19,5 @@
         </div>
     </div>
     <nibbler-question-replies [question]="question"></nibbler-question-replies>
+    <nibbler-dialog-component></nibbler-dialog-component>
 </div>

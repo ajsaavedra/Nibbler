@@ -13,6 +13,7 @@ import { LocationService } from './services/locations.service';
 import { LocationsFilterPipe } from './locations/locations-filter.pipe';
 import { AccountsService } from './services/accounts.service';
 import { TokenService } from './services/token.service';
+import { DialogService } from './services/dialog.service';
 
 @NgModule({
     imports: [
@@ -35,7 +36,8 @@ import { TokenService } from './services/token.service';
         QuestionService,
         LocationService,
         AccountsService,
-        TokenService
+        TokenService,
+        DialogService
     ],
     bootstrap: [ AppComponent ]
 })

@@ -1,2 +1,4 @@
-<nibbler-voting-component *ngFor='let question of questions' [question]="question" [votesMap]="votesMap">
+<nibbler-dialog-component></nibbler-dialog-component>
+<nibbler-voting-component *ngFor='let question of questions' [question]="question" [votesMap]="votesMap"
+    (dialogIsActivated)="toggleDialog($event)" (dialogMessage)="setDialogMessage($event)">
 </nibbler-voting-component>

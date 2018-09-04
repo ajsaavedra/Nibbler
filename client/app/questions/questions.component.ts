@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CacheService } from '../services/cache.service';
 import { GlobalEventsManager } from '../GlobalEventsManager';
+import { DialogService } from '../services/dialog.service';
 
 @Component({
     templateUrl: './app/questions/questions.component.html',
@@ -17,7 +18,8 @@ export class QuestionsComponent implements OnInit, OnDestroy {
     constructor(
         private route: ActivatedRoute,
         private cacheService: CacheService,
-        private globalEventsManager: GlobalEventsManager
+        private globalEventsManager: GlobalEventsManager,
+        private dialog: DialogService
     ) {}
 
     ngOnInit() {
@@ -46,5 +48,13 @@ export class QuestionsComponent implements OnInit, OnDestroy {
             this.questions.forEach(q => this.votesMap.set(q._id, q.votes));
         });
         this.subscriptions.push(questionSub);
+    }
+
+    toggleDialog(toggle: boolean) {
+        this.dialog.toggleActive(toggle);
+    }
+
+    setDialogMessage(message: string) {
+        this.dialog.setMessage(message);
     }
 }

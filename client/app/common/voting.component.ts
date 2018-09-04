@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { TokenService } from '../services/token.service';
 import { CacheService } from '../services/cache.service';
 import { QuestionService } from '../services/questions.service';
@@ -17,6 +17,8 @@ export class VotingComponent implements OnInit, OnDestroy {
     @Input() isDetailsPage;
     @Input() liked;
     @Input() disliked;
+    @Output() dialogIsActivated = new EventEmitter<boolean>();
+    @Output() dialogMessage = new EventEmitter<string>();
 
     private likedQuestions;
     private dislikedQuestions;
@@ -87,10 +89,12 @@ export class VotingComponent implements OnInit, OnDestroy {
                 }));
            })
            .catch((err) => {
-               alert('Could not save your vote. Try later.');
+               this.dialogIsActivated.emit(true);
+               this.dialogMessage.emit('Could not save your vote. Please try again later.');
            });
         } else {
-            alert('You must be a member to vote. Sign up today!');
+            this.dialogIsActivated.emit(true);
+            this.dialogMessage.emit('You must be a member to vote. Sign up today!');
         }
     }
 

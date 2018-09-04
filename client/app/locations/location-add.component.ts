@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Helper } from '../services/helper.service';
 import { GeocodingService } from '../services/geocoding.service';
 import { LocationService } from '../services/locations.service';
 import { TokenService } from '../services/token.service';
+import { DialogService } from '../services/dialog.service';
 
 @Component({
     templateUrl: './app/locations/location-add.component.html',
     providers: [ Helper, GeocodingService ]
 })
 
-export class LocationAddComponent implements OnInit {
+export class LocationAddComponent implements OnInit, OnDestroy {
     private openingHour: string;
     private openingMeridian: string;
     private closingHour: string;
@@ -31,7 +32,8 @@ export class LocationAddComponent implements OnInit {
                 private router: Router,
                 private locationService: LocationService,
                 private geocodingService: GeocodingService,
-                private tokenService: TokenService) {
+                private tokenService: TokenService,
+                private dialog: DialogService) {
         this.addLocationForm = fb.group({
             'name': [null, Validators.required],
             'address': [null, Validators.required],
@@ -51,6 +53,10 @@ export class LocationAddComponent implements OnInit {
         if (!this.isLoggedIn) {
             this.router.navigateByUrl('/');
         }
+    }
+
+    ngOnDestroy() {
+        this.dialog.toggleActive(false);
     }
 
     updateOpeningDay(day) {
@@ -106,7 +112,8 @@ export class LocationAddComponent implements OnInit {
 
     getAddressCoordinates() {
         if (this.timesArray.length === 0) {
-            alert('You must include a location\'s hours of operation.');
+            this.dialog.setMessage('You must include a location\'s hours of operation.');
+            this.dialog.toggleActive(true);
             return;
         }
         this.geocodingService
@@ -125,7 +132,8 @@ export class LocationAddComponent implements OnInit {
                     .subscribe(results => this.router.navigateByUrl('/locations'));
             })
             .catch(err => {
-                 alert('Sorry, it looks like something went wrong with your request.');
+                this.dialog.setMessage('Sorry, it looks like something went wrong with your request.');
+                this.dialog.toggleActive(true);
             });
     }
 }

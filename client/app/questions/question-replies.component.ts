@@ -4,7 +4,7 @@ import { QuestionService } from '../services/questions.service';
 import { TokenService } from '../services/token.service';
 import { CacheService } from '../services/cache.service';
 import { AccountsService } from '../services/accounts.service';
-import { Observable } from 'rxjs/Observable';
+import { DialogService } from '../services/dialog.service';
 
 @Component({
     selector: 'nibbler-question-replies',
@@ -25,39 +25,44 @@ export class QuestionRepliesComponent implements OnInit, OnDestroy {
 
     @Input() question: any;
 
-   constructor(private accountsService: AccountsService,
-               private questionService: QuestionService,
-               private cacheService: CacheService,
-               private tokenService: TokenService,
-               private fb: FormBuilder) {
-        this.replyForm = fb.group({
-            'replyText': [null, Validators.required]
-        });
-        this.editForm = fb.group({
-            'editText': [null, Validators.required]
-        });
+   constructor(
+       private accountsService: AccountsService,
+       private questionService: QuestionService,
+       private cacheService: CacheService,
+       private tokenService: TokenService,
+       private fb: FormBuilder,
+       private dialog: DialogService) {
+            this.replyForm = fb.group({
+                'replyText': [null, Validators.required]
+            });
+            this.editForm = fb.group({
+                'editText': [null, Validators.required]
+            });
     }
 
     ngOnInit() {
-        this.uname = this.tokenService.getUsername();
-        this.questionId = this.question._id;
-        this.getReplies();
+        if (this.tokenService.tokenExists()) {
+            this.uname = this.tokenService.getUsername();
+            this.questionId = this.question._id;
+            this.getReplies();
 
-        if (!this.cacheService._data['postHelpfulComments']) {
-            this.cacheService.getPostHelpfulComments(this.questionId);
-        }
-        const sub = this.cacheService._data['postHelpfulComments'].subscribe(res => {
-            if (res.comments && res.comments[this.questionId]) {
-                this.helpfulCommentsMap = res.comments[this.questionId];
-            } else {
-                this.helpfulCommentsMap = [];
+            if (!this.cacheService._data['postHelpfulComments']) {
+                this.cacheService.getPostHelpfulComments(this.questionId);
             }
-        });
-        this.subscriptions.push(sub);
+            const sub = this.cacheService._data['postHelpfulComments'].subscribe(res => {
+                if (res.comments && res.comments[this.questionId]) {
+                    this.helpfulCommentsMap = res.comments[this.questionId];
+                } else {
+                    this.helpfulCommentsMap = [];
+                }
+            });
+            this.subscriptions.push(sub);
+        }
     }
 
     ngOnDestroy() {
         this.subscriptions.forEach(sub => sub.unsubscribe());
+        this.dialog.toggleActive(false);
     }
 
     updateCachedReplies(id, reply_id) {
@@ -85,7 +90,8 @@ export class QuestionRepliesComponent implements OnInit, OnDestroy {
                 });
             this.subscriptions.push(sub);
         } else {
-            alert('You must sign in to reply to this question.');
+            this.dialog.setMessage('You must sign in to reply to this question.');
+            this.dialog.toggleActive(true);
         }
     }
 
@@ -134,7 +140,8 @@ export class QuestionRepliesComponent implements OnInit, OnDestroy {
             this.updateReplyVotes(reply_id, isHelpful);
             this.updateSavedReplies(this.uname, reply_id, isHelpful);
         } else {
-            alert('Log in to kudos helpful comments!');
+            this.dialog.setMessage('Log in to save helpful comments!');
+            this.dialog.toggleActive(true);
         }
     }
 

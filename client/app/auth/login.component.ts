@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AccountsService } from '../services/accounts.service';
 import { GlobalEventsManager } from '../GlobalEventsManager';
 import { TokenService } from '../services/token.service';
+import { DialogService } from '../services/dialog.service';
 
 @Component({
     templateUrl: './app/auth/login.component.html',
@@ -20,7 +21,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         private router: Router,
         private accountsService: AccountsService,
         private globalEventsManager: GlobalEventsManager,
-        private tokenService: TokenService
+        private tokenService: TokenService,
+        private dialog: DialogService
     ) {
         this.loginForm = fb.group({
             'username': [null, Validators.required],
@@ -37,6 +39,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         if (this.loginSubscription) { this.loginSubscription.unsubscribe(); }
+        this.dialog.toggleActive(false);
     }
 
     loginUser() {
@@ -52,10 +55,11 @@ export class LoginComponent implements OnInit, OnDestroy {
                 },
                 err => {
                     if (err.status === 401) {
-                        alert('Invalid login information. Please try again.');
+                        this.dialog.setMessage('Invalid login information. Please try again');
                     } else {
-                        alert('Oops. Something went wrong on our server. Please try again.');
+                        this.dialog.setMessage('Oops. Something went wrong on our server. Please try again.');
                     }
+                    this.dialog.toggleActive(true);
                 }
             );
     }

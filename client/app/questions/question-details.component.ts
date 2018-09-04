@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AccountsService } from '../services/accounts.service';
 import { CacheService } from '../services/cache.service';
 import { TokenService } from '../services/token.service';
+import { DialogService } from '../services/dialog.service';
 
 @Component({
     templateUrl: './app/questions/question-details.component.html'
@@ -19,7 +20,9 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private accountsService: AccountsService,
         private cacheService: CacheService,
-        private tokenService: TokenService) {}
+        private tokenService: TokenService,
+        private dialog: DialogService
+    ) {}
 
     ngOnInit() {
         if (this.tokenService.tokenExists()) { this.uname = this.tokenService.getUsername(); }
@@ -42,6 +45,7 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.subscriptions.forEach(sub => sub.unsubscribe());
+        this.dialog.toggleActive(false);
     }
 
     getIsFavorited(id) {
@@ -64,7 +68,16 @@ export class QuestionDetailsComponent implements OnInit, OnDestroy {
             this.accountsService.removePostFromUser(this.uname, this.questionId)
                 .subscribe(res => this.isFavorited = false);
         } else {
-            alert('You must be logged in to save a post.');
+            this.setDialogMessage('You must be logged in to save a post.');
+            this.dialog.toggleActive(true);
         }
+    }
+
+    toggleDialog(toggle: boolean) {
+        this.dialog.toggleActive(toggle);
+    }
+
+    setDialogMessage(message: string) {
+        this.dialog.setMessage(message);
     }
 }

@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AccountsService } from '../services/accounts.service';
 import { GeocodingService } from '../services/geocoding.service';
 import { PasswordValidation } from './password.validation';
 import { TokenService } from '../services/token.service';
+import { DialogService } from '../services/dialog.service';
 import {
     trigger,
     state,
@@ -29,7 +30,7 @@ import {
     ]
 })
 
-export class SignupComponent implements OnInit {
+export class SignupComponent implements OnInit, OnDestroy {
 
     private formState = 'inactive';
     private signupFormPageOne: FormGroup;
@@ -42,11 +43,13 @@ export class SignupComponent implements OnInit {
     private passwordRegex = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/);
     private zipcodeRegex = new RegExp(/^\d{5}(?:[-\s]\d{4})?$/);
 
-    constructor(private router: Router,
-                private fb: FormBuilder,
-                private accountsService: AccountsService,
-                private geocodingService: GeocodingService,
-                private tokenService: TokenService) {
+    constructor(
+        private router: Router,
+            private fb: FormBuilder,
+            private accountsService: AccountsService,
+            private geocodingService: GeocodingService,
+            private tokenService: TokenService,
+            private dialog: DialogService) {
         this.signupFormPageOne = fb.group({
             'fname': [null, Validators.compose([
                 Validators.required,
@@ -83,6 +86,10 @@ export class SignupComponent implements OnInit {
         }
     }
 
+    ngOnDestroy() {
+        this.dialog.toggleActive(false);
+    }
+
     checkUserInfo() {
         const email = this.signupFormPageOne.get('email').value;
         const uname = this.signupFormPageOne.get('uname').value;
@@ -93,7 +100,8 @@ export class SignupComponent implements OnInit {
                 res => this.toggleState(),
                 err => {
                     const body = JSON.parse(err._body);
-                    alert(body['message']);
+                    this.dialog.setMessage(body['message']);
+                    this.dialog.toggleActive(true);
                 }
             );
     }
@@ -136,10 +144,11 @@ export class SignupComponent implements OnInit {
             err => {
                 if (err.status === 401) {
                     const body = JSON.parse(err._body);
-                    alert(body['message']);
+                    this.dialog.setMessage(body['message']);
                 } else {
-                    alert('Something went wrong with our server. Please try again.');
+                    this.dialog.setMessage('Something went wrong with our server. Please try again.');
                 }
+                this.dialog.toggleActive(true);
             }
         );
     }

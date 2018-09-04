@@ -216,6 +216,11 @@ nibbler-voting-component:not(:last-child) > .voting-component,
     margin: auto;
 }
 
+.modal-body {
+    padding: 30px;
+    text-align: center;
+}
+
 .modal-footer {
     padding: 0;
 }
