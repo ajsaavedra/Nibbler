@@ -52,12 +52,8 @@ export class LocationDetailsComponent implements OnInit, OnDestroy {
     };
 
     formatDate = function(date) {
-        let str, formattedDate;
-        formattedDate = new Date(date);
-        str = this.getMonthString(formattedDate.getMonth()) + ' ' +
-            formattedDate.getDay() + ', ' +
-            formattedDate.getFullYear();
-        return str;
+        const formattedDate = new Date(date);
+        return `${this.getMonthString(formattedDate.getMonth())} ${formattedDate.getDate()}, ${formattedDate.getFullYear()}`;
     };
 
     getMonthString = function(month) {
@@ -65,6 +61,6 @@ export class LocationDetailsComponent implements OnInit, OnDestroy {
             'January', 'February', 'March', 'April', 'May', 'June',
             'July', 'August', 'September', 'October', 'November', 'December'
         ];
-        return months[month - 1];
+        return months[month];
     };
 }

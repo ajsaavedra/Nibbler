@@ -61,4 +61,10 @@ export class CacheService {
         }
         this._data['location'][id] = this.locationService.getLocationById(id).shareReplay();
     }
+
+    resetCacheOnLogout() {
+        delete this._data['helpfulComments'];
+        delete this._data['liked'];
+        delete this._data['unliked'];
+    }
 }

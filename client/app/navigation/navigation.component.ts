@@ -1,6 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { GlobalEventsManager } from '../GlobalEventsManager';
+import { CacheService } from '../services/cache.service';
 import { TokenService } from '../services/token.service';
 
 @Component({
@@ -13,6 +14,7 @@ export class NavigationComponent implements OnDestroy {
     private subscriptions = [];
 
     constructor(private globalEventsManager: GlobalEventsManager,
+                private cacheService: CacheService,
                 private router: Router, private tokenService: TokenService) {
         this.subscriptions.push(
             this.globalEventsManager.showUserNavBarEmitter
@@ -26,6 +28,7 @@ export class NavigationComponent implements OnDestroy {
 
     logoutUser() {
         this.globalEventsManager.showUserNavBar(false);
+        this.cacheService.resetCacheOnLogout();
         this.tokenService.deleteToken();
         this.router.navigateByUrl('/login');
     }
