@@ -28,6 +28,7 @@ import { CheckboxControlComponent } from './common/checkbox.control.component';
 import { SelectControlComponent } from './common/select.contol.component';
 import { DietOptionsComponent } from './common/diet-options.component';
 import { DialogComponent } from './common/dialog.component';
+import { OptionTagsComponent } from './common/option-tags.component';
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -102,5 +103,6 @@ export const routingComponents = [
     CheckboxControlComponent,
     SelectControlComponent,
     DietOptionsComponent,
-    DialogComponent
+    DialogComponent,
+    OptionTagsComponent
 ];

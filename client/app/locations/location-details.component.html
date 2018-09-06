@@ -22,17 +22,11 @@
             </div>
             <div class="row location-options">
                 <div class="card">
-                    <div class="card card-header location-panel">
+                    <div class="card-header location-panel">
                         Dietary Options
                     </div>
                     <div class="card-body">
-                        <div class="col-sm-6 col-md-6">
-                            <span class="badge badge-pill badge-warning" *ngIf="location.options.gluten_free">Gluten-free</span>
-                            <span class="badge badge-pill badge-primary" *ngIf="location.options.vegan">Vegan</span>
-                            <span class="badge badge-pill badge-success" *ngIf="location.options.vegetarian">Vegetarian</span>
-                            <span class="badge badge-pill badge-danger" *ngIf="location.options.soy_free">Soy-free</span>
-                            <span class="badge badge-pill badge-info" *ngIf="location.options.nut_free">Nut-free</span>
-                        </div>
+                        <nibbler-option-tags [options]="location.options"></nibbler-option-tags>
                     </div>
                 </div>
             </div>
@@ -41,21 +35,21 @@
             <img id="map" src="{{map}}" />
         </div>
     </div>
-    <button class="btn btn-primary" data-toggle="modal" data-target="#reviewModal">Add Review</button>
+    <div class="row">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#reviewModal">Add Review</button>
+    </div>
     <div class="row location-details">
-        <div class="col">
-            <div class="card">
-                <h4 class="card card-header location-panel">
-                    Customer Reviews
-                </h4>
-                <div class="card-body">
-                    <div *ngFor="let review of location.reviews">
-                        <span [innerHTML]="starRating(review.rating)"></span>
-                        <div class="reviewTitle">{{ review.title }}</div>
-                        <p>By <a routerLink="/profile/{{review.author}}">{{ review.author }}</a> on
-                        <span [innerHTML]="formatDate(review.createdOn)"></span></p>
-                        <p>{{ review.reviewText }}</p>
-                    </div>
+        <div class="card">
+            <h4 class="card-header location-panel">
+                Customer Reviews
+            </h4>
+            <div class="card-body">
+                <div *ngFor="let review of location.reviews">
+                    <span [innerHTML]="starRating(review.rating)"></span>
+                    <div class="reviewTitle">{{ review.title }}</div>
+                    <p>By <a routerLink="/profile/{{review.author}}">{{ review.author }}</a> on
+                    <span [innerHTML]="formatDate(review.createdOn)"></span></p>
+                    <p>{{ review.reviewText }}</p>
                 </div>
             </div>
         </div>
@@ -70,7 +64,7 @@
                     <nibbler-location-review-form [location]="location"></nibbler-location-review-form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -83,7 +77,7 @@
                     You must be logged in to add a review. Log in or register now!
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

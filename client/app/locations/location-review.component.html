@@ -10,7 +10,7 @@
                 class="row form-row alert alert-danger">You must include a title.
         </div>
         <div class="row form-row">
-            <div class="col-2">Rating</div>
+            <div>Rating</div>
             <select [formControl]="reviewForm.controls['rating']" name="reviewRating" class="offset-1 col-9 dropdown-rating-menu">
                 <option value="5">5</option>
                 <option value="4">4</option>
@@ -28,9 +28,13 @@
             *ngIf="reviewForm.controls['review'].hasError('required') 
             && reviewForm.controls['review'].touched">You must include a review.
         </div>
+        <div class="form-row">What option(s) did you have?</div>
+        <nibbler-diet-options-component class="review-options" [controls]="reviewForm.controls"></nibbler-diet-options-component>
         <div class="row form-row">
-            <input class="btn btn-primary pull-right" type="submit" 
-            value="Add my review" [disabled]="!reviewForm.valid" (click)="submitReview()" data-dismiss="modal">
+            <input class="btn btn-primary form-control" type="submit" value="Add my review"
+            [disabled]="!reviewForm.valid || !reviewForm.get('gluten-free').errors.selected &&
+                !reviewForm.get('vegan').errors.selected && !reviewForm.get('vegetarian').errors.selected &&
+                !reviewForm.get('soy-free').errors.selected && !reviewForm.get('nut-free').errors.selected" (click)="submitReview()">
         </div>
     </form>
 </div>

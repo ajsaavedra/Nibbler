@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LocationService } from '../services/locations.service';
 import { TokenService } from '../services/token.service';
+import { ValidateDiet } from '../common/diet-option.validation';
 
 @Component({
     selector: 'nibbler-location-review-form',
@@ -20,7 +21,12 @@ export class LocationReviewComponent {
         this.reviewForm = fb.group({
             'title': [null, Validators.required],
             'rating': [5, Validators.required],
-            'review': [null, Validators.required]
+            'review': [null, Validators.required],
+            'gluten-free': [false, ValidateDiet],
+            'vegan': [false, ValidateDiet],
+            'vegetarian': [false, ValidateDiet],
+            'soy-free': [false, ValidateDiet],
+            'nut-free': [false, ValidateDiet]
         });
     }
 
@@ -39,7 +45,7 @@ export class LocationReviewComponent {
 
     submitReview() {
         this.addReview(this.location._id)
-        .then(result => window.location.reload())
-        .catch(err => console.log('Error: ' + err));
+            .then(result => window.location.reload())
+            .catch(err => console.log('Error: ' + err));
     }
 }
