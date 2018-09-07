@@ -24,7 +24,7 @@ export class GeocodingService {
 
     public getMapForLocation(lat: number, lon: number) {
         const url = 'https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/' +
-            `pin-s+EA2A3C(${lon},${lat})/${lon},${lat},15.5,0,0auto/400x300@2x?access_token=${config.mapbox}`;
+            `pin-s+EA2A3C(${lon},${lat})/${lon},${lat},15,0,0auto/600x500@2x?access_token=${config.mapbox}`;
         return this.http.get(url).toPromise();
     }
 }

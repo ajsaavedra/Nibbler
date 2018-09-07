@@ -5,7 +5,7 @@
         type="text" placeholder="Search by city, address, or zipcode"
         [(ngModel)]="locationSearchItem" (keyup.enter)="keystrokeListener()"/>
     </div>
-    <div *ngIf="locations?.length > 0" class="clearfix container filters-container">
+    <div *ngIf="locations?.length > 0" class="clearfix filters-container">
         <div class="row float-left filter-label">Filter by:</div>
         <div class="row float-right filter-options">
             <div class="form-check form-check-inline">
@@ -39,7 +39,7 @@
                             <a [routerLink]="['/locations/', location._id]">{{ location.name }}</a>
                         </p>
                         <p>{{ location.address }}</p>
-                        <p class="suggestion" *ngIf="!location.reviews || location.reviews.length === 0">This location needs your review!</p>
+                        <p class="text-danger" *ngIf="!location.reviews || location.reviews.length === 0">This location needs your review!</p>
                         <span *ngIf="location.reviews && location.reviews.length > 0" [innerHTML]="starRating(location.rating)"></span>
                     </div>
                     <div class="col-sm-6 col-md-6">

@@ -6,6 +6,7 @@ import { GeocodingService } from '../services/geocoding.service';
 import { PasswordValidation } from './password.validation';
 import { TokenService } from '../services/token.service';
 import { DialogService } from '../services/dialog.service';
+import { ValidateDiet } from '../common/diet-option.validation';
 import {
     trigger,
     state,
@@ -35,6 +36,7 @@ export class SignupComponent implements OnInit, OnDestroy {
     private formState = 'inactive';
     private signupFormPageOne: FormGroup;
     private signupFormPageTwo: FormGroup;
+    private signupFormDietSelection: FormGroup;
     private fnameRegex = new RegExp(/[A-Z][a-z]+/);
     private lnameRegex = new RegExp(/^([A-Z]'?[a-z]+)(-?[A-Z]'?[a-z]+)?$/);
     private emailRegex = new RegExp(['^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))',
@@ -71,13 +73,16 @@ export class SignupComponent implements OnInit, OnDestroy {
             'zipcode': [null, Validators.compose([
                 Validators.required,
                 Validators.pattern(this.zipcodeRegex)
-            ])],
-            'gluten-free': false,
-            'vegan': false,
-            'vegetarian': false,
-            'soy-free': false,
-            'nut-free': false
+            ])]
         }, { validator: PasswordValidation.passwordsMatch });
+
+        this.signupFormDietSelection = fb.group({
+            'gluten-free': [false, ValidateDiet],
+            'vegan': [false, ValidateDiet],
+            'vegetarian': [false, ValidateDiet],
+            'soy-free': [false, ValidateDiet],
+            'nut-free': [false, ValidateDiet]
+        });
     }
 
     ngOnInit() {
@@ -117,11 +122,11 @@ export class SignupComponent implements OnInit, OnDestroy {
         const email = this.signupFormPageOne.get('email').value;
         const pw = this.signupFormPageTwo.get('password').value;
         const zip = this.signupFormPageTwo.get('zipcode').value;
-        const gf = this.signupFormPageTwo.get('gluten-free').value;
-        const vg = this.signupFormPageTwo.get('vegan').value;
-        const veg = this.signupFormPageTwo.get('vegetarian').value;
-        const nf = this.signupFormPageTwo.get('nut-free').value;
-        const sf = this.signupFormPageTwo.get('soy-free').value;
+        const gf = this.signupFormDietSelection.get('gluten-free').value;
+        const vg = this.signupFormDietSelection.get('vegan').value;
+        const veg = this.signupFormDietSelection.get('vegetarian').value;
+        const nf = this.signupFormDietSelection.get('nut-free').value;
+        const sf = this.signupFormDietSelection.get('soy-free').value;
 
         this.searchLocation(zip)
             .then(fulfilled => {

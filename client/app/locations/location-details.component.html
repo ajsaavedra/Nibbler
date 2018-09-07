@@ -1,17 +1,16 @@
 <div class="container app-content" *ngIf="location">
-    <div class="row location-name">
-        <h2>{{ location.name }}</h2>
-    </div>
-    <div class="row location-details">
-        <p class="suggestion" *ngIf="location.reviews.length === 0">This location needs your review!</p>
-        <span *ngIf="location.reviews.length > 0" [innerHTML]="starRating(location.rating)"></span>
+    <div class="location-name clearfix">
+        <h2 class="row float-left">{{ location.name }}</h2>
+        <span class="float-right rating-stars" *ngIf="location.reviews.length > 0" [innerHTML]="starRating(location.rating)"></span>
+        <p class="text-danger float-right" *ngIf="location.reviews.length === 0">No reviews</p>
     </div>
     <div class="row location-details">
         <div class="col-md-4 col-sm-4 col-xs-12">
             <div class="row location-hours">
                 <div class="card">
                     <div class="card-header location-panel">
-                        Location Hours
+                        <div class="float-left">Location Hours</div>
+                        <button class="btn-link float-right"><i class="far fa-edit"></i> Edit</button>
                     </div>
                     <div class="card-body">
                         <div *ngFor="let times of location.openingTimes">
@@ -26,7 +25,7 @@
                         Dietary Options
                     </div>
                     <div class="card-body">
-                        <nibbler-option-tags [options]="location.options"></nibbler-option-tags>
+                        <nibbler-option-tags [options]="location.options" detailed="true"></nibbler-option-tags>
                     </div>
                 </div>
             </div>

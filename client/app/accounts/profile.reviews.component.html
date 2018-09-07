@@ -16,6 +16,7 @@
                     {{ getTimeSince(review.createdOn) }} ago for <a [routerLink]="['/locations/', review.location_id]">{{review.location_name}}</a>
                 </div>
                 <div *ngIf="belongsToUser(review)">
+                    <button class="tags badge badge-primary">Edit</button>
                     <button class="tags badge badge-primary" (click)="deleteReview(review.location_id, review._id)">Delete</button>
                 </div>
             </div>

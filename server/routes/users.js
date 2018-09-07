@@ -10,7 +10,7 @@ const requireLogin = passport.authenticate('local', { session: false });
 const requireAuth = passport.authenticate('jwt', { session: false });
 
 router.post('/users/new', ctrlUsers.createUser);
-router.get('/users/:email/:username', ctrlUsers.findUserByEmail, ctrlUsers.findUserByName);
+router.get('/users/:email/:username', ctrlUsers.findUserByEmail, ctrlUsers.findUserByName, ctrlUsers.lookupUserByNameResponse);
 
 const ctrlAuth = require('../controllers/authentication.js');
 

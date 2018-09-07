@@ -13,6 +13,11 @@ $submitBtnColor: #ec6f74;
     margin: 0;
 }
 
+.btn-link {
+    color: grey;
+    border: none;
+}
+
 .submit-btn {
     background-color: $submitBtnColor;
     color: white;
@@ -121,13 +126,22 @@ footer img {
     padding: 10px;
 }
 
+.locations-list {
+    .location-name {
+        font-size: 20px;
+    }
+}
+
 .review-options .form-check {
     margin-left: 10px;
 }
 
-.location-name {
-    font-size: 20px;
-}
+// .location-name {
+    h2 {
+        padding-left: 0;
+        font-family: 'Raleway';
+    }
+// }
 
 .add-time-row {
     margin-left: -10px;
@@ -161,7 +175,6 @@ nibbler-voting-component:not(:last-child) > .voting-component,
 .filters-container {
     border: 1px solid #ddd;
     padding: 20px 0;
-    max-width: 920px;
 }
 
 .search-bar {
@@ -192,9 +205,6 @@ nibbler-voting-component:not(:last-child) > .voting-component,
     margin: 0
 }
 
-.suggestion {
-    color: red;
-}
 /***** Review Form *****/
 #reviewForm {
     width: 100%;
@@ -249,12 +259,13 @@ nibbler-voting-component:not(:last-child) > .voting-component,
     border-bottom: 1px solid #DDD;
 }
 
-.post-body, .answers-body, .answers-header {
+.post-body, .answers-header {
     margin-left: 15px;
 }
 
 .answers-header {
     margin-top: 20px;
+    margin-left: 10px
 }
 
 .answers-body {
@@ -414,10 +425,19 @@ form {
     .main-question {
         padding-left: 40px;
     }
+
+    .filter-options {
+        margin: 0 40px;
+        margin-top: 10px;
+    }
 }
 
 @media screen and (max-width: 414px) {
     .signupFormPageOne, .signupFormPageTwo {
         width: 400px;
+    }
+
+    .location-name h2 {
+        font-size: 20px;
     }
 }

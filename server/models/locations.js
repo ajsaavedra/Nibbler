@@ -14,14 +14,21 @@ const reviewSchema = new Schema({
     title: { type: String, required: true },
     rating: { type: Number, required: true, min: 0, max: 5 },
     reviewText: { type: String, required: true },
-    createdOn: { type: Date, 'default': new Date() }
+    createdOn: { type: Date, 'default': new Date() },
+    options: dietSchema
 }, options);
 
 const locationSchema = new Schema({
     name: { type: String, required: true },
     address: String,
     rating: { type: Number, 'default': 0, min: 0, max: 5 },
-    options: dietSchema,
+    options: {
+        gluten_free: { type: Number, default: 0 },
+        vegan: { type: Number, default: 0 },
+        vegetarian: { type: Number, default: 0 },
+        soy_free: { type: Number, default: 0 },
+        nut_furee: { type: Number, default: 0 }
+    },
     coords: { type: [Number], index: '2dsphere', required: true },
     openingTimes: [openingTimeSchema],
     reviews: [reviewSchema],

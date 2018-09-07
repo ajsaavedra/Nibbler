@@ -39,9 +39,12 @@
                         [control]="signupFormPageTwo.controls['zipcode']" placeholder="Zipcode" name="zipcode" hasRegex="true">
                     </nibbler-field-control-component>
                     <h2>I am...</h2>
-                    <nibbler-diet-options-component [controls]="signupFormPageTwo.controls"></nibbler-diet-options-component>
+                    <nibbler-diet-options-component [controls]="signupFormDietSelection.controls"></nibbler-diet-options-component>
                     <button class="col btn submit-btn"
-                        [disabled]="!signupFormPageTwo.valid" (click)="collectUserData()">Signup</button>
+                        [disabled]="!signupFormPageTwo.valid || (!signupFormDietSelection.get('gluten-free').errors.selected &&
+                        !signupFormDietSelection.get('vegan').errors.selected && !signupFormDietSelection.get('vegetarian').errors.selected &&
+                        !signupFormDietSelection.get('soy-free').errors.selected && !signupFormDietSelection.get('nut-free').errors.selected)"
+                        (click)="collectUserData()">Signup</button>
                 </form>
             </div>
         </div>
