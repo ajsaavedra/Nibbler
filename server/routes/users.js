@@ -6,7 +6,14 @@ const ctrlQuestions = require('../controllers/questions');
 require('../services/passport');
 const passport = require('passport');
 
-const requireLogin = passport.authenticate('local', { session: false });
+const requireLogin = function(req, res, next) {
+    passport.authenticate('local', { session: false }, (err, user, info) => {
+        if (err) return res.status(500).send(err);
+        if (!user) return res.status(404).send(info.message);
+        req.user = user;
+        next();
+    })(req, res, next);
+};
 const requireAuth = passport.authenticate('jwt', { session: false });
 
 router.post('/users/new', ctrlUsers.createUser);

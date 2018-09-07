@@ -7,11 +7,11 @@ const LocalStrategy = require('passport-local').Strategy;
 
 const localLogin = new LocalStrategy(function(username, password, done) {
     User.findOne({ 'profile.username': username }, function(err, foundUser) {
-        if (err) { return done(err); }
-        if (!foundUser) { return done(null, false); }
+        if (err) { return done(err, { err }); }
+        if (!foundUser) { return done(null, false, { message: 'User not found.' }); }
         foundUser.comparePassword(password, function(err, isMatch) {
             if (err) { return done(err); }
-            if (!isMatch) { return done(null, false); }
+            if (!isMatch) { return done(null, false, { message: 'Invalid password.' }); }
             return done(null, foundUser);
         });
     });
