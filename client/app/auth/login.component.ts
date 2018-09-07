@@ -54,8 +54,8 @@ export class LoginComponent implements OnInit, OnDestroy {
                     this.router.navigateByUrl('/profile/' + username);
                 },
                 err => {
-                    if (err.status === 401) {
-                        this.dialog.setMessage('Invalid login information. Please try again');
+                    if (err.status === 404 || err.status === 401) {
+                        this.dialog.setMessage(err._body);
                     } else {
                         this.dialog.setMessage('Oops. Something went wrong on our server. Please try again.');
                     }

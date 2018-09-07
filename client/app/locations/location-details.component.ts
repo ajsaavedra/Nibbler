@@ -4,6 +4,8 @@ import { GeocodingService } from '../services/geocoding.service';
 import { Helper } from '../services/helper.service';
 import { CacheService } from '../services/cache.service';
 import { TokenService } from '../services/token.service';
+import { DialogService } from '../services/dialog.service';
+import { EditDialogService } from '../services/edit-dialog.service';
 
 @Component({
     templateUrl: './app/locations/location-details.component.html',
@@ -20,7 +22,9 @@ export class LocationDetailsComponent implements OnInit, OnDestroy {
                 private cacheService: CacheService,
                 private helper: Helper,
                 private route: ActivatedRoute,
-                private tokenService: TokenService) {}
+                private tokenService: TokenService,
+                private dialog: DialogService,
+                private edit: EditDialogService) {}
 
     ngOnInit() {
         this.sub = this.route.params
@@ -38,13 +42,22 @@ export class LocationDetailsComponent implements OnInit, OnDestroy {
                 this.location = data;
                 this.geocodingService.getMapForLocation(this.location.coords[1], this.location.coords[0])
                     .then(img => { this.map = img['url']; });
+                this.isLoggedIn = this.tokenService.tokenExists();
             });
-
-        this.isLoggedIn = this.tokenService.tokenExists();
     }
 
     ngOnDestroy() {
         this.sub.unsubscribe();
+        this.dialog.toggleActive(false);
+    }
+
+    toggleEditDialog() {
+        if (this.isLoggedIn) {
+            this.edit.toggleActive(true);
+        } else {
+            this.dialog.toggleActive(true);
+            this.dialog.setMessage('You must be logged in to edit or review a location.');
+        }
     }
 
     starRating = function(rating) {

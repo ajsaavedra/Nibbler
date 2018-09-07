@@ -10,7 +10,7 @@
                 <div class="card">
                     <div class="card-header location-panel">
                         <div class="float-left">Location Hours</div>
-                        <button class="btn-link float-right"><i class="far fa-edit"></i> Edit</button>
+                        <button class="btn-link float-right" (click)="toggleEditDialog()"><i class="far fa-edit"></i> Edit</button>
                     </div>
                     <div class="card-body">
                         <div *ngFor="let times of location.openingTimes">
@@ -35,7 +35,8 @@
         </div>
     </div>
     <div class="row">
-        <button class="btn btn-primary" data-toggle="modal" data-target="#reviewModal">Add Review</button>
+        <button *ngIf="isLoggedIn" class="btn btn-primary" data-toggle="modal" data-target="#reviewModal">Add Review</button>
+        <button *ngIf="!isLoggedIn" class="btn btn-primary" (click)="toggleEditDialog()">Add Review</button>
     </div>
     <div class="row location-details">
         <div class="card">
@@ -67,18 +68,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal-dialog" *ngIf='!isLoggedIn'>
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Review {{ location.name }}</h4>
-                </div>
-                <div class="modal-body">
-                    You must be logged in to add a review. Log in or register now!
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
+<nibbler-dialog-component *ngIf="!isLoggedIn"></nibbler-dialog-component>
+<nibbler-edit-dialog-component *ngIf="isLoggedIn" [location]="location"></nibbler-edit-dialog-component>
