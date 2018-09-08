@@ -5,28 +5,7 @@
         </nibbler-field-control-component>
         <nibbler-field-control-component [control]="addLocationForm.controls['address']" placeholder="Address" name="address">
         </nibbler-field-control-component>
-        <div class="col">{{ this.timesArray.join('\n') }}</div>
-        <div class="row add-time-row">
-            <nibbler-select-control-component [onChange]="updateOpeningDay.bind(this)" label="Day" [list]="days">
-            </nibbler-select-control-component>
-            <nibbler-select-control-component [onChange]="updateOpeningHour.bind(this)" label="Open" [list]="hours">
-            </nibbler-select-control-component>
-            <nibbler-select-control-component [onChange]="updateOpeningMeridian.bind(this)" label="AM/PM" [list]="['am','pm']">
-            </nibbler-select-control-component>
-            <nibbler-select-control-component [onChange]="updateClosingHour.bind(this)" label="Close" [list]="hours">
-            </nibbler-select-control-component>
-            <nibbler-select-control-component [onChange]="updateClosingMeridian.bind(this)" label="AM/PM" [list]="['am','pm']">
-            </nibbler-select-control-component>
-            <div id="time-btns">
-                <button class="btn time-btn" (click)="addTime()">
-                    <i class="fa fa-plus"></i>
-                </button>
-                <button class="btn submit-btn" (click)="removeHours()">
-                    <i class="fa fa-minus"></i>
-                </button>
-            </div>
-        </div>
-        <nibbler-diet-options-component [controls]="addLocationForm.controls"></nibbler-diet-options-component>
+        <nibbler-location-hours-component [timesArray]="timesArray" [timesObject]="timesObject"></nibbler-location-hours-component>
         <button class="col btn submit-btn" [disabled]="!addLocationForm.valid" (click)="getAddressCoordinates()">Submit</button>
     </form>
 </div>

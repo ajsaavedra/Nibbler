@@ -30,6 +30,7 @@ import { DietOptionsComponent } from './common/diet-options.component';
 import { DialogComponent } from './common/dialog.component';
 import { EditDialogComponent } from './common/edit-dialog.component';
 import { OptionTagsComponent } from './common/option-tags.component';
+import { LocationHoursComponent } from './common/location-hours.component';
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -106,5 +107,6 @@ export const routingComponents = [
     DietOptionsComponent,
     DialogComponent,
     EditDialogComponent,
-    OptionTagsComponent
+    OptionTagsComponent,
+    LocationHoursComponent
 ];

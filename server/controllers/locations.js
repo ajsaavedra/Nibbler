@@ -75,25 +75,12 @@ module.exports.locationsListByDistance = function(req, res) {
     });
 };
 
-const getLocationHours = function(locationHours) {
-    let hours = [];
-    locationHours.forEach(hour => {
-        hours.push({
-            day: hour.day,
-            opening: hour.opening,
-            closing: hour.closing
-        });
-    });
-    return hours;
-};
-
 module.exports.locationsCreate = function(req, res) {
     Loc.create({
         name: req.body.name,
         address: req.body.address,
-        options: req.body.options,
         coords: [parseFloat(req.body.lng).toFixed(4), parseFloat(req.body.lat).toFixed(4)],
-        openingTimes: getLocationHours(req.body.hours)
+        openingTimes: req.body.hours
     }, function(err, location) {
         if (err) {
             sendJsonResponse(res, 400, err);
@@ -127,49 +114,20 @@ module.exports.locationsReadOne = function(req, res) {
 };
 
 module.exports.locationsUpdateOne = function(req, res) {
-    if (!req.params.locationid) {
-        sendJsonResponse(res, 404, {
-            'message': 'locationid required'
-        });
-        return;
-    }
+    if (!req.params.locationid) { return res.status(404).send({ message: 'locationid required' }); }
     Loc
         .findById(req.params.locationid)
-        .select('-reviews -rating')
         .exec(function(err, location) {
-            if (!location) {
-                sendJsonResponse(res, 404, {
-                    'message': 'locationid not found'
-                });
-                return;
-            } else if (err) {
-                sendJsonResponse(res, 400, err);
-                return;
-            }
-
+            if (!location) return res.status(404).send({ message: 'locationid not found' });
+            else if (err) return res.status(400).send(err);
             location.name = req.body.name;
             location.address = req.body.address;
-            location.options = req.body.options.split(',');
-            location.coords = [
-                parseFloat(req.body.lng),
-                parseFloat(req.body.lat)];
-            location.openingTimes = [{
-                days: req.body.days1,
-                opening: req.body.opening1,
-                closing: req.body.closing1,
-                closed: req.body.closed1
-            }, {
-                days: req.body.days2,
-                opening: req.body.opening2,
-                closing: req.body.closing2,
-                closed: req.body.closed2
-            }];
-            location.save(function(err, location) {
-                if (err) {
-                    sendJsonResponse(res, 404, err);
-                } else {
-                    sendJsonResponse(res, 200, location);
-                }
+            location.coords = [parseFloat(req.body.lng).toFixed(4), parseFloat(req.body.lat).toFixed(4)];
+            location.openingTimes = req.body.hours;
+            location.reviews = location.reviews;
+            location.save(function(err, updated) {
+                if (err) { return res.status(404).send(err) }
+                return res.status(200).send(updated);
             });
         });
 };

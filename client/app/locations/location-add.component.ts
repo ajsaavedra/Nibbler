@@ -13,22 +13,15 @@ import { DialogService } from '../services/dialog.service';
 })
 
 export class LocationAddComponent implements OnInit, OnDestroy {
-    private openingHour: string;
-    private openingMeridian: string;
-    private closingHour: string;
-    private closingMeridian: string;
-    private openingDay: string;
     private timesArray: string[] = [];
-    private timesObj: Object[] = [];
-    private hours: number[];
-    private days: string[];
+    private timesObject: Object[] = [];
     private isLoggedIn: boolean;
     private addLocationForm: FormGroup;
+    private addSubscription;
 
     private formIcon = require('../../assets/images/file.svg');
 
     constructor(private fb: FormBuilder,
-                private helper: Helper,
                 private router: Router,
                 private locationService: LocationService,
                 private geocodingService: GeocodingService,
@@ -36,16 +29,8 @@ export class LocationAddComponent implements OnInit, OnDestroy {
                 private dialog: DialogService) {
         this.addLocationForm = fb.group({
             'name': [null, Validators.required],
-            'address': [null, Validators.required],
-            'gluten-free': false,
-            'vegan': false,
-            'vegetarian': false,
-            'soy-free': false,
-            'nut-free': false
+            'address': [null, Validators.required]
         });
-
-        this.hours = this.helper.timePicker();
-        this.days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     }
 
     ngOnInit() {
@@ -56,58 +41,8 @@ export class LocationAddComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.addSubscription.unsubscribe();
         this.dialog.toggleActive(false);
-    }
-
-    updateOpeningDay(day) {
-        this.openingDay = day;
-    }
-
-    updateOpeningHour(hour) {
-        this.openingHour = hour;
-    }
-
-    updateClosingHour(hour) {
-        this.closingHour = hour;
-    }
-
-    updateOpeningMeridian(meridian) {
-        this.openingMeridian = meridian;
-    }
-
-    updateClosingMeridian(meridian) {
-        this.closingMeridian = meridian;
-    }
-
-    addTime() {
-        if (this.openingDay && this.openingDay !== 'Day' &&
-            this.openingHour && this.openingHour !== 'Open' &&
-            this.closingHour && this.closingHour !== 'Close' &&
-            this.openingMeridian && this.openingMeridian !== 'AM/PM' &&
-            this.closingMeridian && this.closingMeridian !== 'AM/PM') {
-            const time = this.openingDay + ' ' + this.openingHour +
-                       this.openingMeridian + ' to ' + this.closingHour + this.closingMeridian;
-            this.timesArray.push(time);
-            this.timesObj.push({
-                day: this.openingDay,
-                opening: this.openingHour,
-                closing: this.closingHour
-            });
-        }
-    }
-
-    removeHours() {
-        this.timesArray.pop();
-    }
-
-    formatOptions() {
-        return {
-            'gluten_free': this.addLocationForm.get('gluten-free').value,
-            'vegan': this.addLocationForm.get('vegan').value,
-            'vegetarian': this.addLocationForm.get('vegetarian').value,
-            'soy_free': this.addLocationForm.get('soy-free').value,
-            'nut_free': this.addLocationForm.get('nut-free').value
-        };
     }
 
     getAddressCoordinates() {
@@ -120,18 +55,17 @@ export class LocationAddComponent implements OnInit, OnDestroy {
             .getGeoLocation(this.addLocationForm.get('address').value)
             .then(fulfilled => {
                 const result = fulfilled.results[0];
-                const lat = result.geometry.location.lat;
-                const lng = result.geometry.location.lng;
-                const options = this.formatOptions();
-                this.locationService
+                const lat = result.position.lat;
+                const lng = result.position.lon;
+                this.addSubscription = this.locationService
                     .addLocation(
                         this.addLocationForm.get('name').value,
                         this.addLocationForm.get('address').value,
-                        lat, lng, this.timesObj, options
+                        lat, lng, this.timesObject
                     )
-                    .subscribe(results => this.router.navigateByUrl('/locations'));
+                    .subscribe(() => this.router.navigateByUrl('/locations'));
             })
-            .catch(err => {
+            .catch(() => {
                 this.dialog.setMessage('Sorry, it looks like something went wrong with your request.');
                 this.dialog.toggleActive(true);
             });

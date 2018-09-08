@@ -1,11 +1,21 @@
-<button id="openModal" #nibblerModal [hidden]="true" data-toggle="modal" data-target="#alertModal"></button>
-<div id="alertModal" class="modal fade" show="true" role="dialog">
-    <div class="modal-dialog">
+<button id="openModal" #nibblerModal [hidden]="true" data-toggle="modal" data-target="#editModal"></button>
+<div id="editModal" class="modal fade" show="true" role="dialog">
+    <div class="modal-dialog editModal">
         <div class="modal-content nibbler-modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Update {{ location.name }}</h4>
             </div>
             <div class="modal-body">
+                <nibbler-field-control-component [control]="editLocationForm.controls['name']" placeholder="Location Name" name="locationName">
+                </nibbler-field-control-component>
+                <nibbler-field-control-component [control]="editLocationForm.controls['address']" placeholder="Address" name="address">
+                </nibbler-field-control-component>
+                <div class="text-danger" *ngIf="error">{{ error }}</div>
+                <nibbler-location-hours-component [timesArray]="timesArray" [timesObject]="timesObject"></nibbler-location-hours-component>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-light" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-danger" data-dismiss="modal" [disabled]="!editLocationForm.valid" (click)="editLocation()">Submit</button>
             </div>
         </div>
     </div>

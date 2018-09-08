@@ -39,6 +39,7 @@ export class LocationDetailsComponent implements OnInit, OnDestroy {
                 }
             })
             .subscribe(data => {
+                console.log('updating');
                 this.location = data;
                 this.geocodingService.getMapForLocation(this.location.coords[1], this.location.coords[0])
                     .then(img => { this.map = img['url']; });

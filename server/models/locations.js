@@ -27,7 +27,7 @@ const locationSchema = new Schema({
         vegan: { type: Number, default: 0 },
         vegetarian: { type: Number, default: 0 },
         soy_free: { type: Number, default: 0 },
-        nut_furee: { type: Number, default: 0 }
+        nut_free: { type: Number, default: 0 }
     },
     coords: { type: [Number], index: '2dsphere', required: true },
     openingTimes: [openingTimeSchema],

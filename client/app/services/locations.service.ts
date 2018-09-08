@@ -33,27 +33,20 @@ export class LocationService {
                         .map(res => res.json());
     }
 
-    addReviewToLocation(id, author, title, rating, text) {
-        const body = {
-            author: author,
-            title: title,
-            rating: rating,
-            reviewText: text
-        };
+    addReviewToLocation(id, author, title, rating, review) {
+        const body = { author, title, rating, review };
 
         return this.http.post(`${this.API_URL}/${id}/reviews`, body, this.tokenService.getAuthorizedHeaderOptions())
                         .map(res => res.json());
     }
 
-    addLocation(name, address, lat, lng, hours, options) {
-        const body = {
-            name: name,
-            address: address,
-            lng: lng,
-            lat: lat,
-            hours: hours,
-            options: options
-        };
-        return this.http.post(this.API_URL, body, this.options).map(res => res.json());
+    addLocation(name, address, lat, lng, hours) {
+        const body = { name, address, lng, lat, hours };
+        return this.http.post(this.API_URL, body, this.tokenService.getAuthorizedHeaderOptions()).map(res => res.json());
+    }
+
+    editLocation(id, name, address, lat, lng, hours) {
+        const body = { name, address, lng, lat, hours };
+        return this.http.put(`${this.API_URL}/${id}`, body, this.tokenService.getAuthorizedHeaderOptions()).map(res => res.json());
     }
 }

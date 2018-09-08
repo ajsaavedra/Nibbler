@@ -12,7 +12,7 @@ var addReview = function(req, res, location) {
             author: req.body.author,
             title: req.body.title,
             rating: req.body.rating,
-            reviewText: req.body.reviewText
+            reviewText: req.body.review
         });
         location.save(function(err, location) {
             var review;
@@ -51,8 +51,6 @@ var setAverageRating = function(location) {
         location.save(function(err) {
             if (err) {
                 console.log(err);
-            } else {
-                console.log("Average rating updated");
             }
         });
     }
