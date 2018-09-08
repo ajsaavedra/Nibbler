@@ -41,7 +41,7 @@ export class LocationAddComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.addSubscription.unsubscribe();
+        if (this.addSubscription) { this.addSubscription.unsubscribe(); }
         this.dialog.toggleActive(false);
     }
 
